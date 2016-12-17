@@ -1,0 +1,39 @@
+plugins {
+    id "com.moowork.node" version "1.0.1"
+}
+
+group 'org.achacha.somewebcardgame'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+apply from: 'dependencies.gradle'
+
+//noinspection GroovyUnusedAssignment
+sourceCompatibility = 1.8
+//noinspection GroovyUnusedAssignment
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+task copyJs(type: Copy, dependsOn: [ 'npmInstall' ] ) {
+    group 'build'
+    description 'Copy JavaScript dependencies to webapp'
+    from 'node_modules'
+    include '*/dist/*'
+    include '*/build/*'
+    into "${projectDir}/src/main/webapp/js"
+    includeEmptyDirs = false
+}
+
+task cleanJs(type: Delete) {
+    group 'build'
+    description 'Remove JavaScript from webapp'
+    delete "${projectDir}/src/main/webapp/js"
+}
+
+war.dependsOn copyJs
+clean.dependsOn cleanJs
