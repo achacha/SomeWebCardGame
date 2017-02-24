@@ -2,6 +2,13 @@ Some Web Card Game (for a lack of a better name)
 
 Mostly used as a base project to integrate various technologies.
 
+Requirements
+---
+JDK 8.0 or newer
+Tomcat 8.5 or newer
+Nodejs and NPM
+Git bash shell (if using windows)
+
 
 Project
 ---
@@ -38,5 +45,9 @@ it only needs to run after updates to package.json and will call npmInstall as
  
 Trobleshooting
 ---
-**org.hsqldb.HsqlException: Database lock acquisition failure** - IntelliJ is still connected to the DB, select Database view and disconnect it 
+**org.hsqldb.HsqlException: Database lock acquisition failure**
+IntelliJ is still connected to the DB, select Database view and disconnect it 
+
   
+**Nothing is showing up when going to http://localhost:8080/**
+Check if src/main/webapp/js exists, if not run **copyJs** gradle task 
