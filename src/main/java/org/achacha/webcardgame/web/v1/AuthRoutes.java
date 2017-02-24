@@ -1,7 +1,7 @@
 package org.achacha.webcardgame.web.v1;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 @Path("auth")
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthRoutes {
-    private static final Log LOGGER = LogFactory.getLog(AuthRoutes.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthRoutes.class);
 
     @POST
     @Path("login")

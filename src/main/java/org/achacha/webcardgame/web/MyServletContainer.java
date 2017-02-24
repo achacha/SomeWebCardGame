@@ -1,10 +1,10 @@
 package org.achacha.webcardgame.web;
 
 import org.achacha.webcardgame.db.Factory;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.WebConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -21,11 +21,16 @@ import java.io.IOException;
                 @WebInitParam(
                         name = "jersey.config.server.provider.packages",
                         value = "org.achacha.webcardgame.web"
+                ),
+                @WebInitParam(
+                        name = "javax.ws.rs.Application",
+                        value = "org.achacha.webcardgame.web.MyApplication"
                 )
+
         }
 )
 public class MyServletContainer extends ServletContainer {
-    private static final Log LOGGER = LogFactory.getLog(MyServletContainer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MyServletContainer.class);
 
     @Override
     protected void init(WebConfig webConfig) throws ServletException {

@@ -4,8 +4,6 @@ import com.google.gson.JsonObject;
 import org.achacha.webcardgame.db.Factory;
 import org.achacha.webcardgame.dbo.Login;
 import org.achacha.webcardgame.helper.RoutesHelper;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.hibernate.Session;
 
 import javax.ws.rs.GET;
@@ -17,8 +15,6 @@ import javax.ws.rs.core.Response;
 @Path("server")
 @Produces(MediaType.APPLICATION_JSON)
 public class ServerRoutes {
-    private static final Log LOGGER = LogFactory.getLog(ServerRoutes.class);
-
     @GET
     @Path("status")
     public Response getStatus() {
