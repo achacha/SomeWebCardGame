@@ -1,10 +1,6 @@
 package org.achacha.webcardgame.web.v1;
 
-import com.google.gson.JsonObject;
-import org.achacha.webcardgame.db.Factory;
-import org.achacha.webcardgame.dbo.Login;
 import org.achacha.webcardgame.helper.RoutesHelper;
-import org.hibernate.Session;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,16 +20,7 @@ public class ServerRoutes {
     @GET
     @Path("data")
     public Response getData() {
-        try (Session session = Factory.getInstance().getSessionFactory().openSession()) {
-            Login login = session.get(Login.class, 1L);
-
-            JsonObject obj = new JsonObject();
-            if (login != null) {
-                obj.addProperty("id", login.getId());
-                obj.addProperty("email", login.getEmail());
-            }
-            return Response.ok(obj.toString()).build();
-        }
+        return Response.ok().build();
     }
 
 }

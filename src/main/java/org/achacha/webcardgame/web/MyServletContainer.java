@@ -1,6 +1,5 @@
 package org.achacha.webcardgame.web;
 
-import org.achacha.webcardgame.db.Factory;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.WebConfig;
 import org.slf4j.Logger;
@@ -36,13 +35,11 @@ public class MyServletContainer extends ServletContainer {
     protected void init(WebConfig webConfig) throws ServletException {
         LOGGER.info("MyServletContainer.init: START");
         super.init(webConfig);
-        Factory.getInstance().init();   // Hibernate
         LOGGER.info("MyServletContainer.init: END");
     }
 
     @Override
     public void destroy() {
-        Factory.getInstance().destroy();
         super.destroy();
     }
 

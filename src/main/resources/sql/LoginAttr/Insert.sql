@@ -1,0 +1,1 @@
+INSERT INTO public.login_attr(login_id, name, value) VALUES(?, ?, ?) RETURNING id

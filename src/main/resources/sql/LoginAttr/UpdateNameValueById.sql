@@ -1,0 +1,1 @@
+UPDATE public.login_attr SET name=?, value=? WHERE id=?

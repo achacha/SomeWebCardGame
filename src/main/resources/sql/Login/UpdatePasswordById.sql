@@ -1,0 +1,1 @@
+UPDATE public.login SET pwd=? WHERE id=?

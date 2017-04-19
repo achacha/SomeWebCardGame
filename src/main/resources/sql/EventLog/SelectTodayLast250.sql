@@ -1,0 +1,1 @@
+SELECT * FROM public.event_log WHERE created_on>(now()-INTERVAL '1 day') ORDER BY id DESC LIMIT 250

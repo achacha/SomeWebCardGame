@@ -1,0 +1,1 @@
+INSERT INTO public.event_log(login_id,event_id,data) VALUES(0, ?, ?::JSON)

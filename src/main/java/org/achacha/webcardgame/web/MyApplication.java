@@ -7,6 +7,7 @@ import org.glassfish.jersey.server.filter.EncodingFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("unused")  //@see MyServletContainer
 public class MyApplication extends ResourceConfig {
     public MyApplication() {
         super(MyApplication.class);

@@ -1,0 +1,1 @@
+DELETE FROM public.login_attr WHERE id=?
