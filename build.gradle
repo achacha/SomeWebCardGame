@@ -1,5 +1,16 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.postgresql:postgresql:${postgresVersion}"
+        classpath "org.hsqldb:hsqldb:${hsqldbVersion}"
+    }
+}
+
 plugins {
     id "com.moowork.node" version "1.1.1"
+    id "org.flywaydb.flyway" version "4.1.2"
 }
 
 group 'org.achacha'
@@ -8,7 +19,25 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'war'
 
+/*
+Load properties file from user home directory
+ */
+def homeProperties = new Properties()
+file("${System.properties['user.home']}${File.separator}.sawcog.properties").withReader { homeProperties.load(it) }
+
 apply from: 'dependencies.gradle'
+
+/*
+Flyway plugin handles DB migration
+*/
+flyway {
+    url = "${homeProperties['db.jdbc.url']}"
+    user = "${homeProperties['db.user']}"
+    password = "${homeProperties['db.password']}"
+    locations = ['filesystem:db/migration']
+}
+
+print "MODE=${homeProperties['mode']}"
 
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.8

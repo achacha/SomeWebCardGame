@@ -21,8 +21,10 @@ dependencies {
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
     compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
 
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    compile group: 'org.postgresql', name: 'postgresql', version: "${postgresVersion}"
     // https://mvnrepository.com/artifact/org.hsqldb/hsqldb
-    compile group: 'org.hsqldb', name: 'hsqldb', version: '2.3.4'
+    compile group: 'org.hsqldb', name: 'hsqldb', version: "${hsqldbVersion}"
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
     compile group: 'com.zaxxer', name: 'HikariCP', version: '2.6.1'
 
