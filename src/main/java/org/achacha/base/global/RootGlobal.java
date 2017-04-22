@@ -18,11 +18,8 @@ public class RootGlobal extends Global {
 
     @Override
     public void initDatabaseManager() {
-        String jdbcUrl = properties.getProperty("db.jdbc.url");
-        Properties dbProperties = new Properties();
-        dbProperties.setProperty("jdbcUrl", jdbcUrl);
-        dbProperties.setProperty("username", properties.getProperty("db.user"));
-        dbProperties.setProperty("password", properties.getProperty("db.password"));
+        final Properties dbProperties = getDbProperties();
+        String jdbcUrl = dbProperties.getProperty("jdbcUrl");
         databaseManager = new DatabaseManager(
                 new DbPoolConnectionProvider(jdbcUrl, dbProperties),
                 new ResourceSqlProvider()

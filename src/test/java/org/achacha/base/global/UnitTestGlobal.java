@@ -2,6 +2,7 @@ package org.achacha.base.global;
 
 import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.db.UnitTestDatabaseMigrator;
+import org.achacha.base.db.provider.DbPoolConnectionProvider;
 import org.achacha.base.db.provider.ResourceSqlProvider;
 import org.achacha.base.db.provider.UnitTestDbPoolConnectionProvider;
 
@@ -31,11 +32,9 @@ public class UnitTestGlobal extends Global {
 
     @Override
     public void initDatabaseManager() {
-        String jdbcUrl = properties.getProperty("db.jdbc.url");
-        Properties dbProperties = new Properties();
-        dbProperties.setProperty("jdbcUrl", jdbcUrl);
-        dbProperties.setProperty("username", properties.getProperty("db.user"));
-        dbProperties.setProperty("password", properties.getProperty("db.password"));
+        final Properties dbProperties = getDbProperties();
+
+        String jdbcUrl = dbProperties.getProperty("jdbcUrl");
         databaseManager = new DatabaseManager(
                 new UnitTestDbPoolConnectionProvider(jdbcUrl, dbProperties),
                 new ResourceSqlProvider()

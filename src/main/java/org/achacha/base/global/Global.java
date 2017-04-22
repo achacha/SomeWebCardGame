@@ -27,6 +27,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -170,6 +171,24 @@ public abstract class Global {
         }
 
         LOGGER.info("+++[1]+++ Global object created");
+    }
+
+    /**
+     * Extract all properties that start with 'db.' into a separate Properties object
+     * This is used for initialized database drivers
+     * @return Properties
+     */
+    protected Properties getDbProperties() {
+        final Properties dbProperties = new Properties();
+
+        // Properties are found in the $HOME of user and prefixed with 'db.'
+        // Copy all properties that start with 'db.' into separate properties file to be used in DB init
+        properties.keySet().stream()
+                .map(Object::toString)
+                .filter(key -> key.startsWith("db."))
+                .forEach(key -> dbProperties.setProperty(key.substring(3), properties.getProperty(key)));
+        LOGGER.debug("dbProperties={}", dbProperties);
+        return dbProperties;
     }
 
     /**

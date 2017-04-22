@@ -19,7 +19,6 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
         super(jdbcUrl);
 
         HikariConfig config = new HikariConfig(properties);
-        config.setJdbcUrl(jdbcUrl);
         dataSource = new HikariDataSource(config);
     }
 

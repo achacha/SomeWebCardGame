@@ -31,8 +31,9 @@ apply from: 'dependencies.gradle'
 Flyway plugin handles DB migration
 */
 flyway {
-    url = "${homeProperties['db.jdbc.url']}"
-    user = "${homeProperties['db.user']}"
+    url = "${homeProperties['db.jdbcUrl']}"
+    driver = "${homeProperties['db.driverClassName']}"
+    user = "${homeProperties['db.username']}"
     password = "${homeProperties['db.password']}"
     locations = ['filesystem:db/migration']
 }
