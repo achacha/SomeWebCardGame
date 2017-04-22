@@ -2,7 +2,9 @@ package org.achacha.base.db.provider;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -11,14 +13,13 @@ import java.util.Properties;
  * Connection provider using DB pool
  */
 public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
-    private final HikariDataSource dataSource;
+    protected final HikariDataSource dataSource;
 
     public DbPoolConnectionProvider(String jdbcUrl, Properties properties) {
         super(jdbcUrl);
 
         HikariConfig config = new HikariConfig(properties);
         config.setJdbcUrl(jdbcUrl);
-        config.setDriverClassName("org.hsqldb.jdbcDriver");
         dataSource = new HikariDataSource(config);
     }
 
@@ -53,5 +54,15 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
             --retries;
         }
         throw new SQLException("Failed to get database connection, giving up after retries!");
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    DataSource getDataSource() {
+        return this.dataSource;
     }
 }

@@ -27,6 +27,8 @@ dependencies {
     compile group: 'org.hsqldb', name: 'hsqldb', version: "${hsqldbVersion}"
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
     compile group: 'com.zaxxer', name: 'HikariCP', version: '2.6.1'
+    // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+    compile group: 'org.flywaydb', name: 'flyway-core', version:"${flywaydbVersion}"
 
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.23'

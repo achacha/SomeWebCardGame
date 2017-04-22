@@ -1,6 +1,6 @@
 package org.achacha.base.db;
 
-import org.achacha.base.db.provider.DatabaseConnectionProvider;
+import org.achacha.base.db.provider.JdbcDatabaseConnectionProvider;
 import org.achacha.base.db.provider.SqlProvider;
 import org.achacha.base.logging.Markers;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class DatabaseManager {
     /**
      * Provider of Connection
      */
-    private final DatabaseConnectionProvider databaseConnectionProvider;
+    final JdbcDatabaseConnectionProvider databaseConnectionProvider;
 
     /**
      * SQL provider
@@ -39,7 +39,7 @@ public class DatabaseManager {
      * @param sqlProvider SQL provider
      */
     public DatabaseManager(
-            @Nonnull DatabaseConnectionProvider databaseConnectionProvider,
+            @Nonnull JdbcDatabaseConnectionProvider databaseConnectionProvider,
             @Nonnull SqlProvider sqlProvider
     ) {
         this.databaseConnectionProvider = databaseConnectionProvider;

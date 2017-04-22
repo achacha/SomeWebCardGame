@@ -32,7 +32,7 @@ import java.util.TimeZone;
 
 public abstract class Global {
     protected static final Logger LOGGER = LoggerFactory.getLogger(Global.class);
-    private static final String DEFAULT_INSTANCE_PROPERTIES_FILE = ".SomeWebCardGame.properties";
+    private static final String DEFAULT_INSTANCE_PROPERTIES_FILE = ".sawcog.properties";
 
     private static Global instance = null;
 
