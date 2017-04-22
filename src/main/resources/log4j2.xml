@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration status="debug">
+    <properties>
+        <Property name="layout">%d [%t] %-5p %c- %m%n</Property>
+    </properties>
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${layout}"/>
+        </Console>
+        <Servlet name="Servlet">
+            <PatternLayout pattern="%m%n%ex{none}"/>
+        </Servlet>
+    </appenders>
+
+    <loggers>
+        <root level="debug">
+            <appender-ref ref="Servlet"/>
+            <appender-ref ref="Console"/>
+        </root>
+        <logger name="org.achacha" level="debug">
+            <appender-ref ref="Console"/>
+        </logger>
+    </loggers>
+</Configuration>

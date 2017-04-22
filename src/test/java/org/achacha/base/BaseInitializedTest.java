@@ -5,15 +5,18 @@ import org.achacha.base.global.UnitTestGlobal;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 public class BaseInitializedTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseInitializedTest.class);
 
     @BeforeClass
     public static void init() {
-        System.out.println("+++INIT");
+        LOGGER.info("+++INIT");
 
         // Mock ServletContext
         ServletContext sc = Mockito.mock(ServletContext.class);
@@ -29,6 +32,6 @@ public class BaseInitializedTest {
 
     @AfterClass
     public static void deinit() {
-        System.out.println("---INIT");
+        LOGGER.info("---INIT");
     }
 }

@@ -14,8 +14,8 @@ import org.achacha.base.i18n.LocalizedKey;
 import org.achacha.base.i18n.LocalizedKeyAdapter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 public abstract class Global {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(Global.class);
+    protected static final Logger LOGGER = LogManager.getLogger(Global.class);
     private static final String DEFAULT_INSTANCE_PROPERTIES_FILE = ".sawcog.properties";
 
     private static Global instance = null;
