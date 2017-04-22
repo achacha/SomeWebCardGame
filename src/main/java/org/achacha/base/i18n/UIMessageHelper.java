@@ -2,15 +2,15 @@ package org.achacha.base.i18n;
 
 import com.google.gson.JsonObject;
 import org.achacha.base.json.JsonHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 public class UIMessageHelper extends BaseMessageHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UIMessageHelper.class);
+    private static final Logger LOGGER = LogManager.getLogger(UIMessageHelper.class);
     
     // The base property file name for the messages managed by this class.
     public static final String BUNDLE_NAME = "Messages";

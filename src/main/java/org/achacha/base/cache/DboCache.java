@@ -10,8 +10,8 @@ import org.achacha.base.db.JdbcTuple;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonEmittable;
 import org.achacha.base.json.JsonHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
  * Optionally reloads all table data with ability to load new data
  */
 public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(DboCache.class);
+    protected static final Logger LOGGER = LogManager.getLogger(DboCache.class);
 
     /**
      * Cache to contain all the data

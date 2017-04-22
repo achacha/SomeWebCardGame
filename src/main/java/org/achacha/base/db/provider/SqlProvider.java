@@ -1,14 +1,14 @@
 package org.achacha.base.db.provider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Cached SQL string resource provider
  * Loads from resources SQL
  */
 public abstract class SqlProvider {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(SqlProvider.class);
+    protected static final Logger LOGGER = LogManager.getLogger(SqlProvider.class);
 
     /**
      * Get SQL from resource path

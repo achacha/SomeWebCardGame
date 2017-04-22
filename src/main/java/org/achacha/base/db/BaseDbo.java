@@ -3,8 +3,8 @@ package org.achacha.base.db;
 import com.google.gson.JsonObject;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonEmittable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +17,7 @@ import java.sql.SQLException;
  * Can be populated form ResultSet
  **/
 public abstract class BaseDbo implements JsonEmittable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseDbo.class);
+    private static final Logger LOGGER = LogManager.getLogger(BaseDbo.class);
 
     /**
      * Create Dbo

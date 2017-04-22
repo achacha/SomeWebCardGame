@@ -2,8 +2,8 @@ package org.achacha.base.i18n;
 
 import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -11,7 +11,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public abstract class BaseMessageHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseMessageHelper.class);
+    private static final Logger LOGGER = LogManager.getLogger(BaseMessageHelper.class);
 
     // The base name of the all error message properties files.
     private static final Utf8Control utf8Contol = new Utf8Control();

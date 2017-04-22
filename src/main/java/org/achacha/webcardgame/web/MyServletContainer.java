@@ -1,9 +1,9 @@
 package org.achacha.webcardgame.web;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.WebConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -29,7 +29,7 @@ import java.io.IOException;
         }
 )
 public class MyServletContainer extends ServletContainer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MyServletContainer.class);
+    private static final Logger LOGGER = LogManager.getLogger(MyServletContainer.class);
 
     @Override
     protected void init(WebConfig webConfig) throws ServletException {

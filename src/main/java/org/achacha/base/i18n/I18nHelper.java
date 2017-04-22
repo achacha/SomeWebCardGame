@@ -1,8 +1,8 @@
 package org.achacha.base.i18n;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
 
@@ -10,7 +10,7 @@ import java.util.Locale;
  * I18n related functions
  */
 public class I18nHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(I18nHelper.class);
+    private static final Logger LOGGER = LogManager.getLogger(I18nHelper.class);
 
     /**
      * Get Locale from string name

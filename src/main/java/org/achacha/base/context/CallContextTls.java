@@ -1,14 +1,12 @@
 package org.achacha.base.context;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CallContextTls {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CallContextTls.class);
+    private static final Logger LOGGER = LogManager.getLogger(CallContextTls.class);
 
     protected static final ThreadLocal<CallContext> threadLocal = new ThreadLocal<>();
-
-    public static final String BEAN_CONTEXTLOG = "context.log";
 
     // Spring initialized logging object
     protected static CallContextLog contextLog = new CallContextLog();

@@ -2,9 +2,8 @@ package org.achacha.base.db;
 
 import org.achacha.base.db.provider.JdbcDatabaseConnectionProvider;
 import org.achacha.base.db.provider.SqlProvider;
-import org.achacha.base.logging.Markers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.sql.Statement;
  * @see JdbcTuple for autoclosing tuple of Connection/Statement/ResultSet
  */
 public class DatabaseManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManager.class);
+    private static final Logger LOGGER = LogManager.getLogger(DatabaseManager.class);
 
     /**
      * Provider of Connection
@@ -94,9 +93,7 @@ public class DatabaseManager {
         String sql = sqlProvider.get(resourcePath);
         PreparedStatement pstmt = conn.prepareStatement(sql);
         setter.prepare(pstmt);
-        if (LOGGER.isDebugEnabled(Markers.DB)) {
-            LOGGER.debug(Markers.DB, "SQL: " + DatabaseHelper.toString(pstmt));
-        }
+        LOGGER.debug("SQL: " + DatabaseHelper.toString(pstmt));
         return pstmt;
     }
 
@@ -125,9 +122,7 @@ public class DatabaseManager {
     public static PreparedStatement prepareStatementDirect(Connection conn, String sql, PreparedStatementSetter setter) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         setter.prepare(pstmt);
-        if (LOGGER.isDebugEnabled(Markers.DB)) {
-            LOGGER.debug(Markers.DB, "SQL: " + DatabaseHelper.toString(pstmt));
-        }
+        LOGGER.debug("SQL: " + DatabaseHelper.toString(pstmt));
         return pstmt;
     }
 

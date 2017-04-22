@@ -1,8 +1,8 @@
 package org.achacha.base.global;
 
 import org.achacha.base.db.JdbcTuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
  * Global properties loader populates GlobalProperties object from database
  */
 public class GlobalPropertiesHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalPropertiesHelper.class);
+    private static final Logger LOGGER = LogManager.getLogger(GlobalPropertiesHelper.class);
 
     /**
      * Read all properties and overlay over existing

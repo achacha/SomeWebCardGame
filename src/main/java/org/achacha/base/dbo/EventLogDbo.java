@@ -3,15 +3,15 @@ package org.achacha.base.dbo;
 import com.google.gson.JsonObject;
 import org.achacha.base.db.BaseDbo;
 import org.achacha.base.logging.Event;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
 public class EventLogDbo extends BaseDbo {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(EventLogDbo.class);
+    protected static final Logger LOGGER = LogManager.getLogger(EventLogDbo.class);
 
     protected long id;
     protected Timestamp createdOn;

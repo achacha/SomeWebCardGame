@@ -9,8 +9,8 @@ import org.achacha.base.i18n.I18nHelper;
 import org.achacha.base.security.SecurityHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.security.InvalidParameterException;
 import java.sql.Connection;
@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class LoginUserDbo extends BaseIndexedDbo {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(LoginUserDbo.class);
+    protected static final Logger LOGGER = LogManager.getLogger(LoginUserDbo.class);
 
     /** Object database id */
     protected long id;

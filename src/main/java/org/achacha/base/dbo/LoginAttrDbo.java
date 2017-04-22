@@ -6,8 +6,8 @@ import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.global.Global;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,7 +19,7 @@ import java.sql.SQLException;
  * Attribute associated with LoginPersona
  */
 public class LoginAttrDbo extends BaseIndexedDbo {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(LoginAttrDbo.class);
+    protected static final Logger LOGGER = LogManager.getLogger(LoginAttrDbo.class);
 
     private long id;
     private long loginId;

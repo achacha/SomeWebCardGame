@@ -3,7 +3,6 @@ package org.achacha.base.db.provider;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.achacha.base.context.CallContext;
-import org.achacha.base.logging.Markers;
 import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nonnull;
@@ -51,9 +50,7 @@ public class ResourceSqlProvider extends SqlProvider {
             if (sql == null)
                 throw new RuntimeException("Resource not found: " + resourcePath);
 
-            if (LOGGER.isDebugEnabled(Markers.DB)) {
-                LOGGER.debug(Markers.DB, "Loading resource SQL at '{}' with: {}", resourcePath, sql);
-            }
+            LOGGER.debug("Loading resource SQL at '{}' with: {}", resourcePath, sql);
             return sql;
         }
         catch (ExecutionException ee) {

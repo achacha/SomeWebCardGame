@@ -2,17 +2,17 @@ package org.achacha.base;
 
 import org.achacha.base.global.Global;
 import org.achacha.base.global.UnitTestGlobal;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 public class BaseInitializedTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseInitializedTest.class);
+    private static final Logger LOGGER = LogManager.getLogger(BaseInitializedTest.class);
 
     @BeforeClass
     public static void init() {

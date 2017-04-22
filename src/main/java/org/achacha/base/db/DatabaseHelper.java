@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import com.zaxxer.hikari.HikariDataSource;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DatabaseHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHelper.class);
+    private static final Logger LOGGER = LogManager.getLogger(DatabaseHelper.class);
 
     /** Regex for valid DB column names */
     public static final Pattern VALID_COLUMN_CHARS = Pattern.compile("[A-Za-z][A-Za-z0-9_]*");

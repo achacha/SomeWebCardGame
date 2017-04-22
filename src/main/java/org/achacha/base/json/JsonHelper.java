@@ -9,8 +9,8 @@ import com.google.gson.stream.JsonReader;
 import org.achacha.base.global.Global;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Properties;
 
 public class JsonHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsonHelper.class);
+    private static final Logger LOGGER = LogManager.getLogger(JsonHelper.class);
 
     // Success status
     public static final String SUCCESS = "success";

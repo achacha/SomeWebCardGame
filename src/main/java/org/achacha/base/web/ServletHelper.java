@@ -8,8 +8,8 @@ import org.achacha.base.global.Global;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * Error - Server error unable to execute API correctly
  */
 public class ServletHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServletHelper.class);
+    private static final Logger LOGGER = LogManager.getLogger(ServletHelper.class);
 
     /**
      * Return JSON object as response

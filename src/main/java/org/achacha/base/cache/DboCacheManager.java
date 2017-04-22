@@ -2,8 +2,8 @@ package org.achacha.base.cache;
 
 import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.base.db.DboHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.Set;
  * Dbo objects that are cached
  */
 public class DboCacheManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DboCacheManager.class);
+    private static final Logger LOGGER = LogManager.getLogger(DboCacheManager.class);
 
     private static final DboCacheManager instance = new DboCacheManager();
     public static DboCacheManager getInstance() {

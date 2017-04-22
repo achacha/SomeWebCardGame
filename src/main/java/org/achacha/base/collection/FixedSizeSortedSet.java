@@ -3,8 +3,7 @@ package org.achacha.base.collection;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-public class FixedSizeSortedSet<E> extends TreeSet<E>
-{
+public class FixedSizeSortedSet<E> extends TreeSet<E> {
     private static final long serialVersionUID = 1L;
 
     private final Comparator<? super E> comparator;
