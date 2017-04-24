@@ -8,4 +8,11 @@ public class RoutesHelper {
         obj.addProperty("success", "true");
         return obj;
     }
+
+    public static JsonObject getFailObject() {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("success", "false");
+        return obj;
+    }
+
 }

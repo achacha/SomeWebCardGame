@@ -2,7 +2,7 @@
   "name": "WebCardGame",
   "version": "1.0.0",
   "description": "WebCardGame",
-  "main": "index.js",
+  "main": "index.jsp",
   "directories": {
     "doc": "doc",
     "test": "test"
@@ -12,7 +12,14 @@
   },
   "author": "achacha",
   "license": "UNLICENSED",
+  "dependencies": {
+    "phaser": "2.6.2",
+    "bootstrap": "v4.0.0-alpha.6",
+    "jquery": "3.2.1",
+    "jquery-ui": "1.12.1",
+    "font-awesome": "^4.7.0"
+  },
   "devDependencies": {
-    "phaser": "2.6.2"
-  }
+  },
+  "repository": "git@github.com:achacha/SomeWebCardGame.git"
 }

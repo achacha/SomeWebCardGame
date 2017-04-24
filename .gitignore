@@ -7,3 +7,5 @@
 /src/main/webapp/js/
 .DS_Store
 /etc/
+/yark.lock
+/.gradletasknamecache

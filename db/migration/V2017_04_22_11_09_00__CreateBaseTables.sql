@@ -79,8 +79,7 @@ CREATE TABLE public.global_properties
   created_on timestamp without time zone NOT NULL DEFAULT now(),
   name character varying(256) NOT NULL,
   value character varying(4096),
-  application character varying(64),
-  CONSTRAINT "UNIQUE_global_properties__name" UNIQUE (name,application)
+  CONSTRAINT "UNIQUE_global_properties__name" UNIQUE (name)
 )
 WITH (
 OIDS=FALSE

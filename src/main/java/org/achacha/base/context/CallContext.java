@@ -23,11 +23,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Optional;
 
 public class CallContext {
     private static final Logger LOGGER = LogManager.getLogger(CallContext.class);
 
     public static final String DEFAULT_ENCODING = "UTF-8";
+
+    // Used by login to redirect to requesting page
+    public static final String SESSION_REDIRECT_FROM = "redirectToLoginFrom";
 
     // /favicon.ico
     public static final String CONTENT_TYPE_IMAGE_FAVICON = "image/x-icon";
@@ -105,6 +109,14 @@ public class CallContext {
     @Nonnull
     public HttpServletRequest getRequest() {
         return request;
+    }
+
+    /**
+     * You can also call getRequest().getSession() but that will create a session if there isn't one which may not be needed in some cases
+     * @return Optional HttpSession, since it may not yet exist if the use is about to log in or has made anonymous calls
+     */
+    public Optional<HttpSession> getSession() {
+        return Optional.ofNullable(request.getSession(false));
     }
 
     /**
