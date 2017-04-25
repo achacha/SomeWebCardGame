@@ -54,3 +54,9 @@ VirtualBox configuration with postgresql
 Network type: Host-only network
 
 Create a new entry in /etc/hosts called fjord-db that maps to the IP of the VM
+
+
+Using gradle (To see all tasks: ./gradlew tasks)
+---
+  - **flywayMigrate -i** - Execute migrations
+  - **flywayClean -i**  - Clean the database and drop the table associated with migrations
