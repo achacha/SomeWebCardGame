@@ -328,17 +328,4 @@ public abstract class Global {
     public ScriptEngine getScriptEngine() {
         return scriptEngine;
     }
-
-    /**
-     * @param uri String absolute URI
-     * @return true if the URI does not need authentication and is part of static content (such as JS includes, images, etc)
-     */
-    public boolean isLocalStaticUri(String uri) {
-        return     uri.startsWith(GlobalProperties.URI_STATIC)
-                || uri.startsWith(GlobalProperties.URI_NODE_MODULES)
-                || uri.startsWith(GlobalProperties.URI_APP)
-                || uri.startsWith(GlobalProperties.URI_API)
-                || uri.equals(properties.getUriHomeLogin());
-    }
-
 }

@@ -7,14 +7,14 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${layout}"/>
         </Console>
-        <Servlet name="Servlet">
-            <PatternLayout pattern="%m%n%ex{none}"/>
-        </Servlet>
+        <!--<Servlet name="Servlet">-->
+            <!--<PatternLayout pattern="%m%n%ex{none}"/>-->
+        <!--</Servlet>-->
     </appenders>
 
     <loggers>
         <root level="info">
-            <appender-ref ref="Servlet"/>
+            <!--<appender-ref ref="Servlet"/>-->
             <appender-ref ref="Console"/>
         </root>
         <logger name="org.achacha" level="debug">

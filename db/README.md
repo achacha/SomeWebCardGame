@@ -1,26 +1,28 @@
 ONE-TIME Configuration
 ---
 Postgres: Development database
-  . Install postgres
+  - Install postgres
   	It is best to do this using a package manager (see ROOT/config/README.md)
   	
-  . Create user sawcog:cogsaw
+  - Create user sawcog:cogsaw
   	to do this manually, type the following commands into your terminal
+  		
   		- sudo su postgres (this sets you as the postgres user)
   		- psql (this launches the postgres command line)
   		- CREATE USER sawcog WITH PASSWORD 'cogsaw';
+  	
   	alternatively, use a postgres tool like pgadmin3
   	
-  . Alter user sawcog so that it has CREATEDB permission
+  - Alter user sawcog so that it has CREATEDB permission
   	to do this manually, type the following into the postgres command line:
   	- ALTER USER sawcog WITH CREATEDB;
   	
-  . Create database necropolis and assign it to user sawcog
+  - Create database necropolis and assign it to user sawcog
   	to do this manually, type the following into the postgres command line:
   	- CREATE DATABASE necropolis WITH OWNER sawcog;
   	- CREATE DATABASE necropolis_test WITH OWNER sawcog;
   
-  . Test connection to verify that sawcog user can login and use necropolis database
+  - Test connection to verify that sawcog user can login and use necropolis database
   	
   	psql -d necropolis -U sawcog -W -h localhost
 

@@ -1,5 +1,6 @@
 package org.achacha.webcardgame.web;
 
+import org.achacha.base.global.GlobalProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -13,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        name="API app",
-        urlPatterns = "/api/*",
+        name = "API app",
+        urlPatterns = GlobalProperties.URI_API_BASE+"/*",
         loadOnStartup = 1,
         initParams = {
                 @WebInitParam(

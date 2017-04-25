@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -20,11 +21,13 @@ import javax.ws.rs.core.Response;
 public class AuthRoutes {
     private static final Logger LOGGER = LogManager.getLogger(AuthRoutes.class);
 
+
     @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("login")
     public Response doLogin(@FormParam("email") String email, @FormParam("pwd") String password) {
         String hashPassword = SecurityHelper.encodeSaltPassword(password, email);
-        if (LoginHelper.isAbleToLogIn(email, password)) {
+        if (LoginHelper.isAbleToLogIn(email, hashPassword)) {
             LOGGER.debug("Login success: email={} hashPassword={}", email, hashPassword);
             JsonObject obj = RoutesHelper.getSuccessObject();
             return Response.ok().entity(obj).build();

@@ -2,8 +2,9 @@
 -- TODO: CLEANUP
 INSERT into public.global_properties(name,value) VALUES
   ('uri.home','/'),
-  ('uri.home.login','/login.jsp'),
-  ('url.home.public','http://localhost:8080'),
+  ('uri.login.home','/login.jsp'),
+  ('uri.login.target','/api/auth/login'),
+  ('url.home.public','http://localhost:10080'),
   ('uri.admin.login','/admin/login.jsp')
 ;
 

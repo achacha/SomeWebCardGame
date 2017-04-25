@@ -19,15 +19,15 @@ public class GlobalProperties extends Properties implements JsonEmittable {
 
     /** Relative URI for static directory */
     public static final String URI_STATIC = "/static";
-    public static final String URI_NODE_MODULES = "/node_modules";
-    public static final String URI_APP = "/app";
+    public static final String URI_JS = "/js";
 
-    /** Relative URI for API directory */
-    public static final String URI_API = "/v1";
+    /** Base URI for API directory */
+    public static final String URI_API_BASE = "/api";
 
     private static final String KEY_URI_ADMIN_LOGIN = "uri.admin.login";
     private static final String KEY_URI_HOME = "uri.home";
-    private static final String KEY_URI_HOME_LOGIN = "uri.home.login";
+    private static final String KEY_URI_LOGIN_HOME = "uri.login.home";
+    private static final String KEY_URI_LOGIN_TARGET = "uri.login.target";
     private static final String KEY_URL_HOME_PUBLIC = "url.home.public";
 
     /** WebContext path with leading / */
@@ -63,7 +63,15 @@ public class GlobalProperties extends Properties implements JsonEmittable {
      * @return path to URI where public login page is (leading / included)
      */
     public String getUriHomeLogin() {
-        return getProperty(KEY_URI_HOME_LOGIN);
+        return getProperty(KEY_URI_LOGIN_HOME);
+    }
+
+    /**
+     * Example: /index.jsp
+     * @return path to URI where public login page is (leading / included)
+     */
+    public String getUriLoginTarget() {
+        return getProperty(KEY_URI_LOGIN_TARGET);
     }
 
     /**

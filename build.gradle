@@ -49,12 +49,15 @@ repositories {
     mavenCentral()
 }
 
-task copyJs(type: Copy, dependsOn: [ 'npmInstall' ] ) {
+task copyJs(type: Copy, dependsOn: [ 'npmSetup', 'nodeSetup', 'yarn' ] ) {
     group 'build'
     description 'Copy JavaScript dependencies to webapp'
     from 'node_modules'
-    include '*/dist/*'
+    include '*/dist/**/*'
     include '*/build/*'
+    include 'font-awesome/css/*'
+    include 'font-awesome/fonts/*'
+    include 'requirejs/require.js'
     into "${projectDir}/src/main/webapp/js"
     includeEmptyDirs = false
 }

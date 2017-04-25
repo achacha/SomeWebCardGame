@@ -1,5 +1,7 @@
 package org.achacha.webcardgame.web.filter;
 
+import com.google.common.base.Preconditions;
+import com.google.common.net.HttpHeaders;
 import com.google.gson.JsonObject;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
@@ -9,6 +11,7 @@ import org.achacha.base.global.Global;
 import org.achacha.base.global.GlobalProperties;
 import org.achacha.base.logging.Event;
 import org.achacha.base.web.ServletHelper;
+import org.achacha.webcardgame.helper.LoginHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +40,7 @@ public class RootAuthFilter implements Filter {
             // Check if this is a request for login, if not make sure security is enforced
             String uri = CallContext.getUriRelativeToWebContext(request);
             LOGGER.debug("Processing relative URI: {}", uri);
-            if (!Global.getInstance().isLocalStaticUri(uri)) {
-
+            if (!LoginHelper.isPublicUri(uri)) {
                 // MUST be logged in
                 boolean needsLogin = true;
                 HttpSession session = request.getSession();
@@ -54,19 +56,23 @@ public class RootAuthFilter implements Filter {
                 }
 
                 // Session or Login does not exist, redirect to login page
-                if (needsLogin) {
-                    StringBuilder originatingUrl = new StringBuilder(request.getRequestURI());
-                    if (null != request.getQueryString()) {
-                        originatingUrl.append('?');
-                        originatingUrl.append(request.getQueryString());
+                if (!LoginHelper.isLoginTargetUri(uri) && needsLogin) {
+                    // GET referer and save URL that requested this
+                    String baseOriginatingUrl = request.getParameter(HttpHeaders.REFERER);
+                    if (baseOriginatingUrl != null) {
+                        // We have a URL to return to
+                        StringBuilder originatingUrl = new StringBuilder(baseOriginatingUrl);
+                        if (null != request.getQueryString()) {
+                            originatingUrl.append('?');
+                            originatingUrl.append(request.getQueryString());
+                        }
+                        request.getSession(true).setAttribute(CallContext.SESSION_REDIRECT_FROM, originatingUrl.toString());
                     }
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("Login check failed for /admin, redirecting to login, URI: '{}'", originatingUrl);
-                    }
-                    request.getSession(true).setAttribute(CallContext.SESSION_REDIRECT_FROM, originatingUrl.toString());
                     ServletHelper.redirectUriRelativeToContextVia302((HttpServletResponse) resp, Global.getInstance().getProperties().getUriHomeLogin());
                     return;
                 }
+
+                Preconditions.checkNotNull(login, "Must have a valid login object if not redirecting to login page");
 
                 // MUST be admin to access /admin part of the site
                 if (uri.startsWith(GlobalProperties.URI_ADMIN) && !login.isSuperuser()) {
@@ -82,11 +88,18 @@ public class RootAuthFilter implements Filter {
                     ServletHelper.redirectUriRelativeToContextVia302((HttpServletResponse) resp, Global.getInstance().getProperties().getUriHome());
                     return;
                 }
+            }
 
-                // Put ScContext into TLS
+            // Create CallContext for non-static calls
+            if (!LoginHelper.isStaticUri(uri)) {
+                LOGGER.debug("Creating CallContext for {}", uri);
+                // Put CallContext into TLS
                 CallContext context = new CallContext(request, (HttpServletResponse) resp, request.getMethod());
                 CallContextTls.set(context);
                 contextSet = true;
+            }
+            else {
+                LOGGER.debug("Skipping CallContext for {}", uri);
             }
 
             // Continue on to other filter chains

@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -58,4 +59,10 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
+    @Override
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
 }

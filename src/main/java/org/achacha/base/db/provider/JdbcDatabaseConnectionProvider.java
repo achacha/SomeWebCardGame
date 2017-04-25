@@ -3,6 +3,8 @@ package org.achacha.base.db.provider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.sql.DataSource;
+
 /**
  * Provides connections to a JDBC based database
  */
@@ -22,4 +24,10 @@ public abstract class JdbcDatabaseConnectionProvider implements DatabaseConnecti
     public String getJdbcUrl() {
         return jdbcUrl;
     }
+
+    /**
+     * @return DataSource
+     */
+    public abstract DataSource getDataSource();
+
 }

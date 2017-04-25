@@ -20,6 +20,9 @@ public class RootGlobal extends Global {
     public void initDatabaseManager() {
         final Properties dbProperties = getDbProperties();
         String jdbcUrl = dbProperties.getProperty("jdbcUrl");
+
+        // Configure DatabaseManager
+        LOGGER.info("Creating database manager");
         databaseManager = new DatabaseManager(
                 new DbPoolConnectionProvider(jdbcUrl, dbProperties),
                 new ResourceSqlProvider()
