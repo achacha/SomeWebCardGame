@@ -1,7 +1,6 @@
-package org.achacha.base;
+package org.achacha.test;
 
 import org.achacha.base.global.Global;
-import org.achacha.base.global.UnitTestGlobal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.AfterClass;

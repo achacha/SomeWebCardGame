@@ -1,10 +1,10 @@
-package org.achacha.base.global;
+package org.achacha.test;
 
 import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.db.UnitTestDatabaseMigrator;
-import org.achacha.base.db.provider.DbPoolConnectionProvider;
 import org.achacha.base.db.provider.ResourceSqlProvider;
 import org.achacha.base.db.provider.UnitTestDbPoolConnectionProvider;
+import org.achacha.base.global.Global;
 
 import java.util.Properties;
 

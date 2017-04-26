@@ -1,7 +1,7 @@
 package org.achacha.base.db;
 
-import org.achacha.base.BaseInitializedTest;
 import org.achacha.base.global.Global;
+import org.achacha.test.BaseInitializedTest;
 import org.junit.Assert;
 import org.junit.Test;
 
