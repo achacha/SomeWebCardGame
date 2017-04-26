@@ -30,17 +30,17 @@ public enum SecurityLevel {
     }
 
     /**
-     * Check if this API is allowed access
-     * @param target SecurityLevel
-     * @return true if allowed
+     * Check if this Security level is high enough and is allowed access
+     * @param minimumRequiredLevel minimum level required
+     * @return true if security level is high enough and access is allowed
      */
-    boolean isAllowed(SecurityLevel target) {
-        return target.level >= this.level;
+    public boolean isLevelSufficient(SecurityLevel minimumRequiredLevel) {
+        return this.level >= minimumRequiredLevel.level;
     }
 
     /**
      * Check if API entry point is public and doesn't require authentication
      * @return true if public API
      */
-    boolean isPublic() { return this.level == PUBLIC.level; }
+    public boolean isPublic() { return this.level == PUBLIC.level; }
 }

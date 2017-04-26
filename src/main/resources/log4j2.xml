@@ -7,17 +7,20 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${layout}"/>
         </Console>
-        <!--<Servlet name="Servlet">-->
-            <!--<PatternLayout pattern="%m%n%ex{none}"/>-->
-        <!--</Servlet>-->
+        <Servlet name="Servlet">
+            <PatternLayout pattern="%m%n%ex{none}"/>
+        </Servlet>
     </appenders>
 
     <loggers>
         <root level="info">
-            <!--<appender-ref ref="Servlet"/>-->
             <appender-ref ref="Console"/>
+            <appender-ref ref="Servlet"/>
         </root>
         <logger name="org.achacha" level="debug">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="javax.ws" level="debug">
             <appender-ref ref="Console"/>
         </logger>
     </loggers>

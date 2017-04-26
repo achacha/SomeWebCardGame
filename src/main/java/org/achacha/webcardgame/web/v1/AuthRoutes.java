@@ -5,7 +5,9 @@ import org.achacha.base.context.CallContextTls;
 import org.achacha.base.dbo.LoginUserDbo;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityHelper;
+import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.helper.LoginHelper;
+import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +28,7 @@ public class AuthRoutes {
 
     @GET
     @Path("login")
+    @SecurityLevelRequired(SecurityLevel.PUBLIC)
     public Response getLogin() {
         JsonObject obj = JsonHelper.getSuccessObject();
 
@@ -49,6 +52,7 @@ public class AuthRoutes {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("login")
+    @SecurityLevelRequired(SecurityLevel.PUBLIC)
     public Response doLogin(@FormParam("email") String email, @FormParam("pwd") String password) {
         String hashPassword = SecurityHelper.encodeSaltPassword(password, email);
         if (LoginHelper.isAbleToLogIn(email, hashPassword)) {

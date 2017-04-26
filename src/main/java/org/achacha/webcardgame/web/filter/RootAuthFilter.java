@@ -59,6 +59,10 @@ public class RootAuthFilter implements Filter {
                 if (!LoginHelper.isLoginTargetUri(uri) && needsLogin) {
                     // GET referer and save URL that requested this
                     String baseOriginatingUrl = request.getParameter(HttpHeaders.REFERER);
+                    if (baseOriginatingUrl == null && request.getSession() != null && request.getSession().getAttribute(CallContext.SESSION_REDIRECT_FROM) == null) {
+                        // We do not have a referer and we do not have a target to redirect to, use originating URI
+                        baseOriginatingUrl = request.getRequestURI();
+                    }
                     if (baseOriginatingUrl != null) {
                         // We have a URL to return to
                         StringBuilder originatingUrl = new StringBuilder(baseOriginatingUrl);
