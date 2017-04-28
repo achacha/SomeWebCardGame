@@ -30,17 +30,14 @@ dependencies {
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
     compile group: 'org.flywaydb', name: 'flyway-core', version:"${flywaydbVersion}"
 
-//    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-//    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.23'
-//    // https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14
-//    compile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.23'
-
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.2'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4jVersion}"
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-web
-    compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.8.2'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: "${log4jVersion}"
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
-    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.8.2'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4jVersion}"
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.23'
 
     // https://mvnrepository.com/artifact/com.google.code.findbugs/annotations
     compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
