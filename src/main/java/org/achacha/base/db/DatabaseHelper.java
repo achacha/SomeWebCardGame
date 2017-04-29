@@ -56,7 +56,7 @@ public class DatabaseHelper {
             conn = Global.getInstance().getDatabaseManager().getConnection();
             stmt = conn.createStatement();
 
-            LOGGER.debug("SQL: {}", sql);
+            LOGGER.debug("SQL={}", sql);
             rs = stmt.executeQuery(sql);
 
             // Convert ResultSet into JSON
@@ -257,7 +257,7 @@ public class DatabaseHelper {
             conn = Global.getInstance().getDatabaseManager().getConnection();
             stmt = conn.createStatement();
 
-            LOGGER.debug("SQL: {}", sql);
+            LOGGER.debug("SQL={}", sql);
             rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 return rs.getLong(1);
@@ -278,7 +278,7 @@ public class DatabaseHelper {
             conn = Global.getInstance().getDatabaseManager().getConnection();
             stmt = conn.createStatement();
 
-            LOGGER.debug("SQL: {}", sql);
+            LOGGER.debug("SQL={}", sql);
             rs = stmt.executeQuery(sql);
 
             ResultSetMetaData rsMetaData = rs.getMetaData();

@@ -50,7 +50,7 @@ public class ResourceSqlProvider extends SqlProvider {
             if (sql == null)
                 throw new RuntimeException("Resource not found: " + resourcePath);
 
-            LOGGER.debug("Loading resource SQL at '{}' with: {}", resourcePath, sql);
+            LOGGER.debug("Loading resource SQL at path='{}' with sql={}", resourcePath, sql);
             return sql;
         }
         catch (ExecutionException ee) {

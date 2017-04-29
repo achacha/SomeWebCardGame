@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration status="info">
-    <properties>
-        <Property name="layout">%d [%t] %-5p %c- %m%n</Property>
-    </properties>
-    <appenders>
+    <Properties>
+        <Property name="layout">%d{HH:mm:ss.SSS} [%t] %-5level %logger{3}(%class{1}.%method:%line) %msg%n</Property>
+    </Properties>
+    <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${layout}"/>
         </Console>
-        <Servlet name="Servlet">
-            <PatternLayout pattern="%m%n%ex{none}"/>
-        </Servlet>
-    </appenders>
+    </Appenders>
 
-    <loggers>
-        <root level="info">
-            <appender-ref ref="Console"/>
-            <appender-ref ref="Servlet"/>
-        </root>
-        <logger name="org.achacha" level="debug">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="javax.ws" level="debug">
-            <appender-ref ref="Console"/>
-        </logger>
-    </loggers>
+    <Loggers>
+        <Logger name="org.achacha" level="trace">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="trace">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
 </Configuration>

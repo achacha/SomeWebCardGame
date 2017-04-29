@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>hello phaser!</title>
-  <script src="js/phaser/build/phaser.js"></script>
+  <script src="./js/phaser/build/phaser.js"></script>
 </head>
 <body>
 

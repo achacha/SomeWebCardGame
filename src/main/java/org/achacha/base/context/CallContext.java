@@ -12,7 +12,7 @@ import org.achacha.base.i18n.UIMessageHelper;
 import org.achacha.base.json.JsonEmittable;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.logging.Event;
-import org.achacha.base.web.ServletHelper;
+import org.achacha.webcardgame.helper.ResponseHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -525,11 +525,11 @@ public class CallContext {
 
         obj.addProperty(JsonHelper.AUTHORIZED, null != login);
 
-        LOGGER.warn("Returning error, object=" + obj.toString() + " for " + this, t);
+        LOGGER.warn("Returning error, object=" + obj.toString() + " for this=" + this, t);
         try {
             response.getWriter().println(obj.toString());
         } catch (IOException e) {
-            LOGGER.error("Failed to send error object="+obj+" for "+this, e);
+            LOGGER.error("Failed to send error object="+obj+" for this="+this, e);
         }
 
         return obj;
@@ -541,12 +541,12 @@ public class CallContext {
     @Nonnull
     public static String getUriRelativeToWebContext(HttpServletRequest request) {
         String contextPath = Global.getInstance().getProperties().getWebContextPath();
-        LOGGER.debug("Resolving relative to web context URL: {} for context: {}", request.getRequestURI(), contextPath);
+        LOGGER.debug("Resolving relative to web context URI={} for contextPath={}", request.getRequestURI(), contextPath);
         String requestUri = request.getRequestURI();
         if (null != requestUri)
             return requestUri.substring(contextPath.length());
         else {
-            LOGGER.error("Null RequestURI detected: "+ ServletHelper.toHtml(request));
+            LOGGER.error("Null RequestURI detected: "+ ResponseHelper.toHtml(request));
             return "";
         }
     }

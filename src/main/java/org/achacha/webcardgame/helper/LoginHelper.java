@@ -1,5 +1,6 @@
 package org.achacha.webcardgame.helper;
 
+import com.google.common.net.HttpHeaders;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
 import org.achacha.base.dbo.LoginUserDbo;
@@ -9,6 +10,7 @@ import org.achacha.base.global.GlobalProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
@@ -55,6 +57,28 @@ public class LoginHelper {
             Optional<HttpSession> optSession = CallContextTls.get().getSession();
             optSession.ifPresent(session -> session.removeAttribute(CallContext.SESSION_LOGIN_PARAM));
             return false;
+        }
+    }
+
+    /**
+     * Get originating URI and set it on session so we can redirect to it
+     * @param request HttpServletRequest
+     * @return URI string
+     */
+    public static void processOriginatingUri(HttpServletRequest request) {
+        String baseOriginatingUrl = request.getParameter(HttpHeaders.REFERER);
+        if (baseOriginatingUrl == null && request.getSession() != null && request.getSession().getAttribute(CallContext.SESSION_REDIRECT_FROM) == null) {
+            // We do not have a referer and we do not have a target to redirect to, use originating URI
+            baseOriginatingUrl = request.getRequestURI();
+        }
+        if (baseOriginatingUrl != null) {
+            // We have a URL to return to
+            StringBuilder originatingUrl = new StringBuilder(baseOriginatingUrl);
+            if (null != request.getQueryString()) {
+                originatingUrl.append('?');
+                originatingUrl.append(request.getQueryString());
+            }
+            request.getSession(true).setAttribute(CallContext.SESSION_REDIRECT_FROM, originatingUrl.toString());
         }
     }
 }

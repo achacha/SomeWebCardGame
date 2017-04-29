@@ -46,6 +46,13 @@ public class DatabaseManager {
     }
 
     /**
+     * @return JdbcDatabaseConnectionProvider
+     */
+    public JdbcDatabaseConnectionProvider getDatabaseConnectionProvider() {
+        return databaseConnectionProvider;
+    }
+
+    /**
      * Get database connection from Global DataSource
      * @return Connection
      * @throws SQLException

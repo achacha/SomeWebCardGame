@@ -1,11 +1,11 @@
 package org.achacha.webcardgame.web.filter;
 
 import com.google.common.net.HttpHeaders;
-import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
 import org.achacha.base.dbo.LoginUserDbo;
 import org.achacha.base.global.Global;
 import org.achacha.base.security.SecurityLevel;
+import org.achacha.webcardgame.helper.LoginHelper;
 import org.achacha.webcardgame.helper.ResponseHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +29,6 @@ import java.lang.reflect.Method;
 public class AuthenticationFilter implements ContainerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFilter.class);
 
-    // TODO: Maybe add a way to inject LoginUserDbo into Context?
-
     @Context
     private ResourceInfo resourceInfo;
 
@@ -42,6 +40,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+        // Check method security
         Method method = resourceInfo.getResourceMethod();
         SecurityLevelRequired[] levelsRequired = method.getAnnotationsByType(SecurityLevelRequired.class);
         if (levelsRequired.length > 0) {
@@ -52,40 +51,27 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 LoginUserDbo user = CallContextTls.get().getLogin();
                 if (user == null) {
                     // Redirect to a login page
-                    LOGGER.debug("No user logged in for URI: {}  securityLevelRequired: {}, redirecting to login", requestContext.getUriInfo().getRequestUri(), minimumRequiredLevel);
+                    LOGGER.debug("No user logged in for URI={}  securityLevelRequired={}, redirecting to login", requestContext.getUriInfo().getRequestUri(), minimumRequiredLevel);
                     redirectToLoginPage(requestContext);
                 } else {
+                    // Verify security level
                     if (!user.getSecurityLevel().isLevelSufficient(minimumRequiredLevel)) {
-                        LOGGER.debug("Authorization too low for URI: {}  securityLevelRequired: {}", requestContext.getUriInfo().getRequestUri(), minimumRequiredLevel);
+                        LOGGER.debug("Authorization too low for URI={}  securityLevelRequired={}", requestContext.getUriInfo().getRequestUri(), minimumRequiredLevel);
                         requestContext.abortWith(ResponseHelper.getAuthFailed("Insufficient security level"));
                     }
                 }
             }
         }
 
-        LOGGER.debug("Authorization valid for URI: {}", requestContext.getUriInfo().getRequestUri());
+        LOGGER.debug("Authorization valid for URI={}", requestContext.getUriInfo().getRequestUri());
     }
-
     private void redirectToLoginPage(ContainerRequestContext requestContext) {
         // GET referer and save URL that requested this
-        String baseOriginatingUrl = request.getParameter(HttpHeaders.REFERER);
-        if (baseOriginatingUrl == null && request.getSession() != null && request.getSession().getAttribute(CallContext.SESSION_REDIRECT_FROM) == null) {
-            // We do not have a referer and we do not have a target to redirect to, use originating URI
-            baseOriginatingUrl = request.getRequestURI();
-        }
-        if (baseOriginatingUrl != null) {
-            // We have a URL to return to
-            StringBuilder originatingUrl = new StringBuilder(baseOriginatingUrl);
-            if (null != request.getQueryString()) {
-                originatingUrl.append('?');
-                originatingUrl.append(request.getQueryString());
-            }
-            request.getSession(true).setAttribute(CallContext.SESSION_REDIRECT_FROM, originatingUrl.toString());
-        }
+        LoginHelper.processOriginatingUri(request);
         requestContext.abortWith(
                 Response.status(HttpServletResponse.SC_FOUND)
                         .header(HttpHeaders.LOCATION, Global.getInstance().getProperties().getUriHomeLogin()
-                ).build()
+                        ).build()
         );
     }
 }
