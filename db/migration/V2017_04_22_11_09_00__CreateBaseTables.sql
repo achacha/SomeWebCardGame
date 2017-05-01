@@ -40,6 +40,7 @@ CREATE TABLE public.login_attr
   name character varying(256) NOT NULL,
   value character varying(4096),
   login_id integer NOT NULL,
+  --
   CONSTRAINT "FK_login_attr__login__login_id" FOREIGN KEY (login_id) REFERENCES public.login (id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "UNIQUE_login_attr__login_id__name" UNIQUE (login_id, name)
 )
@@ -79,6 +80,7 @@ CREATE TABLE public.global_properties
   created_on timestamp without time zone NOT NULL DEFAULT now(),
   name character varying(256) NOT NULL,
   value character varying(4096),
+  --
   CONSTRAINT "UNIQUE_global_properties__name" UNIQUE (name)
 )
 WITH (
