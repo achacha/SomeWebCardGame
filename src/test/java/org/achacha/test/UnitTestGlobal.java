@@ -13,13 +13,10 @@ import java.util.Properties;
  */
 public class UnitTestGlobal extends Global {
     // To be found in user's home directory
-    private static final String DEFAULT_PROPERTIES_FILE = ".sawcog.TEST.properties";
+    private static final String DEFAULT_PROPERTIES_FILE = ".sawcog.properties";
 
-    public static final long JUNIT_LOGINID = 2;
-    public static final String JUNIT_EMAIL = "junit";
-    public static final String JUNIT_PASSWORD = "test";
-    public static final long JUNITADMIN_LOGINID = 3;
-    public static final String JUNITADMIN_EMAIL = "junitadmin";
+    // Keep track of database migration
+    private static boolean isDatabaseMigrated = false;
 
     public UnitTestGlobal() {
         super("TEST", DEFAULT_PROPERTIES_FILE);
@@ -27,20 +24,28 @@ public class UnitTestGlobal extends Global {
 
     @Override
     public void initChild() {
-
+        // Simulate production when testing
+        this.mode = Mode.PRODUCTION;
     }
 
     @Override
     public void initDatabaseManager() {
-        final Properties dbProperties = getDbProperties();
+        synchronized(this) {
+            if (databaseManager == null) {
+                final Properties dbProperties = getDbProperties("test.");
 
-        String jdbcUrl = dbProperties.getProperty("jdbcUrl");
-        databaseManager = new DatabaseManager(
-                new UnitTestDbPoolConnectionProvider(jdbcUrl, dbProperties),
-                new ResourceSqlProvider()
-        );
+                String jdbcUrl = dbProperties.getProperty("jdbcUrl");
+                databaseManager = new DatabaseManager(
+                        new UnitTestDbPoolConnectionProvider(jdbcUrl, dbProperties),
+                        new ResourceSqlProvider()
+                );
 
-        // Perform migrations
-        UnitTestDatabaseMigrator.migrateTestDatabase();
+                // Perform migrations
+                if (!isDatabaseMigrated) {
+                    UnitTestDatabaseMigrator.migrateTestDatabase();
+                    isDatabaseMigrated = true;
+                }
+            }
+        }
     }
 }

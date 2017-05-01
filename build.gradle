@@ -43,7 +43,9 @@ flyway {
     driver = "${homeProperties['db.driverClassName']}"
     user = "${homeProperties['db.username']}"
     password = "${homeProperties['db.password']}"
-    locations = ['filesystem:db/migration']
+    locations = [
+            'filesystem:db/migration'
+    ]
 }
 
 print "MODE=${homeProperties['mode']}"
@@ -78,3 +80,26 @@ task cleanJs(type: Delete) {
 
 war.dependsOn copyJs
 clean.dependsOn cleanJs
+
+task flywayCleanTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
+    description 'Migrate Test database and populate test data'
+    url = "${homeProperties['test.db.jdbcUrl']}"
+    driver = "${homeProperties['test.db.driverClassName']}"
+    user = "${homeProperties['test.db.username']}"
+    password = "${homeProperties['test.db.password']}"
+    locations = [
+            'filesystem:db/migration',
+            'filesystem:db/migration_test'
+    ]
+}
+task flywayMigrateTest(type: org.flywaydb.gradle.task.FlywayMigrateTask, dependsOn: flywayCleanTest) {
+    description 'Migrate Test database and populate test data'
+    url = "${homeProperties['test.db.jdbcUrl']}"
+    driver = "${homeProperties['test.db.driverClassName']}"
+    user = "${homeProperties['test.db.username']}"
+    password = "${homeProperties['test.db.password']}"
+    locations = [
+            'filesystem:db/migration',
+            'filesystem:db/migration_test'
+    ]
+}

@@ -18,9 +18,8 @@ public class UnitTestDatabaseMigrator {
         Assert.assertTrue("Test database name MUST end with '_test'", dbConnProvider.getJdbcUrl().endsWith("_test"));
 
         // Migrate
-        // TODO: Drop/Create database here
         flyway.setDataSource(dbConnProvider.getDataSource());
-        flyway.setLocations("filesystem:db/migration");
+        flyway.setLocations("filesystem:db/migration", "filesystem:db/migration_test");
         flyway.clean();
         flyway.migrate();
     }

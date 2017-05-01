@@ -1,7 +1,7 @@
 package org.achacha.base.dbo;
 
 import org.achacha.test.BaseInitializedTest;
-import org.achacha.test.UnitTestGlobal;
+import org.achacha.test.TestDataConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class TestLoginAttrDbo extends BaseInitializedTest {
         Assert.assertEquals("red", dbo.getValue());
 
         // Attributes by loginId
-        LoginUserDbo login = LoginUserDboFactory.findById(UnitTestGlobal.JUNIT_LOGINID);
+        LoginUserDbo login = LoginUserDboFactory.findById(TestDataConstants.JUNIT_LOGINID);
         Assert.assertNotNull(login);
         Collection<LoginAttrDbo> attrs = LoginAttrFactoryDbo.findByLoginId(login.getId());
         Assert.assertEquals(3, attrs.size());
@@ -28,13 +28,13 @@ public class TestLoginAttrDbo extends BaseInitializedTest {
     @Test
     public void testCreateDelete() throws Exception {
         // Pre-delete
-        LoginAttrFactoryDbo.deleteByLoginIdAndName(UnitTestGlobal.JUNIT_LOGINID, "test.create");
+        LoginAttrFactoryDbo.deleteByLoginIdAndName(TestDataConstants.JUNIT_LOGINID, "test.create");
 
         // Create new object and save to DB
         LoginAttrDbo dbo = new LoginAttrDbo();
         dbo.setName("test.create");
         dbo.setValue("inserted");
-        dbo.setLoginId(UnitTestGlobal.JUNIT_LOGINID);
+        dbo.setLoginId(TestDataConstants.JUNIT_LOGINID);
         Assert.assertEquals(0, dbo.getId());
         dbo.save();
         Assert.assertNotEquals(0, dbo.getId());
@@ -42,7 +42,7 @@ public class TestLoginAttrDbo extends BaseInitializedTest {
         // Verify exists
         dbo = LoginAttrFactoryDbo.findById(dbo.getId());
         Assert.assertNotNull(dbo);
-        Assert.assertEquals(UnitTestGlobal.JUNIT_LOGINID, dbo.getLoginId());
+        Assert.assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
         Assert.assertEquals("test.create", dbo.getName());
         Assert.assertEquals("inserted", dbo.getValue());
 
@@ -51,7 +51,7 @@ public class TestLoginAttrDbo extends BaseInitializedTest {
         dbo.save();
         dbo = LoginAttrFactoryDbo.findById(dbo.getId());
         Assert.assertNotNull(dbo);
-        Assert.assertEquals(UnitTestGlobal.JUNIT_LOGINID, dbo.getLoginId());
+        Assert.assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
         Assert.assertEquals("test.create", dbo.getName());
         Assert.assertEquals("updated", dbo.getValue());
 

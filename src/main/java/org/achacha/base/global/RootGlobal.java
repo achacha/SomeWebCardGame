@@ -18,7 +18,7 @@ public class RootGlobal extends Global {
 
     @Override
     public void initDatabaseManager() {
-        final Properties dbProperties = getDbProperties();
+        final Properties dbProperties = getDbProperties("");
         String jdbcUrl = dbProperties.getProperty("jdbcUrl");
 
         // Configure DatabaseManager

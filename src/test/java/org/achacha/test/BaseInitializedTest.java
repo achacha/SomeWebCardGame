@@ -17,16 +17,23 @@ public class BaseInitializedTest {
     public static void init() {
         LOGGER.info("+++INIT");
 
-        // Mock ServletContext
-        ServletContext sc = Mockito.mock(ServletContext.class);
-        Mockito.when(sc.getContextPath()).thenReturn("");
+        if (Global.getInstance() == null) {
+            LOGGER.info("Global begin initialized");
 
-        // Mock ServletContextEvent
-        ServletContextEvent sce = Mockito.mock(ServletContextEvent.class);
-        Mockito.when(sce.getServletContext()).thenReturn(sc);
+            // Mock ServletContext
+            ServletContext sc = Mockito.mock(ServletContext.class);
+            Mockito.when(sc.getContextPath()).thenReturn("");
 
-        Global.setInstance(new UnitTestGlobal());
-        Global.getInstance().init(sce);
+            // Mock ServletContextEvent
+            ServletContextEvent sce = Mockito.mock(ServletContextEvent.class);
+            Mockito.when(sce.getServletContext()).thenReturn(sc);
+
+            Global.setInstance(new UnitTestGlobal());
+            Global.getInstance().init(sce);
+        }
+        else {
+            LOGGER.info("Global already initialized, skipping init");
+        }
     }
 
     @AfterClass

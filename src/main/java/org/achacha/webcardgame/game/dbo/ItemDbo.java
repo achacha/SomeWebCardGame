@@ -31,4 +31,12 @@ public class ItemDbo extends BaseIndexedDbo {
         this.type = ItemType.of(rs.getInt("type"));
         this.quantity = rs.getLong("quantity");
     }
+
+    public ItemType getType() {
+        return type;
+    }
+
+    public long getQuantity() {
+        return quantity;
+    }
 }
