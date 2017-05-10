@@ -7,11 +7,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.mockito.Mockito;
 
-import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-@Singleton
 public class BaseInitializedTest {
     private static final Logger LOGGER = LogManager.getLogger(BaseInitializedTest.class);
 

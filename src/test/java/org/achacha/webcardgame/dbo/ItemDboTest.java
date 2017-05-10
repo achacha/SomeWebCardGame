@@ -1,5 +1,6 @@
 package org.achacha.webcardgame.dbo;
 
+import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
 import org.achacha.webcardgame.game.dbo.ItemDbo;
 import org.achacha.webcardgame.game.dbo.ItemDboFactory;
@@ -8,7 +9,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class ItemDboTest {
+public class ItemDboTest extends BaseInitializedTest {
     @Test
     public void testGetItemsForInventory() {
         List<ItemDbo> items = ItemDboFactory.getItemsForInventory(TestDataConstants.JUNIT_INVENTORY_ID);

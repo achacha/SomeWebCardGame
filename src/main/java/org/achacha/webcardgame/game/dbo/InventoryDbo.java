@@ -31,4 +31,8 @@ public class InventoryDbo extends BaseIndexedDbo {
     public long getEnergy() {
         return energy;
     }
+
+    public List<ItemDbo> getItems() {
+        return items;
+    }
 }

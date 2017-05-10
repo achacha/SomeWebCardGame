@@ -1,0 +1,1 @@
+select * from public.inventory where login__id=?;
