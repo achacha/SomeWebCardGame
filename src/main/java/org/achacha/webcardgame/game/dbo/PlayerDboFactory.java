@@ -11,33 +11,33 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemDboFactory extends BaseDboFactory {
-    private static final Logger LOGGER = LogManager.getLogger(ItemDbo.class);
+public class PlayerDboFactory extends BaseDboFactory {
+    private static final Logger LOGGER = LogManager.getLogger(PlayerDbo.class);
 
     /**
-     * Get a list of items for a given inventory
-     * @param inventoryId long
-     * @return List of items (never null)
+     * Get all PlayerDbo objects associated with a login id
+     * @param loginId long id
+     * @return List of PlayerDbo, never null
      */
     @Nonnull
-    public static List<ItemDbo> getItemsForInventory(long inventoryId) {
-        List<ItemDbo> items = new ArrayList<>();
+    public static List<PlayerDbo> getByLoginId(long loginId) {
+        List<PlayerDbo> dbos = new ArrayList<>();
         try (
                 Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
-                        "/sql/Item/SelectByInventoryId.sql",
-                        p -> p.setLong(1, inventoryId));
+                        "/sql/Player/SelectByLoginId.sql",
+                        p -> p.setLong(1, loginId));
                 ResultSet rs = pstmt.executeQuery()
         ) {
-            while (rs.next()) {
-                ItemDbo dbo = new ItemDbo();
+            if (rs.next()) {
+                PlayerDbo dbo = new PlayerDbo();
                 dbo.fromResultSet(rs);
-                items.add(dbo);
+                dbos.add(dbo);
             }
         } catch (Exception sqle) {
-            LOGGER.error("Failed to find item for inventoryId={}", inventoryId, sqle);
+            LOGGER.error("Failed to find players for playerId={}", loginId, sqle);
         }
-        return items;
+        return dbos;
     }
 }

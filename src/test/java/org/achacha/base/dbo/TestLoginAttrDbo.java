@@ -17,7 +17,7 @@ public class TestLoginAttrDbo extends BaseInitializedTest {
         Assert.assertEquals("color", dbo.getName());
         Assert.assertEquals("red", dbo.getValue());
 
-        // Attributes by loginId
+        // Attributes by playerId
         LoginUserDbo login = LoginUserDboFactory.findById(TestDataConstants.JUNIT_LOGINID);
         Assert.assertNotNull(login);
         Collection<LoginAttrDbo> attrs = LoginAttrFactoryDbo.findByLoginId(login.getId());

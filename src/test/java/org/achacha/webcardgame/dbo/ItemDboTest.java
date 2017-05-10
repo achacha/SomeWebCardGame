@@ -16,7 +16,6 @@ public class ItemDboTest extends BaseInitializedTest {
 
         Assert.assertNotNull(items);
         Assert.assertEquals(6, items.size());
-
         Assert.assertEquals(31L, items.get(0).getQuantity());
     }
 }

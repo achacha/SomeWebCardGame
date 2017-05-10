@@ -1,6 +1,8 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseIndexedDbo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,8 +12,10 @@ import java.util.List;
  * Inventory
  */
 public class InventoryDbo extends BaseIndexedDbo {
+    private static final Logger LOGGER = LogManager.getLogger(InventoryDbo.class);
+
     protected long id;
-    protected long loginId;
+    protected long playerId;
     protected long energy;
     protected List<ItemDbo> items;
 
@@ -23,7 +27,7 @@ public class InventoryDbo extends BaseIndexedDbo {
     @Override
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
-        this.loginId = rs.getLong("login__id");
+        this.playerId = rs.getLong("player__id");
         this.energy = rs.getLong("energy");
         this.items = ItemDboFactory.getItemsForInventory(this.id);
     }

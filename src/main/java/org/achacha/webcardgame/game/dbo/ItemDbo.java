@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * Inventory item
  */
 public class ItemDbo extends BaseIndexedDbo {
-    static final Logger LOGGER = LogManager.getLogger(ItemDbo.class);
+    private static final Logger LOGGER = LogManager.getLogger(ItemDbo.class);
 
     protected long id;
     protected long inventoryId;

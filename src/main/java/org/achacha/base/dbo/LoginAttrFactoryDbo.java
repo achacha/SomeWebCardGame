@@ -44,7 +44,7 @@ public class LoginAttrFactoryDbo extends BaseDboFactory {
     }
 
     /**
-     * Find by loginId and name
+     * Find by playerId and name
      *
      * @param loginId long
      * @param name String
@@ -69,10 +69,10 @@ public class LoginAttrFactoryDbo extends BaseDboFactory {
                 dbo.fromResultSet(rs);
                 return dbo;
             } else {
-                LoginAttrDbo.LOGGER.debug("Failed to find login_attr loginId={}  name={}", loginId, name);
+                LoginAttrDbo.LOGGER.debug("Failed to find login_attr playerId={}  name={}", loginId, name);
             }
         } catch (Exception e) {
-            LoginAttrDbo.LOGGER.error("Failed to find login_attr, loginId={}  name={}", loginId, name, e);
+            LoginAttrDbo.LOGGER.error("Failed to find login_attr, playerId={}  name={}", loginId, name, e);
         }
         return null;
     }
@@ -101,7 +101,7 @@ public class LoginAttrFactoryDbo extends BaseDboFactory {
                 attrs.add(dbo);
             }
         } catch (Exception e) {
-            LoginAttrDbo.LOGGER.error("Failed to find login_attr for loginId="+userId, e);
+            LoginAttrDbo.LOGGER.error("Failed to find login_attr for playerId="+userId, e);
         }
         return attrs;
     }
@@ -129,7 +129,7 @@ public class LoginAttrFactoryDbo extends BaseDboFactory {
     }
 
     /**
-     * Delete by loginId and name
+     * Delete by playerId and name
      *
      * @param loginId long
      * @param name String
@@ -150,13 +150,13 @@ public class LoginAttrFactoryDbo extends BaseDboFactory {
         ) {
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected != 1) {
-                LoginAttrDbo.LOGGER.debug("Unable to delete login_attr, loginId={}  name={}", loginId, name);
+                LoginAttrDbo.LOGGER.debug("Unable to delete login_attr, playerId={}  name={}", loginId, name);
                 return false;
             }
             else
                 return true;
         } catch (Exception e) {
-            LoginAttrDbo.LOGGER.error("Failed to delete login_attr, loginId={}  name={}", loginId, name, e);
+            LoginAttrDbo.LOGGER.error("Failed to delete login_attr, playerId={}  name={}", loginId, name, e);
         }
         return false;
     }

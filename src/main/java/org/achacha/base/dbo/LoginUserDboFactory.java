@@ -145,7 +145,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
                 dbo.fromResultSet(triple.getResultSet());
                 return dbo;
             } else {
-                LoginUserDbo.LOGGER.warn("Login to impersonate email={} by loginId={}", email, context.getLogin().getId());
+                LoginUserDbo.LOGGER.warn("Login to impersonate email={} by playerId={}", email, context.getLogin().getId());
             }
         } catch (Exception sqle) {
             LoginUserDbo.LOGGER.error("Failed to login user", sqle);

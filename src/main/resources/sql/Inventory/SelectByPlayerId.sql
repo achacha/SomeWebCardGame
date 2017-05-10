@@ -1,0 +1,1 @@
+select * from public.inventory where player__id=?;

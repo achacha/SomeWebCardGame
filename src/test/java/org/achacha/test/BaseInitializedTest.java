@@ -15,7 +15,7 @@ public class BaseInitializedTest {
 
     @BeforeClass
     public static void init() {
-        LOGGER.info("+++INIT");
+        LOGGER.debug("+++INIT");
 
         //TODO: check if this can be initialized only once
         if (Global.getInstance() == null) {
@@ -33,12 +33,12 @@ public class BaseInitializedTest {
             Global.getInstance().init(sce);
         }
         else {
-            LOGGER.info("Global already initialized, skipping init");
+            LOGGER.debug("Global already initialized, skipping init");
         }
     }
 
     @AfterClass
     public static void deinit() {
-        LOGGER.info("---INIT");
+        LOGGER.debug("---INIT");
     }
 }

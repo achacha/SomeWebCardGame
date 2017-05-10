@@ -2,20 +2,35 @@
 -- Inventory is associated with a login
 -- Inventory contains list of item
 --
-CREATE TABLE public.inventory
+CREATE TABLE public.player
 (
   id serial NOT NULL PRIMARY KEY,
   login__id integer, -- Login id of the owner of this item
-  energy integer, -- Energy
   --
-  CONSTRAINT inventory_login__id_fkey FOREIGN KEY (login__id)
+  CONSTRAINT player_login__id_fkey FOREIGN KEY (login__id)
   REFERENCES public.login (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
 OIDS=FALSE
 );
+ALTER TABLE public.player OWNER TO sawcog;
+COMMENT ON COLUMN public.player.login__id IS 'Login id of the owner of this player';
+
+
+CREATE TABLE public.inventory
+(
+  id serial NOT NULL PRIMARY KEY,
+  player__id integer, -- Login id of the owner of this item
+  energy integer, -- Energy
+  --
+  CONSTRAINT inventory_player__id_fkey FOREIGN KEY (player__id)
+  REFERENCES public.player (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+OIDS=FALSE
+);
 ALTER TABLE public.inventory OWNER TO sawcog;
-COMMENT ON COLUMN public.inventory.login__id IS 'Login id of the owner of this inventory';
+COMMENT ON COLUMN public.inventory.player__id IS 'Player id of the owner of this inventory';
 COMMENT ON COLUMN public.inventory.energy IS 'Energy total';
 
 

@@ -1,0 +1,1 @@
+select * from public.player where login__id=?;
