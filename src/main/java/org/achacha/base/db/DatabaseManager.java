@@ -90,11 +90,12 @@ public class DatabaseManager {
      * }
      *
      * @param conn Connection
-     * @param resourcePath String SQL resource path
+     * @param resourcePath String SQL resource path, looked up via SQLProvider
      * @param setter Setter that will set the parameters in the PreparedStatement
      * @return PreparedStatement with parameters set
      * @throws SQLException
      * @throws IOException
+     * @see SqlProvider
      */
     public PreparedStatement prepareStatement(Connection conn, String resourcePath, PreparedStatementSetter setter) throws IOException, SQLException {
         String sql = sqlProvider.get(resourcePath);
@@ -106,10 +107,11 @@ public class DatabaseManager {
 
     /**
      * Prepare PreparedStatement with parameters using lambda function
+     * This method does not lookup SQL in resource bundle and uses SQL provided
      *
      * try (
      *      Connection connection = DatabaseManager.getConnection();
-     *      PreparedStatement stmt = DatabaseManager.prepareStatement(connection, SQL, pstmt -> {
+     *      PreparedStatement stmt = DatabaseManager.prepareStatementDirect(connection, SQL, pstmt -> {
      *          pstmt.setString(1, "foo");
      *      });
      *      ResultSet rs = stmt.executeQuery()
@@ -121,7 +123,7 @@ public class DatabaseManager {
      * }
      *
      * @param conn Connection
-     * @param sql String SQL with parameters to set
+     * @param sql String Actual SQL with parameters to set
      * @param setter Setter that will set the parameters in the PreparedStatement
      * @return PreparedStatement with parameters set
      * @throws SQLException
@@ -136,6 +138,7 @@ public class DatabaseManager {
     /**
      * Close statement and connection and log errors if any
      * Prefer using try-with-resource to avoid calling this directly
+     *
      * @param connection Connection (or null if none)
      * @param statement Statement (or null if none)
      * @param resultSet ResultSet (or null if none)
@@ -175,8 +178,9 @@ public class DatabaseManager {
     /**
      * Create Connection/PreparedStatement/ResultSet
      * Uses setter to set parameters on PreparedStatement
+     * SQL provided is used directly without any lookup
      *
-     * @param sql String SQL
+     * @param sql String Actual SQL
      * @param setter Setter for PreparedStatement
      * @return JdbcTuple
      * @throws SQLException
@@ -193,10 +197,11 @@ public class DatabaseManager {
      * Create Connection/PreparedStatement/ResultSet
      * Uses setter to set parameters on PreparedStatement
      *
-     * @param resourcePath String SQL resource classpath
+     * @param resourcePath String SQL resource via SqlProvider
      * @param setter Setter for PreparedStatement
      * @return JdbcTuple
      * @throws SQLException
+     * @see SqlProvider
      */
     public JdbcTuple executeSql(String resourcePath, PreparedStatementSetter setter) throws Exception {
         JdbcTuple triple = new JdbcTuple();

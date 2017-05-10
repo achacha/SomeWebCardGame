@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
- * Contains DB objects that close when done
+ * Contains DB objects that close when done via AutoCloseable using try-with-resources
  *
  final String SQL = "select * from NVPAIR where name=?";
  try (
@@ -17,7 +17,8 @@ import java.sql.Statement;
  } catch (Exception e) {
     e.printStackTrace();
  }
-
+ *
+ * NOTE: if used without try-with-resources, you have to call close() explicitly
  */
 public class JdbcTuple implements AutoCloseable {
     Connection connection;
@@ -36,6 +37,9 @@ public class JdbcTuple implements AutoCloseable {
         return resultSet;
     }
 
+    /**
+     * @throws Exception which is an SQLException but thrown as Exception to adhere to the AutoCloseable interface
+     */
     @Override
     public void close() throws Exception {
         if (resultSet != null)
