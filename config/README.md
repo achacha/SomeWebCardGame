@@ -7,20 +7,43 @@
 </p>
 
 <br/>
-<hr/>
+
+# Create a VM for the database and other services
+ - Download VirtualBox and install (You can use VMWare if you like but you should know how to set it up)
+ - Download *buntu ISO of choice (I use xubuntu or lubuntu for their light weight)
+ - When creating new VM from ISO set HD space to 20GB+ to be sure you have room for the future, 10GB is minimum
+ - You may want to adjust settings and use Bidirectional clipboard so you can copy/paste from inside the VM
+ - You need 2 network adapters
+      - Host-only to allow your host machine to reach it
+      - Bridged to allow it to connect to the internet
+ - Once VM starts go to Devices | Insert Guest Additions CD Image... (this will insert the CD)
+ - Open shell (or Terminal Emulator or whatever the distro calls it)
+ - <pre>
+    cd /media/fjord/VBOXADDITIONS_[whatever version]
+    sudo ./VBoxLinuxAdditions.run
+ </pre>
+   
+ - Now you should be able to resize the window and have the VM match the size (after you restart bit later) 
+ - Then from shell do: ifconfig to get the IP so you can alias it, in your hosts file add something like:
+    - `192.168.0.233   fjord-db`
+    - You should be able to `ping fjord-db` from host machine
+    - Linux/osx: `/etc/hosts`, windows `C:\Windows\System32\drivers\etc\hosts` 
+
 <br/>
 
-<h3>Create a VM for the database and other services</h3>
-VirtualBox or similar with a flavor or ubuntu can be used.  Once created, install postgresql.<br/>
-Add alias to your /etc/hosts file for the new VM called 'fjord-db'.  The purpose of this is to not have postgres
-run on your dev machine all the time, just when you need it.<br/>
-<pre>
-sudo apt-get install postgresql postgresql-contrib
-</pre>
+# Update and install software on VM 
+ - Update your linux to latest
+    - `sudo apt-get update`
+    - `sudo apt-get dist-upgrade`
+ - Install postgres and admin tool
+    - `sudo apt-get install postgresql postgresql-contrib pgadmin3`
+
+ - Restart the VM
 <br/>
 
-# Configure postgres
+# Configure postgres on your VM
 <br/>
+From shell window set admin password to `postgres`:
 <pre>
 sudo -u postgres psql postgres
 
@@ -28,20 +51,24 @@ sudo -u postgres psql postgres
 postgres
 </pre>
 
+NOTE: **From here follow the directions in /db/README.md**
+
 <br/>
 <hr/>
 <br/>
 
-<h3>Create user specific directory</h3>
+# Create user specific directory on local machine
 <pre>
 mkdir ~/opt 
 cd opt
 </pre>
 
 <hr/>
-<h1>Software</h1>
+# Software required locally
 
 <i>download and extract latest JDK to ~/opt and symlink it - <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a></i>
+
+Depending on your OS you can either symlink it like below or install it.
 
 <pre>
  ln -s jdk-[version] jdk
@@ -51,7 +78,7 @@ cd opt
 <hr/>
 <br/>
 
-<i>download and extract latest Tomcat (version 8.5.4 or newer) - <a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></i>
+<i>download and extract latest Tomcat (version 8.5.x or newer) - <a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></i>
 <pre>
  ln -s apache-tomcat-[version] tomcat
 </pre>

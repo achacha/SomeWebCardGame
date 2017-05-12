@@ -27,7 +27,7 @@ Postgres: Development database
   	psql -d necropolis -U sawcog -W -h localhost
 
 
-Configuring postgresql to allow tcpip connection (assumed v9.4, adjust as needed)
+Configuring postgresql to allow tcpip connection (assumed v9.5+, adjust as needed)
 ---
 <pre>
 sudo vi /etc/postgresql/9.5/main/postgresql.conf
@@ -42,18 +42,13 @@ sudo vi /etc/postgresql/9.5/main/pg_hba.conf
 </pre>
 
 Add following to allow other machines to login (this will need to be removed/limited if deployed to production):<br/>
-<pre>host     all     all     0.0.0.0/0     md5</pre>
+<pre>
+host     all     all     0.0.0.0/0     md5
+</pre>
 
 <pre>
 sudo service postgresql restart
 </pre>
-
-
-VirtualBox configuration with postgresql
----
-Network type: Host-only network
-
-Create a new entry in /etc/hosts called fjord-db that maps to the IP of the VM
 
 
 Using gradle (To see all tasks: ./gradlew tasks)
