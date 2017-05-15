@@ -4,8 +4,7 @@ INSERT into public.global_properties(name,value) VALUES
   ('uri.home','/'),
   ('uri.login.home','/login.jsp'),
   ('uri.login.target','/api/auth/login'),
-  ('url.home.public','http://localhost:10080'),
-  ('uri.admin.login','/admin/login.jsp')
+  ('url.home.public','http://localhost:10080')
 ;
 
 -- su (password should never be in code and must be changed in production after initial deploy)

@@ -24,7 +24,6 @@ public class GlobalProperties extends Properties implements JsonEmittable {
     /** Base URI for API directory */
     public static final String URI_API_BASE = "/api";
 
-    private static final String KEY_URI_ADMIN_LOGIN = "uri.admin.login";
     private static final String KEY_URI_HOME = "uri.home";
     private static final String KEY_URI_LOGIN_HOME = "uri.login.home";
     private static final String KEY_URI_LOGIN_TARGET = "uri.login.target";
@@ -40,14 +39,6 @@ public class GlobalProperties extends Properties implements JsonEmittable {
     protected void processServletContextEvent(ServletContextEvent servletContextEvent) {
         if (null != servletContextEvent)
             webContextPath = servletContextEvent.getServletContext().getContextPath();
-    }
-
-    /**
-     * Example: /admin/login.jsp
-     * @return path to URI where admin login page is (leading / included)
-     */
-    public String getUriAdminLogin() {
-        return getProperty(KEY_URI_ADMIN_LOGIN);
     }
 
     /**

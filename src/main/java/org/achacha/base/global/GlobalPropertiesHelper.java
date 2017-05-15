@@ -26,7 +26,7 @@ public class GlobalPropertiesHelper {
             ) {
                 populate(properties, triple.getResultSet());
             } catch (Exception sqle) {
-                LOGGER.error("Failed to read all roles", sqle);
+                LOGGER.error("Failed to load global properties", sqle);
             }
         } else {
             try (
@@ -36,7 +36,7 @@ public class GlobalPropertiesHelper {
             ) {
                 populate(properties, triple.getResultSet());
             } catch (Exception sqle) {
-                LOGGER.error("Failed to read global properties", sqle);
+                LOGGER.error("Failed to read global properties for application={}", application, sqle);
             }
         }
     }

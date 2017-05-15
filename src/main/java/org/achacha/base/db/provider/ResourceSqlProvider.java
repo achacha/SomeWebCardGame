@@ -3,6 +3,7 @@ package org.achacha.base.db.provider;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.achacha.base.context.CallContext;
+import org.achacha.base.global.Global;
 import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nonnull;
@@ -32,7 +33,7 @@ public class ResourceSqlProvider extends SqlProvider {
      */
     @Nonnull
     private static String loadResource(@Nonnull String key) throws IOException {
-        InputStream is = SqlProvider.class.getResourceAsStream(key);
+        InputStream is = Global.getInstance().getClass().getResourceAsStream(key);
         if (is == null)
             throw new FileNotFoundException("Unable to locate resource: "+key);
 
