@@ -22,5 +22,6 @@ public class UnitTestDatabaseMigrator {
         flyway.setLocations("filesystem:db/migration", "filesystem:db/migration_test");
         flyway.clean();
         flyway.migrate();
+        flyway.validate();
     }
 }
