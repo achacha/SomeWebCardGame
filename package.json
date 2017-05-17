@@ -13,14 +13,13 @@
   "author": "achacha",
   "license": "UNLICENSED",
   "dependencies": {
-    "phaser": "2.6.2",
     "bootstrap": "v4.0.0-alpha.6",
+    "font-awesome": "^4.7.0",
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
-    "font-awesome": "^4.7.0",
+    "phaser": "2.6.2",
     "requirejs": "^2.3.3"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "repository": "git@github.com:achacha/SomeWebCardGame.git"
 }
