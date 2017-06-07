@@ -1,6 +1,7 @@
-<%@ page import="org.achacha.base.context.CallContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<%@ page import="org.achacha.base.context.CallContext" %>
 <head>
     <title>Title</title>
     <script src="./js/jquery/dist/jquery.js" type="application/javascript"></script>

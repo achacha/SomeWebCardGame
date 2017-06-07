@@ -269,7 +269,7 @@ public class DatabaseHelper {
         return -1;
     }
 
-    public static void toHtmlTable(String sql, StringBuilder output) throws SQLException {
+    public static void toHtmlTable(String sql, StringBuilder output) {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -312,6 +312,10 @@ public class DatabaseHelper {
             output.append("</tbody>");
 
             output.append("</table>");
+        }
+        catch(SQLException e) {
+            LOGGER.error(e);
+            output.append("<b>").append(e.toString()).append("</b>");
         }
         finally {
             DatabaseManager.close(conn, stmt, rs);
