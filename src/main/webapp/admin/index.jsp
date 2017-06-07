@@ -8,7 +8,6 @@
 <body>
 <%@include file="_admin_navbar.jsp"%>
 
-body here
 
 </body>
 <%@include file="_admin_footer.jsp"%>

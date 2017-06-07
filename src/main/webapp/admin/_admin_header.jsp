@@ -5,3 +5,4 @@
 <link href="../js/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
 <link href="../static/css/app.css" rel="stylesheet"/>
 <link rel="shortcut icon" href="../static/images/fjord_logo.jpg" type="image/x-icon" />
+<script src="../js/jquery/dist/jquery.slim.js"></script>

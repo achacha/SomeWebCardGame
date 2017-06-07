@@ -14,7 +14,7 @@
 </head>
 <body>
 <jsp:include page="_admin_navbar.jsp"/>
-<script>$('#admin_subhead').text('Log4j2 Admin')</script>
+<script>$('#admin_subhead').text('Log4j2 Settings')</script>
 <%
     final Level[] LOGGER_LEVELS = new Level[] {
             Level.TRACE, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL, Level.OFF
