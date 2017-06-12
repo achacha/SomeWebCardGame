@@ -2,7 +2,6 @@ package org.achacha.base.db.provider;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.achacha.base.global.Global;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.sql.DataSource;
@@ -19,10 +18,6 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
     public DbPoolConnectionProvider(String jdbcUrl, Properties properties) {
         super(jdbcUrl);
 
-        if (Global.getInstance().isDevelopment()) {
-            // Development only settings
-            properties.setProperty("minimumIdle", "2");  // Don't need more than 2 connections during development
-        }
         HikariConfig config = new HikariConfig(properties);
         dataSource = new HikariDataSource(config);
     }
@@ -39,10 +34,6 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
             try {
                 Connection connection = dataSource.getConnection();
                 if (!connection.isClosed()) {
-                    // Connection is not closed, set transactional if so requested
-                    if (!autoCommit)
-                        connection.setAutoCommit(false);
-
                     return connection;
                 } else {
                     LOGGER.info("Detected database closed connection, retry #{}", retries);
