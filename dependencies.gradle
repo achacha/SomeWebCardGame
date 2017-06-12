@@ -1,17 +1,25 @@
 dependencies {
     compileOnly group: 'org.apache.tomcat', name: 'tomcat-catalina', version: '8.5.9'
 
-    compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.25'
-    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '2.25'
+    //
+    // Jersey and Swagger
+    //
+    compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: "${jerseyVersion}"
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: "${jerseyVersion}"
 
+    //
+    // Utils
+    //
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     compile group: 'com.google.code.gson', name: 'gson', version: "${gsonVersion}"
     // https://mvnrepository.com/artifact/com.google.guava/guava
     compile group: 'com.google.guava', name: 'guava', version: "${guavaVersion}"
-
     // https://mvnrepository.com/artifact/org.reflections/reflections
-    compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
+    compile group: 'org.reflections', name: 'reflections', version: "${reflectionsVersion}"
 
+    //
+    // Commons
+    //
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
     // https://mvnrepository.com/artifact/commons-io/commons-io
@@ -21,6 +29,9 @@ dependencies {
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
     compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
 
+    //
+    // Database
+    //
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     compile group: 'org.postgresql', name: 'postgresql', version: "${postgresVersion}"
     // https://mvnrepository.com/artifact/org.hsqldb/hsqldb
@@ -37,17 +48,21 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4jVersion}"
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.23'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
 
+    //
+    // Test tools for compile time
+    //
     // https://mvnrepository.com/artifact/com.google.code.findbugs/annotations
     compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
-
     // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
     compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.2.0'
-
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     compile group: 'org.mockito', name: 'mockito-core', version: "${mockitoVersion}"
 
+    //
+    // Test
+    //
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.apache.tomcat', name: 'tomcat-catalina', version: "${tomcatVersion}"
 }
