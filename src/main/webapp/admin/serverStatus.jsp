@@ -42,62 +42,49 @@ os.version=<%= System.getProperty("os.version") %></pre>
     </tr>
     <tr>
         <th>Server Environment</th>
-        <td>
-servletContext.serverInfo=<%= config.getServletContext().getServerInfo() %><br/>
-servletContext.virtualServerName=<%= config.getServletContext().getVirtualServerName() %><br/>
-servletContext.version=<%= config.getServletContext().getMajorVersion() %>.<%= config.getServletContext().getMinorVersion() %><br/>
-servletContext.contextPath=<%= config.getServletContext().getContextPath() %><br/>
-servletContext.filterRegistrations=
-<table class="table">
-    <tbody>
+        <td><pre>
+servletContext.serverInfo=<%= config.getServletContext().getServerInfo() %>
+servletContext.virtualServerName=<%= config.getServletContext().getVirtualServerName() %>
+servletContext.version=<%= config.getServletContext().getMajorVersion() %>.<%= config.getServletContext().getMinorVersion() %>
+servletContext.contextPath=<%= config.getServletContext().getContextPath() %>
+servletContext.servletContextName=<%= config.getServletContext().getServletContextName() %>
+servletContext.jspConfigDescriptor=<%= config.getServletContext().getJspConfigDescriptor() %>
+
+servletContext.filterRegistrations={
 <%
     for (Map.Entry<String, ? extends FilterRegistration> entry : config.getServletContext().getFilterRegistrations().entrySet()) {
-        out.println("<tr><th>"+entry.getKey()+"</th><td>"+entry.getValue().getClassName()+"</td></tr>");
+        out.println("  "+entry.getKey()+"="+entry.getValue().getClassName());
     }
 %>
-    </tbody>
-</table><br/>
+}
 
-servletContext.servletRegistrations=
-<table class="table">
-    <tbody>
+servletContext.servletRegistrations={
 <%
     for (Map.Entry<String, ? extends ServletRegistration> entry : config.getServletContext().getServletRegistrations().entrySet()) {
-        out.println("<tr><th>"+entry.getKey()+"</th><td>"+entry.getValue().getClassName()+"</td></tr>");
+        out.println("  "+entry.getKey()+"="+entry.getValue().getClassName());
     }
 %>
-    </tbody>
-</table><br/>
-
-servletContext.servletContextName=<%= config.getServletContext().getServletContextName() %><br/>
-servletContext.jspConfigDescriptor=<%= config.getServletContext().getJspConfigDescriptor() %><br/>
+}
 
 servletContext.initParameters={
-<table class="table">
-    <tbody>
 <%
     Enumeration<String> einit = config.getInitParameterNames();
     while (einit.hasMoreElements()) {
         String name = einit.nextElement();
-        out.println("<tr><th>"+name+"</th><td>"+config.getInitParameter(name)+"</td></tr>");
+        out.println("  "+name+"="+config.getInitParameter(name));
     }
 %>
-    </tbody>
-</table><br/>
+}
 
 servletContext.attributes={
-<table class="table">
-    <tbody>
 <%
     Enumeration<String> eattr = config.getServletContext().getAttributeNames();
     while (eattr.hasMoreElements()) {
         String name = eattr.nextElement();
-        out.println("<tr><th>"+name+"</th><td>"+config.getServletContext().getAttribute(name)+"</td></tr>");
+        out.println("  "+name+"="+config.getServletContext().getAttribute(name));
 
     }
 %>
-    </tbody>
-</table><br/>
 }
         </td>
     </tr>
