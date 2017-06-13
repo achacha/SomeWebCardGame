@@ -5,6 +5,8 @@ import org.apache.commons.lang3.NotImplementedException;
 /**
  * DataBase Object based by database table
  * Expected to have an id and can be cached
+ *
+ * insert and update methods need to be implemented by the child class if save is to be used
  **/
 public abstract class BaseIndexedDbo extends BaseDbo {
     /**
