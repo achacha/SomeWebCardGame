@@ -1,9 +1,12 @@
 dependencies {
-    compileOnly group: 'org.apache.tomcat', name: 'tomcat-catalina', version: '8.5.9'
 
     //
-    // Jersey and Swagger
+    // Tomcat, Jersey
     //
+    // https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-catalina
+    compileOnly group: 'org.apache.tomcat', name: 'tomcat-catalina', version: "${tomcatVersion}"
+    // https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-jasper
+    compileOnly group: 'org.apache.tomcat', name: 'tomcat-jasper', version: "${tomcatVersion}"
     compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: "${jerseyVersion}"
     compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: "${jerseyVersion}"
 
