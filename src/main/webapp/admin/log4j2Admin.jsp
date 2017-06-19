@@ -78,12 +78,9 @@
             for (Logger logger : sortedSet) {
                 out.println("<tr>");
 
-                StringBuilder info = new StringBuilder();
-                info.append("parent=").append(logger.getParent() != null ? logger.getParent().getName() : "");
-                info.append("\nappenders=").append(logger.getAppenders().values());
-
                 out.print("<td><span title='");
-                out.print(info);
+                out.print("appenders="+logger.getAppenders().values());
+                out.print("\ntoString="+logger.get().toString());
                 out.print("'>");
                 String name = StringUtils.isNotEmpty(logger.getName()) ? logger.getName() : "ROOT";
                 out.print(name);
