@@ -114,6 +114,12 @@ ant init
 This will create:<br/>
 build/catalina_home - This is the project specific location to be used by IDE
 
+
+# Installing node and yarn (more todo here maybe)
+For OSX: use brew to install both
+For linux: use apt-get to install both
+For windows: follow directions on website
+
 # IDEA: config
 (IMPORTANT: On Mac "IntelliJ IDEA | Preferences..." is same as "File | Settings..." on linux and windows)
 
