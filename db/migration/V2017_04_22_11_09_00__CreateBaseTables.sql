@@ -1,7 +1,7 @@
 -- -----------------------------------------------------
 -- login an individual
 --
-CREATE TABLE public.login
+CREATE TABLE login
 (
   -- Login data
   id serial NOT NULL PRIMARY KEY,
@@ -31,34 +31,34 @@ CREATE TABLE public.login
 WITH (
 OIDS=FALSE
 );
-ALTER TABLE public.login OWNER TO sawcog;
+ALTER TABLE login OWNER TO sawcog;
 
 -- Attributes name/value pairs per login
-CREATE TABLE public.login_attr
+CREATE TABLE login_attr
 (
   id serial NOT NULL PRIMARY KEY,
   name character varying(256) NOT NULL,
   value character varying(4096),
   login_id integer NOT NULL,
   --
-  CONSTRAINT "FK_login_attr__login__login_id" FOREIGN KEY (login_id) REFERENCES public.login (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "FK_login_attr__login__login_id" FOREIGN KEY (login_id) REFERENCES login (id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "UNIQUE_login_attr__login_id__name" UNIQUE (login_id, name)
 )
 WITH (
 OIDS = FALSE
 )
 ;
-ALTER TABLE public.login_attr
+ALTER TABLE login_attr
   OWNER TO sawcog;
-COMMENT ON COLUMN public.login_attr.name IS 'Attribute name';
-COMMENT ON COLUMN public.login_attr.value IS 'Value of the attribute';
-COMMENT ON TABLE public.login_attr
+COMMENT ON COLUMN login_attr.name IS 'Attribute name';
+COMMENT ON COLUMN login_attr.value IS 'Value of the attribute';
+COMMENT ON TABLE login_attr
 IS 'Name:Value pairs associated with login by id';
 
 -- -----------------------------------------------------
 -- Internal event used for logging and auditing
 --
-CREATE TABLE public.event_log
+CREATE TABLE event_log
 (
   id serial NOT NULL PRIMARY KEY,
   created_on timestamp without time zone NOT NULL DEFAULT now(),
@@ -69,12 +69,12 @@ CREATE TABLE public.event_log
 WITH (
 OIDS=FALSE
 );
-ALTER TABLE public.event_log OWNER TO sawcog;
+ALTER TABLE event_log OWNER TO sawcog;
 
 -- -----------------------------------------------------
 -- Global name/value pairs
 --
-CREATE TABLE public.global_properties
+CREATE TABLE global_properties
 (
   id serial NOT NULL PRIMARY KEY,
   created_on timestamp without time zone NOT NULL DEFAULT now(),
@@ -86,4 +86,4 @@ CREATE TABLE public.global_properties
 WITH (
 OIDS=FALSE
 );
-ALTER TABLE public.global_properties OWNER TO sawcog;
+ALTER TABLE global_properties OWNER TO sawcog;

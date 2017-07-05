@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         classpath "org.postgresql:postgresql:${postgresVersion}"
-        classpath "org.hsqldb:hsqldb:${hsqldbVersion}"
+        classpath "com.h2database:h2:${h2Version}"
     }
 }
 

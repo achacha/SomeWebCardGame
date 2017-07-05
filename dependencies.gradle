@@ -37,13 +37,16 @@ dependencies {
     //
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     compile group: 'org.postgresql', name: 'postgresql', version: "${postgresVersion}"
-    // https://mvnrepository.com/artifact/org.hsqldb/hsqldb
-    compile group: 'org.hsqldb', name: 'hsqldb', version: "${hsqldbVersion}"
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
     compile group: 'com.zaxxer', name: 'HikariCP', version: '2.6.2'
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
-    compile group: 'org.flywaydb', name: 'flyway-core', version:"${flywaydbVersion}"
+    compile group: 'org.flywaydb', name: 'flyway-core', version: "${flywaydbVersion}"
+    // https://mvnrepository.com/artifact/com.h2database/h2
+    testCompile group: 'com.h2database', name: 'h2', version: "${h2Version}"
 
+    //
+    // Logging
+    //
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4jVersion}"
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-web
