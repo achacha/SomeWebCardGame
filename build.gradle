@@ -31,6 +31,8 @@ Load properties file from user home directory
 def homeProperties = new Properties()
 file("${System.properties['user.home']}${File.separator}.sawcog.properties").withReader { homeProperties.load(it) }
 
+//sourceSets['main'].allSource.add("webapp" as FileCollection)
+
 apply from: 'dependencies.gradle'
 
 // IntelliJ settings

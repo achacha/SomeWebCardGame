@@ -13,7 +13,6 @@
 
     <link rel="stylesheet" href="./js/font-awesome/css/font-awesome.min.css">
     <link rel="shortcut icon" href="./static/images/fjord_logo.jpg" type="image/x-icon" />
-
     <script src="./js/requirejs/require.js"></script>
     <script type="text/javascript">
         function doLogin() {
