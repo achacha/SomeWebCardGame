@@ -1,0 +1,14 @@
+avatar slots
+
+recipes
+
+raw materials
+
+inventory deck of gatherers
+
+
+---
+
+player
+  inventory
+    [item]
