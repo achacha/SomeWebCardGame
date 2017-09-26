@@ -14,9 +14,16 @@ import java.sql.SQLException;
 public class ItemDbo extends BaseIndexedDbo {
     private static final Logger LOGGER = LogManager.getLogger(ItemDbo.class);
 
+    /** Item id */
     protected long id;
+
+    /** Inventory that contains this item */
     protected long inventoryId;
+
+    /** Item type */
     protected ItemType type;
+
+    /** Quantity stack */
     protected long quantity;
 
     @Override

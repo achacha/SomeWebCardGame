@@ -13,8 +13,13 @@ import java.sql.SQLException;
 public class PlayerDbo extends BaseIndexedDbo {
     private static final Logger LOGGER = LogManager.getLogger(PlayerDbo.class);
 
+    /** Player id */
     protected long id;
+
+    /** Login that owns this player */
     protected long loginId;
+
+    /** Inventory */
     protected InventoryDbo inventory;
 
     @Override
