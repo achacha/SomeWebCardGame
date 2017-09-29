@@ -9,6 +9,7 @@
     <link href="./js/tether/dist/css/tether.min.css" rel="stylesheet"/>
     <script src="./js/tether/dist/js/tether.min.js"></script>
     <link href="./js/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="./js/popper.js/dist/popper.js"></script>
     <script src="./js/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="./js/font-awesome/css/font-awesome.min.css">

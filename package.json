@@ -19,7 +19,8 @@
     "jquery-ui": "1.12.1",
     "phaser": "2.6.2",
     "requirejs": "^2.3.3",
-    "popper.js": "^1.11.0"
+    "popper.js": "^1.11.0",
+    "tether": "^1.4.0"
   },
   "devDependencies": {},
   "repository": "git@github.com:achacha/SomeWebCardGame.git"
