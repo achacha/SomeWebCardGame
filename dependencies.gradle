@@ -3,7 +3,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
     //
-    // Jersey and Swagger
+    // Tomcat, Jersey
     //
     // https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-catalina
     compileOnly group: 'org.apache.tomcat', name: 'tomcat-catalina', version: "${tomcatVersion}"
@@ -26,13 +26,13 @@ dependencies {
     // Commons
     //
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: "${commonsLang3Version}"
     // https://mvnrepository.com/artifact/commons-io/commons-io
-    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile group: 'commons-io', name: 'commons-io', version: "${commonsIoVersion}"
     // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
-    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: "${commonsCollectionsVersion}"
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
-    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+    compile group: 'commons-codec', name: 'commons-codec', version: "${commonsCodecVersion}"
 
     //
     // Database
@@ -40,9 +40,11 @@ dependencies {
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     compile group: 'org.postgresql', name: 'postgresql', version: "${postgresVersion}"
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
-    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.1'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.6.2'
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
-    compile group: 'org.flywaydb', name: 'flyway-core', version:"${flywaydbVersion}"
+    compile group: 'org.flywaydb', name: 'flyway-core', version: "${flywaydbVersion}"
+    // https://mvnrepository.com/artifact/com.h2database/h2
+    testCompile group: 'com.h2database', name: 'h2', version: "${h2Version}"
 
     //
     // Logging
@@ -60,9 +62,9 @@ dependencies {
     // Test tools for compile time
     //
     // https://mvnrepository.com/artifact/com.google.code.findbugs/annotations
-    compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
+    compile group: 'com.google.code.findbugs', name: 'annotations', version: "${findbugsVersion}"
     // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
-    compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
+    compile group: 'com.jayway.jsonpath', name: 'json-path', version: "${jsonpathVersion}"
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     compile group: 'org.mockito', name: 'mockito-core', version: "${mockitoVersion}"
 
