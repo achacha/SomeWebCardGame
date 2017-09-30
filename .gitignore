@@ -8,3 +8,5 @@
 /etc/
 /yarn.lock
 /.gradletasknamecache
+/src/main/generated/
+/src/test/generated_tests/
