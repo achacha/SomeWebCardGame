@@ -52,6 +52,7 @@ task ideaInfo {
     group 'help'
     description 'IntelliJ Idea info'
     println "idea.module.sourceDirs="+idea.module.sourceDirs
+    println "idea.module.testSourceDirs="+idea.module.testSourceDirs
     println "idea.module.generatedSourceDirs="+idea.module.generatedSourceDirs
 }
 
