@@ -39,7 +39,20 @@ idea {
     module {
         name = 'SomeWebCardGame'
         inheritOutputDirs = true
+
+        sourceDirs += file("src/main/generated")
+        testSourceDirs += file("src/test/generated_tests")
+
+        generatedSourceDirs += file("src/main/generated")
+        generatedSourceDirs += file("src/test/generated_tests")
     }
+}
+
+task ideaInfo {
+    group 'help'
+    description 'IntelliJ Idea info'
+    println "idea.module.sourceDirs="+idea.module.sourceDirs
+    println "idea.module.generatedSourceDirs="+idea.module.generatedSourceDirs
 }
 
 compileKotlin {
