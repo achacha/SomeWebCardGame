@@ -6,13 +6,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Inventory
  */
-public class InventoryDbo extends BaseIndexedDbo {
-    private static final Logger LOGGER = LogManager.getLogger(InventoryDbo.class);
+public class CardDbo extends BaseIndexedDbo {
+    private static final Logger LOGGER = LogManager.getLogger(CardDbo.class);
 
     /** Inventory id */
     protected long id;
@@ -20,11 +19,8 @@ public class InventoryDbo extends BaseIndexedDbo {
     /** Player that owns this inventory */
     protected long playerId;
 
-    /** Energy stores in the inventory */
-    protected long energy;
-
-    /** Items in this inventory */
-    protected List<ItemDbo> items;
+    /** Card name */
+    protected String name;
 
     @Override
     public long getId() {
@@ -34,20 +30,11 @@ public class InventoryDbo extends BaseIndexedDbo {
     @Override
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
-        this.playerId = rs.getLong("login__id");
-        this.energy = rs.getLong("energy");
-        this.items = ItemDboFactory.getItemsForInventory(this.id);
+        this.playerId = rs.getLong("player__id");
+        this.name = rs.getString("name");
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
         }
-    }
-
-    public long getEnergy() {
-        return energy;
-    }
-
-    public List<ItemDbo> getItems() {
-        return items;
     }
 }

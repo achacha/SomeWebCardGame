@@ -1,3 +1,6 @@
+import org.flywaydb.gradle.task.FlywayCleanTask
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
 buildscript {
     ext.kotlin_version = '1.1.50'
     repositories {
@@ -113,7 +116,7 @@ task cleanJs(type: Delete) {
 war.dependsOn copyJs
 clean.dependsOn cleanJs
 
-task flywayCleanTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
+task flywayCleanTest(type: FlywayCleanTask) {
     description 'Migrate Test database and populate test data'
     url = "${homeProperties['test.db.jdbcUrl']}"
     driver = "${homeProperties['test.db.driverClassName']}"
@@ -124,7 +127,7 @@ task flywayCleanTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
             'filesystem:db/migration_test'
     ]
 }
-task flywayMigrateTest(type: org.flywaydb.gradle.task.FlywayMigrateTask, dependsOn: flywayCleanTest) {
+task flywayMigrateTest(type: FlywayMigrateTask, dependsOn: flywayCleanTest) {
     description 'Migrate Test database and populate test data'
     url = "${homeProperties['test.db.jdbcUrl']}"
     driver = "${homeProperties['test.db.driverClassName']}"

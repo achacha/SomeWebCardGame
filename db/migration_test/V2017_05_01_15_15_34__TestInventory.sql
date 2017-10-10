@@ -12,3 +12,8 @@ INSERT INTO public.item(id,inventory__id,type,quantity) VALUES
   ,(5,1,5,2)  --orange
   ,(6,1,6,1)  --red
   ;
+
+INSERT INTO public.card(id,player__id,name) VALUES
+  (1,1,'Patient Zero')
+ ,(2,1,'One Eye')
+  ;
