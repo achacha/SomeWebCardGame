@@ -32,6 +32,9 @@ public class PlayerDbo extends BaseIndexedDbo {
         this.id = rs.getLong("id");
         this.loginId = rs.getLong("login__id");
         this.inventory = InventoryDboFactory.getByPlayerId(this.id);
-    }
 
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("fromResultSet: this="+this);
+        }
+    }
 }

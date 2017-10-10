@@ -61,6 +61,10 @@ public class LoginAttrDbo extends BaseIndexedDbo {
         loginId = rs.getLong("login_id");
         name = rs.getString("name");
         value = rs.getString("value");
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("fromResultSet: this="+this);
+        }
     }
 
     @Override

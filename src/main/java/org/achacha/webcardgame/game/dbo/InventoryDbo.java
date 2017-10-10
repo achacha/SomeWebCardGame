@@ -30,6 +30,10 @@ public class InventoryDbo extends BaseIndexedDbo {
         this.playerId = rs.getLong("player__id");
         this.energy = rs.getLong("energy");
         this.items = ItemDboFactory.getItemsForInventory(this.id);
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("fromResultSet: this="+this);
+        }
     }
 
     public long getEnergy() {

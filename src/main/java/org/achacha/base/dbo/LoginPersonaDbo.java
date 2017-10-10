@@ -34,6 +34,10 @@ public class LoginPersonaDbo extends LoginUserDbo {
         postal = rs.getString("postal");
         phone1 = rs.getString("phone1");
         phone2 = rs.getString("phone2");
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("fromResultSet: this="+this);
+        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.achacha.base.dbo;
 
-import com.google.gson.JsonObject;
 import org.achacha.base.db.BaseDbo;
 import org.achacha.base.logging.Event;
 import org.apache.logging.log4j.LogManager;
@@ -49,20 +48,6 @@ public class EventLogDbo extends BaseDbo {
         eventId = rs.getInt("event_id");
         loginId = rs.getInt("login_id");
         data = rs.getString("data");
-    }
-
-    @Override
-    public JsonObject toJsonObject() {
-        JsonObject obj = new JsonObject();
-
-        obj.addProperty("id", id);
-        obj.addProperty("created_on", createdOn.toString());
-        obj.addProperty("event_id", eventId);
-        obj.addProperty("login_id", loginId);
-
-        obj.addProperty("data", data);
-
-        return obj;
     }
 
     /**

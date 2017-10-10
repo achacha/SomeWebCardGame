@@ -105,6 +105,10 @@ public class LoginUserDbo extends BaseIndexedDbo {
         active = rs.getBoolean("is_active");
         timezone = TimeZone.getTimeZone(rs.getString("timezone"));
         locale = I18nHelper.getLocale(rs.getString("locale"));
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("fromResultSet: this="+this);
+        }
     }
 
     /**

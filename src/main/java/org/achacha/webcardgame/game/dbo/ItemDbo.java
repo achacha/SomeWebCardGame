@@ -37,6 +37,10 @@ public class ItemDbo extends BaseIndexedDbo {
         this.inventoryId = rs.getLong("inventory__id");
         this.type = ItemType.of(rs.getInt("type"));
         this.quantity = rs.getLong("quantity");
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("fromResultSet: this="+this);
+        }
     }
 
     public ItemType getType() {
