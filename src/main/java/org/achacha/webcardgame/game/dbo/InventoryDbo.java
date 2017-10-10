@@ -34,7 +34,7 @@ public class InventoryDbo extends BaseIndexedDbo {
     @Override
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
-        this.playerId = rs.getLong("login__id");
+        this.playerId = rs.getLong("player__id");
         this.energy = rs.getLong("energy");
         this.items = ItemDboFactory.getItemsForInventory(this.id);
 
