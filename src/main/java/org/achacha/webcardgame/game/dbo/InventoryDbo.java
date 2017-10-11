@@ -20,9 +20,6 @@ public class InventoryDbo extends BaseIndexedDbo {
     /** Player that owns this inventory */
     protected long playerId;
 
-    /** Energy stores in the inventory */
-    protected long energy;
-
     /** Items in this inventory */
     protected List<ItemDbo> items;
 
@@ -35,16 +32,11 @@ public class InventoryDbo extends BaseIndexedDbo {
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.playerId = rs.getLong("player__id");
-        this.energy = rs.getLong("energy");
         this.items = ItemDboFactory.getItemsForInventory(this.id);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
         }
-    }
-
-    public long getEnergy() {
-        return energy;
     }
 
     public List<ItemDbo> getItems() {

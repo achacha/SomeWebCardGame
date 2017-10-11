@@ -1,8 +1,8 @@
-INSERT INTO public.player(id,login__id) VALUES
-  (1,2);
+INSERT INTO public.player(id,login__id,energy) VALUES
+  (1,2,1200);
 
-INSERT INTO public.inventory(id,player__id,energy) VALUES
-  (1,1,1200);
+INSERT INTO public.inventory(id,player__id) VALUES
+  (1,1);
 
 INSERT INTO public.item(id,inventory__id,type,quantity) VALUES
    (1,1,1,31)   --white

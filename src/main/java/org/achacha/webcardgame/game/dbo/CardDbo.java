@@ -22,6 +22,8 @@ public class CardDbo extends BaseIndexedDbo {
     /** Card name */
     protected String name;
 
+
+
     @Override
     public long getId() {
         return this.id;

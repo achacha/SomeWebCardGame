@@ -17,6 +17,7 @@ public class PlayerDboTest extends BaseInitializedTest {
         Assert.assertEquals(1, players.size());
 
         PlayerDbo player = players.get(0);
+        Assert.assertEquals(1200, player.getEnergy());
         Assert.assertEquals(TestDataConstants.JUNIT_PLAYERID, player.getId());
     }
 }
