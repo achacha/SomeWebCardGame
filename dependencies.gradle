@@ -41,7 +41,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     compile group: 'org.postgresql', name: 'postgresql', version: "${postgresVersion}"
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
-    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.6.2'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: "${hikariVersion}"
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
     compile group: 'org.flywaydb', name: 'flyway-core', version: "${flywaydbVersion}"
     // https://mvnrepository.com/artifact/com.h2database/h2
