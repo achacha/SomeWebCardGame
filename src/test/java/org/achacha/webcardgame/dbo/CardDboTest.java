@@ -14,6 +14,10 @@ public class CardDboTest extends BaseInitializedTest {
     public void testGetCardsForPlayer() {
         Collection<CardDbo> cards = CardDboFactory.getByPlayerId(TestDataConstants.JUNIT_PLAYERID);
         Assert.assertNotNull(cards);
-        Assert.assertEquals(2, cards.size());
+        Assert.assertEquals(3, cards.size());
+
+        CardDbo one = cards.iterator().next();
+        Assert.assertEquals(1, one.getId());
+        Assert.assertNotNull(one.getStickers());
     }
 }
