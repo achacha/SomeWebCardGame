@@ -68,6 +68,46 @@ public class JsonHelper {
     }
 
     /**
+     * Standard success object with data
+     * success:true
+     *
+     * @param datum JsonEmittable
+     * @return JsonObject
+     */
+    public static JsonObject getSuccessWithData(JsonEmittable datum) {
+        JsonObject obj = new JsonObject();
+
+        obj.addProperty(SUCCESS, true);
+        if (null != datum) {
+            obj.add(DATA, datum.toJsonObject());
+        }
+
+        return obj;
+    }
+
+    /**
+     * Standard success object with collection of data
+     * success:true
+     *
+     * @param data JsonEmittable
+     * @return JsonObject
+     */
+    public static JsonObject getSuccessWithData(Collection<? extends JsonEmittable> data) {
+        JsonObject obj = new JsonObject();
+
+        obj.addProperty(SUCCESS, true);
+        if (null != data) {
+            JsonArray ary = new JsonArray();
+            data.forEach(d -> {
+                ary.add(d.toJsonObject());
+            });
+            obj.add(DATA, ary);
+        }
+
+        return obj;
+    }
+
+    /**
      * Standard fail object
      * success:false
      *
