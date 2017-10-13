@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 
 /**
  * Player
@@ -25,6 +26,9 @@ public class PlayerDbo extends BaseIndexedDbo {
     /** Inventory */
     protected InventoryDbo inventory;
 
+    /** Cards */
+    protected Collection<CardDbo> cards;
+
     @Override
     public long getId() {
         return this.id;
@@ -35,7 +39,9 @@ public class PlayerDbo extends BaseIndexedDbo {
         this.id = rs.getLong("id");
         this.loginId = rs.getLong("login__id");
         this.energy = rs.getLong("energy");
+
         this.inventory = InventoryDboFactory.getByPlayerId(this.id);
+        this.cards = CardDboFactory.getByPlayerId(this.id);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
