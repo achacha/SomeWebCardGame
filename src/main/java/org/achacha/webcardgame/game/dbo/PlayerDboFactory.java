@@ -48,14 +48,18 @@ public class PlayerDboFactory extends BaseDboFactory {
      * @return PlayerDbo or null
      */
     @Nullable
-    public static PlayerDbo getByPlayerId(long playerId) {
+    public static PlayerDbo getByLoginIdAndPlayerId(long loginId, long playerId) {
         PlayerDbo dbo = null;
         try (
                 Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Player/SelectByPlayerId.sql",
-                        p -> p.setLong(1, playerId));
+                        p -> {
+                            p.setLong(1, playerId);
+                            p.setLong(2, loginId);
+                        }
+                );
                 ResultSet rs = pstmt.executeQuery()
         ) {
             if (rs.next()) {
@@ -63,7 +67,7 @@ public class PlayerDboFactory extends BaseDboFactory {
                 dbo.fromResultSet(rs);
             }
         } catch (Exception sqle) {
-            LOGGER.error("Failed to find players for playerId={}", playerId, sqle);
+            LOGGER.error("Failed to find player for playerId={} and loginId={}", playerId, loginId, sqle);
         }
         return dbo;
     }

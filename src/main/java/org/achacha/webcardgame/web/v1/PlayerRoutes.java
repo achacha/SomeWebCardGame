@@ -1,6 +1,5 @@
 package org.achacha.webcardgame.web.v1;
 
-import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
@@ -16,27 +15,32 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
 
+/**
+ * /api/player
+ */
 @Path("player")
 @Produces(MediaType.APPLICATION_JSON)
 public class PlayerRoutes {
+    /**
+     * Get players associated with this login
+     */
     @GET
-    @Path("all")
-    @SecurityLevelRequired(SecurityLevel.PUBLIC)
+    @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response getAllPlayersForThisLogin() {
-        CallContext ctx = CallContextTls.get();
-        if (ctx == null || ctx.getLogin() == null)
-            return Response.status(Response.Status.UNAUTHORIZED).entity(JsonHelper.getFailObject("Current user is not logged in")).build();
-        else {
-            Collection<PlayerDbo> players = PlayerDboFactory.getByLoginId(ctx.getLogin().getId());
-            return Response.ok(JsonHelper.getSuccessWithData(players)).build();
-        }
+        Collection<PlayerDbo> players = PlayerDboFactory.getByLoginId(CallContextTls.get().getLogin().getId());
+        return Response.ok(JsonHelper.getSuccessWithData(players)).build();
     }
 
+    /**
+     * Get player by ID for this login
+     * @param id long
+     * @return Response
+     */
     @GET
     @Path("{id}")
-    @SecurityLevelRequired(SecurityLevel.PUBLIC)
+    @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response getPlayer(@PathParam("id") long id) {
-        PlayerDbo player = PlayerDboFactory.getByPlayerId(id);
+        PlayerDbo player = PlayerDboFactory.getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), id);
         if (player == null)
             return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("Object not found, id="+id)).build();
         else

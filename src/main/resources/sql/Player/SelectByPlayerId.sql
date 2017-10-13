@@ -1,1 +1,1 @@
-select * from public.player where id=?;
+select * from public.player where id=? and login__id=?;

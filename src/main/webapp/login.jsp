@@ -41,7 +41,7 @@
                             %>
                         }
                         else {
-                            console.log("Result fail on  login");
+                            console.log("Result fail on login");
                         }
                     },
                     error: function (result) {
