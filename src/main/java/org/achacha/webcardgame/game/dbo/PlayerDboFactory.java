@@ -44,7 +44,8 @@ public class PlayerDboFactory extends BaseDboFactory {
 
     /**
      * Get all PlayerDbo objects associated with a login id
-     * @param playerId long id
+     * @param loginId long login id
+     * @param playerId long player id
      * @return PlayerDbo or null
      */
     @Nullable

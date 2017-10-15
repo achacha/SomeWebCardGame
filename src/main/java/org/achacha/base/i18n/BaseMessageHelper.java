@@ -39,11 +39,12 @@ public abstract class BaseMessageHelper {
      * is returned.  When a key is not found, than the offending key is returned in 
      * a string.  Neither of these errors should happen in production. 
      * 
+     * @param locale Locale
      * @param key the error message key
-     * @param parms optional values for filling placeholders in value string 
+     * @param params optional values for filling placeholders in value string
      * @return the localized message
      */
-    public String getLocalizedMsg(Locale locale, String key, Object... parms)
+    public String getLocalizedMsg(Locale locale, String key, Object... params)
     {
         // ResourceBundle manages its own caches so we don't have to preload bundles.
         ResourceBundle bundle = ResourceBundle.getBundle(getBundleName(), locale, utf8Contol);
@@ -64,7 +65,7 @@ public abstract class BaseMessageHelper {
         
         // We found a value that might have placeholders.  If we start getting
         // IllegalArgumentExceptions here, we can wrap the format call in a try block.
-        if (parms.length > 0) value = MessageFormat.format(value, parms);  
+        if (params.length > 0) value = MessageFormat.format(value, params);
         return value;
     }
     

@@ -16,7 +16,7 @@ public abstract class BaseIndexedDbo extends BaseDbo {
 
     /**
      * Save the current object
-     * if (id > 0) it calls update otherwise insert
+     * if (id &gt; 0) it calls update otherwise insert
      *
      * @throws Exception if unable to save
      */
@@ -29,7 +29,7 @@ public abstract class BaseIndexedDbo extends BaseDbo {
 
     /**
      * Create a new instance and set id
-     * @throws Exception
+     * @throws Exception if unable to insert
      */
     protected void insert() throws Exception {
         throw new NotImplementedException("Not implemented: "+getClass()+".insert()");
@@ -37,7 +37,7 @@ public abstract class BaseIndexedDbo extends BaseDbo {
 
     /**
      * Update current instance
-     * @throws Exception
+     * @throws Exception if unable to update
      */
     protected void update() throws Exception {
         throw new NotImplementedException("Not implemented: "+getClass()+".update()");

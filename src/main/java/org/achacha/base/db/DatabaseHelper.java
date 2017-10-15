@@ -32,7 +32,7 @@ public class DatabaseHelper {
      *
      * @param sql statement
      * @return JsonArray or null if something bad happened
-     * @throws SQLException
+     * @throws SQLException if fails to select data
      */
     public static JsonArray selectToJsonArrayOfObjects(String sql) throws SQLException {
         return selectToJsonArrayOfObjects(sql, null);
@@ -42,9 +42,9 @@ public class DatabaseHelper {
      * Execute simple SQL query and convert result to JsonArray
      *
      * @param sql statement
-     * @param lookupMaps column -> Map used to do lookup/replace on the data
+     * @param lookupMaps column to Map used to do lookup/replace on the data
      * @return JsonArray or null if something bad happened
-     * @throws SQLException
+     * @throws SQLException if fails to select data
      */
     public static JsonArray selectToJsonArrayOfObjects(String sql, Map<String,Map<String,String>> lookupMaps) throws SQLException {
         Statement stmt = null;
@@ -71,9 +71,9 @@ public class DatabaseHelper {
      * Execute simple SQL query and convert result to JsonArray
      *
      * @param sql statement
-     * @param lookupMaps column -> Map used to do lookup/replace on the data
+     * @param lookupMaps column to Map used to do lookup/replace on the data
      * @return JsonArray or null if something bad happened
-     * @throws SQLException
+     * @throws SQLException if fails to select data
      */
     public static ArrayList<Map<String,String>> selectToArrayOfMaps(String sql, Map<String,Map<String,String>> lookupMaps) throws SQLException {
         Statement stmt = null;
@@ -100,7 +100,7 @@ public class DatabaseHelper {
      * e.g. [ {name0:val00, name1:val01}, {name0:val10, name1:val11}, {name0:val20, name1:val21} ]
      *
      * @param rs ResultSet
-     * @param lookupMaps column -> Map used to do lookup/replace on the data
+     * @param lookupMaps column to Map used to do lookup/replace on the data
      * @param n  use first n elements (-1 for everything)
      * @return Array of Maps
      */
@@ -211,7 +211,7 @@ public class DatabaseHelper {
      * Escape ANSI SQL queries
      * Replace ' with ''
      *
-     * @param in
+     * @param in String
      * @return Escaped string
      */
     public static String escapeString(String in) {
@@ -220,8 +220,8 @@ public class DatabaseHelper {
 
     /**
      * Populate JsonObject with DataSource properties
-     * @param ds
-     * @return
+     * @param ds DataSource
+     * @return JsonObject
      */
     public static JsonObject toJsonObject(DataSource ds) {
         JsonObject obj = new JsonObject();
@@ -246,7 +246,7 @@ public class DatabaseHelper {
      * Execute SQL which returns count()
      * @param sql String
      * @return long result of count, -1 of count SQL returned no result set
-     * @throws SQLException
+     * @throws SQLException if fails to query
      */
     public static long countQuery(String sql) throws SQLException {
         Connection conn = null;

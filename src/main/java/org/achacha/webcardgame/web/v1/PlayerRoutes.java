@@ -23,6 +23,7 @@ import java.util.Collection;
 public class PlayerRoutes {
     /**
      * Get players associated with this login
+     * @return Response
      */
     @GET
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)

@@ -48,6 +48,10 @@ public class AuthRoutes {
     /**
      * NOTE: /api/auth/login is a reserved URI (See GlobalProperties)
      * It is excluded from security rules as it is a way to authenticate
+     *
+     * @param email Email
+     * @param password Password
+     * @return Response
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)

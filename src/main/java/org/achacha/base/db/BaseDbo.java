@@ -47,7 +47,7 @@ public abstract class BaseDbo implements JsonEmittable {
     /**
      * Populate data from ResultSet
      * @param rs ResultSet
-     * @throws SQLException
+     * @throws SQLException if fails to get data from ResultSet
      */
     public abstract void fromResultSet(ResultSet rs) throws SQLException;
 }

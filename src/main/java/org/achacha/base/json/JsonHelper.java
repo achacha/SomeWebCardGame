@@ -162,6 +162,7 @@ public class JsonHelper {
      *
      * @param rs ResultSet
      * @param lookupMaps to lookup columns and replace with values
+     * @param useLabels if true will use column label in the database for name instead of column name
      * @return JsonObject
      */
     public static JsonObject toJsonObject(ResultSet rs, Map<String,Map<String,String>> lookupMaps, boolean useLabels) {
@@ -217,8 +218,9 @@ public class JsonHelper {
      * e.g. [ {name0:val00, name1:val01}, {name0:val10, name1:val11}, {name0:val20, name1:val21} ]
      *
      * @param rs ResultSet
-     * @param lookupMaps column -> Map used to do lookup/replace on the data
+     * @param lookupMaps column to Map used to do lookup/replace on the data
      * @param n  use first n elements (-1 for everything)
+     * @param exclusions list of columns to exclude value (usually sensitive data to omit from client transmission)
      * @return JsonArray
      */
     public static JsonArray toArrayOfObjects(ResultSet rs, int n, Map<String,Map<String,String>> lookupMaps, List<String> exclusions) {
@@ -448,11 +450,11 @@ public class JsonHelper {
         }
     }
 
-
     /**
      * Convert a list of JsonEmittable types to JsonArray
      * @param emittables Collection of JsonEmittable
-     * @return JsonArray
+     * @param <T> extends JsonEmittable
+     * @return JsonArray from collection
      */
     public static <T extends JsonEmittable> JsonArray toJsonArray(Collection<T> emittables) {
         JsonArray ary = new JsonArray();
@@ -561,8 +563,8 @@ public class JsonHelper {
 
     /**
      * Convert Properties to JsonObject
-     * @param properties
-     * @return
+     * @param properties Properties
+     * @return JsonObject
      */
     public static JsonObject toJsonObject(Properties properties) {
         JsonObject jobj = new JsonObject();

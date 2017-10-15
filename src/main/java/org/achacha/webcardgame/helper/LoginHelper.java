@@ -63,7 +63,6 @@ public class LoginHelper {
     /**
      * Get originating URI and set it on session so we can redirect to it
      * @param request HttpServletRequest
-     * @return URI string
      */
     public static void processOriginatingUri(HttpServletRequest request) {
         String baseOriginatingUrl = request.getParameter(HttpHeaders.REFERER);

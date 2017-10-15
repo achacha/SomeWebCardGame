@@ -55,7 +55,7 @@ public class DatabaseManager {
     /**
      * Get database connection from Global DataSource
      * @return Connection
-     * @throws SQLException
+     * @throws SQLException if fails to get connection
      */
     @Nonnull
     public Connection getConnection() throws SQLException {
@@ -64,9 +64,9 @@ public class DatabaseManager {
 
     /**
      * Get database connection from Global DataSource
-     * @param autoCommit true=transactions, false=required manual commit
+     * @param autoCommit if true auto-commits, if false requires an explicit commit
      * @return Connection
-     * @throws SQLException
+     * @throws SQLException if fails to get connection
      */
     @Nonnull
     public Connection getConnection(boolean autoCommit) throws SQLException {
@@ -76,6 +76,7 @@ public class DatabaseManager {
     /**
      * Prepare PreparedStatement with parameters using lambda function
      *
+     * {@code
      * try (
      *      Connection connection = DatabaseManager.getConnection();
      *      PreparedStatement stmt = DatabaseManager.prepareStatement(connection, SQL, pstmt -> {
@@ -84,17 +85,19 @@ public class DatabaseManager {
      *      ResultSet rs = stmt.executeQuery()
      * ) {
      *      while (rs.next()) {
-     *      // ...
+     *          // ...
+     *      }
      * } catch (Exception e) {
      *      e.printStackTrace();
+     * }
      * }
      *
      * @param conn Connection
      * @param resourcePath String SQL resource path, looked up via SQLProvider
      * @param setter Setter that will set the parameters in the PreparedStatement
      * @return PreparedStatement with parameters set
-     * @throws SQLException
-     * @throws IOException
+     * @throws SQLException if fails to prepare statement
+     * @throws IOException if fails to read resource
      * @see SqlProvider
      */
     public PreparedStatement prepareStatement(Connection conn, String resourcePath, PreparedStatementSetter setter) throws IOException, SQLException {
@@ -109,6 +112,7 @@ public class DatabaseManager {
      * Prepare PreparedStatement with parameters using lambda function
      * This method does not lookup SQL in resource bundle and uses SQL provided
      *
+     * {@code
      * try (
      *      Connection connection = DatabaseManager.getConnection();
      *      PreparedStatement stmt = DatabaseManager.prepareStatementDirect(connection, SQL, pstmt -> {
@@ -117,16 +121,18 @@ public class DatabaseManager {
      *      ResultSet rs = stmt.executeQuery()
      * ) {
      *      while (rs.next()) {
-     *      // ...
+     *          // ...
+     *      }
      * } catch (Exception e) {
      *      e.printStackTrace();
+     * }
      * }
      *
      * @param conn Connection
      * @param sql String Actual SQL with parameters to set
      * @param setter Setter that will set the parameters in the PreparedStatement
      * @return PreparedStatement with parameters set
-     * @throws SQLException
+     * @throws SQLException is fails to prepare statement
      */
     public static PreparedStatement prepareStatementDirect(Connection conn, String sql, PreparedStatementSetter setter) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -183,7 +189,7 @@ public class DatabaseManager {
      * @param sql String Actual SQL
      * @param setter Setter for PreparedStatement
      * @return JdbcTuple
-     * @throws SQLException
+     * @throws SQLException if fails to execute SQL
      */
     public JdbcTuple executeSqlDirect(String sql, PreparedStatementSetter setter) throws Exception {
         JdbcTuple triple = new JdbcTuple();
@@ -200,7 +206,7 @@ public class DatabaseManager {
      * @param resourcePath String SQL resource via SqlProvider
      * @param setter Setter for PreparedStatement
      * @return JdbcTuple
-     * @throws SQLException
+     * @throws SQLException if execute fails
      * @see SqlProvider
      */
     public JdbcTuple executeSql(String resourcePath, PreparedStatementSetter setter) throws Exception {
@@ -218,7 +224,7 @@ public class DatabaseManager {
      *
      * @param sql String SQL
      * @return JdbcTuple
-     * @throws SQLException
+     * @throws SQLException if fails to execit SQL
      */
     public JdbcTuple executeSqlDirect(String sql) throws Exception {
         JdbcTuple triple = new JdbcTuple();
@@ -234,7 +240,7 @@ public class DatabaseManager {
      *
      * @param resourcePath String SQL resource classpath
      * @return JdbcTuple
-     * @throws SQLException
+     * @throws SQLException if fails to execute SQL
      */
     public JdbcTuple executeSql(String resourcePath) throws Exception {
         JdbcTuple triple = new JdbcTuple();

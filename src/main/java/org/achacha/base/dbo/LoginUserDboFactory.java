@@ -71,6 +71,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
     /**
      * Delete a LoginUserDbo from the database.
      * This method is for testing purposes only. Deletes on non-transient data should instead flip deleted flag.
+     * @param email String
      */
     public static void deleteForRealByEmail(String email) {
         DatabaseManager dm = Global.getInstance().getDatabaseManager();

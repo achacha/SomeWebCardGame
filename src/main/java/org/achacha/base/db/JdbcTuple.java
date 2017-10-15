@@ -7,16 +7,18 @@ import java.sql.Statement;
 /**
  * Contains DB objects that close when done via AutoCloseable using try-with-resources
  *
- final String SQL = "select * from NVPAIR where name=?";
- try (
-        JdbcTuple triple = JdbcTuple.executeSql(SQL, pstmt -> { pstmt.setString(1, "foo"); })
- ){
-    while (triple.getResultSet().next()) {
-        System.out.println(triple.getResultSet().getString("name") + "=" + triple.getResultSet().getString("value"));
-    }
- } catch (Exception e) {
-    e.printStackTrace();
- }
+ * {@code
+ *    final String SQL = "select * from NVPAIR where name=?";
+ *    try (
+ *           JdbcTuple triple = JdbcTuple.executeSql(SQL, pstmt -> { pstmt.setString(1, "foo"); })
+ *    ){
+ *       while (triple.getResultSet().next()) {
+ *           System.out.println(triple.getResultSet().getString("name") + "=" + triple.getResultSet().getString("value"));
+ *       }
+ *    } catch (Exception e) {
+ *       e.printStackTrace();
+ *    }
+ * }
  *
  * NOTE: if used without try-with-resources, you have to call close() explicitly
  */

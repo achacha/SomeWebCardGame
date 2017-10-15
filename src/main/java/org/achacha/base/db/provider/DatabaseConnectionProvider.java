@@ -19,6 +19,7 @@ public interface DatabaseConnectionProvider {
     /**
      * Allow explicit control of auto-commit on the connection
      * This is ususally used to turn off auto-commit and allow transactions
+     * @param autoCommit if true will auto-commit
      * @return Connection
      * @throws SQLException if error occurs
      */

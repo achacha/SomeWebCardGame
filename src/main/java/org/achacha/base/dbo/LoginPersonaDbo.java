@@ -62,6 +62,7 @@ public class LoginPersonaDbo extends LoginUserDbo {
 
     /**
      * Lazy-load login attributes associated with this object
+     * @return Collection of LoginAttrDbo
      */
     public synchronized Collection<LoginAttrDbo> getAttrs() {
         if (attrs == null) {

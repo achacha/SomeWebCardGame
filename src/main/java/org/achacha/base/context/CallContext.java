@@ -73,8 +73,9 @@ public class CallContext {
     /**
      * Construct a call context
      *
-     * @param request  HttpServletRequest
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
+     * @param method String method
      */
     public CallContext(HttpServletRequest request, HttpServletResponse response, String method) {
         if (request == null || response == null)
@@ -223,7 +224,8 @@ public class CallContext {
     /**
      * Perform a login by checking the database and if valid adding this login user to session
      * @param username String dto LoginAttamptDto with all fields present
-     * @return true if login is valid
+     * @param pwd String password
+     * @return LoginResult
      */
     public LoginResult login(String username, String pwd) {
         // Try to login the user
@@ -247,7 +249,8 @@ public class CallContext {
 
     /**
      * Impersonate a login
-     * @return true is successfully impersonated
+     * @param email String
+     * @return Event of impersonation
      */
     public Event impersonate(String email) {
         if (login.isSuperuser()) {
@@ -407,9 +410,12 @@ public class CallContext {
     }
 
     /**
-     * Create JSON object as response
+     * Send JSON object as response
+     * Adds authorized state to this object
+     *
      * Status is 200 - HttpServletResponse.SC_OK
      *
+     * @param obj JsonObject to return as response
      * @return JsonObject written to response
      */
     @Nonnull
@@ -430,6 +436,7 @@ public class CallContext {
 
     /**
      * Default response for methods not implemented
+     *
      * Status is 501 - HttpServletResponse.SC_NOT_IMPLEMENTED
      *
      * @return JsonObject written to response
@@ -536,6 +543,7 @@ public class CallContext {
     }
 
     /**
+     * @param request HttpServletRequest
      * @return Uri relative to web context (with leading /)
      */
     @Nonnull

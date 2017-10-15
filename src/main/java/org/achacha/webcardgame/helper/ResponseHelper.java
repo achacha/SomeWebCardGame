@@ -63,6 +63,7 @@ public class ResponseHelper {
     /**
      * Do 302 redirect to url
      * @param response HttpServletResponse
+     * @param url redirect URL
      */
     public static void redirectUrlVia302(HttpServletResponse response, String url) {
         LOGGER.debug("HTTP 302 redirect to URL: ", url);
@@ -73,6 +74,7 @@ public class ResponseHelper {
     /**
      * Do 302 redirect to uri and prepends context path
      * @param response HttpServletResponse
+     * @param uri redirect URI
      */
     public static void redirectUriRelativeToContextVia302(HttpServletResponse response, String uri) {
         String url = Global.getInstance().getProperties().getWebContextPath() + uri;
@@ -526,8 +528,8 @@ public class ResponseHelper {
     /**
      * Redirect to the login page via 302 so URL can change to login page
      * @param context CallContext
-     * @throws javax.servlet.ServletException
-     * @throws IOException
+     * @throws ServletException if fails to redirect to login lage
+     * @throws IOException if fails to redirect to login lage
      */
     public static void redirectToLogin(CallContext context) throws ServletException, IOException {
         String loginUrl = Global.getInstance().getProperties().getUrlPublicHome() + Global.getInstance().getProperties().getUriHomeLogin();
@@ -540,8 +542,8 @@ public class ResponseHelper {
      * NOTE: This will keep requested URL unchanged
      * @param context CallContext
      * @param jspPath String
-     * @throws javax.servlet.ServletException
-     * @throws IOException
+     * @throws ServletException if fails to forward
+     * @throws IOException if fails forward
      */
     public static void redirectInternalToJsp(CallContext context, String jspPath) throws ServletException, IOException {
         LOGGER.debug("Servlet dispatcher redirect: {}", jspPath);

@@ -58,7 +58,7 @@ public class DboCacheManager {
      * Can be used directly when populating from database since id of 0 will always return null
      *
      * @param clazz Class E of the BaseIndexedDbo
-     * @param id long id of the object or pass <=0 to guarantee null
+     * @param id long id of the object or pass &lt;=0 to guarantee null
      * @param <E> type of BaseIndexedDbo
      * @return E or null if not found
      * @see #init()
@@ -79,7 +79,7 @@ public class DboCacheManager {
      * Get DboCache object associated with the Class
      * @param clazz Class of E
      * @param <E> extends BaseIndexedDbo
-     * @return
+     * @return DboCache of E
      */
     public <E extends BaseIndexedDbo> DboCache<E> getCache(Class<E> clazz) {
         DboCache<E> cache = caches.get(clazz);
@@ -97,6 +97,7 @@ public class DboCacheManager {
     }
 
     /**
+     * @param simpleName String to lookup against a class name
      * @return Class from simple name
      */
     public Class<? extends BaseIndexedDbo> forName(String simpleName) {
