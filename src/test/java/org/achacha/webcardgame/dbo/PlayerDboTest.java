@@ -23,7 +23,7 @@ public class PlayerDboTest extends BaseInitializedTest {
 
     @Test
     public void testGetPlayerForId() {
-        PlayerDbo player = PlayerDboFactory.getByPlayerId(TestDataConstants.JUNIT_PLAYERID);
+        PlayerDbo player = PlayerDboFactory.getByLoginIdAndPlayerId(TestDataConstants.JUNIT_LOGINID, TestDataConstants.JUNIT_PLAYERID);
         Assert.assertNotNull(player);
         Assert.assertEquals(1200, player.getEnergy());
         Assert.assertEquals(TestDataConstants.JUNIT_PLAYERID, player.getId());
