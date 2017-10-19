@@ -34,6 +34,8 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-collections4', version: "${commonsCollectionsVersion}"
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
     compile group: 'commons-codec', name: 'commons-codec', version: "${commonsCodecVersion}"
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+    compile group: 'org.apache.commons', name: 'commons-text', version: "${commonsTextVersion}"
 
     //
     // Database
