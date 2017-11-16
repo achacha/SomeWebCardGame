@@ -17,10 +17,10 @@
     "font-awesome": "^4.7.0",
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
-    "phaser": "2.6.2",
-    "requirejs": "^2.3.3",
-    "popper.js": "^1.11.0",
-    "tether": "^1.4.0"
+    "phaser": "~2.6",
+    "requirejs": "~2",
+    "popper.js": "~1",
+    "tether": "~1"
   },
   "devDependencies": {},
   "repository": "git@github.com:achacha/SomeWebCardGame.git"
