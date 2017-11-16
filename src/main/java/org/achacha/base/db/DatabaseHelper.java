@@ -9,12 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,24 +42,17 @@ public class DatabaseHelper {
      * @throws SQLException if fails to select data
      */
     public static JsonArray selectToJsonArrayOfObjects(String sql, Map<String,Map<String,String>> lookupMaps) throws SQLException {
-        Statement stmt = null;
-        ResultSet rs = null;
-        JsonArray ary = null;
-        Connection conn = null;
-        try {
+        try (
+                Connection conn = Global.getInstance().getDatabaseManager().getConnection();
+                Statement stmt = conn.createStatement()
+        ) {
             // Execute query
-            conn = Global.getInstance().getDatabaseManager().getConnection();
-            stmt = conn.createStatement();
-
             LOGGER.debug("SQL={}", sql);
-            rs = stmt.executeQuery(sql);
-
-            // Convert ResultSet into JSON
-            ary = JsonHelper.toArrayOfObjects(rs, -1, lookupMaps);
-        } finally {
-            DatabaseManager.close(conn, stmt, rs);
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                // Convert ResultSet into JSON
+                return JsonHelper.toArrayOfObjects(rs, -1, lookupMaps);
+            }
         }
-        return ary;
     }
 
     /**
@@ -76,22 +64,16 @@ public class DatabaseHelper {
      * @throws SQLException if fails to select data
      */
     public static ArrayList<Map<String,String>> selectToArrayOfMaps(String sql, Map<String,Map<String,String>> lookupMaps) throws SQLException {
-        Statement stmt = null;
-        ResultSet rs = null;
-        Connection conn = null;
-        try {
+        try (
+                Connection conn = Global.getInstance().getDatabaseManager().getConnection();
+                Statement stmt = conn.createStatement()
+        ){
             // Execute query
-            conn = Global.getInstance().getDatabaseManager().getConnection();
-            stmt = conn.createStatement();
-
             LOGGER.debug("SQL: ", sql);
-            rs = stmt.executeQuery(sql);
-
-            // Convert ResultSet into JSON
-            return toArrayOfMaps(rs, -1, lookupMaps);
-
-        } finally {
-            DatabaseManager.close(conn, stmt, rs);
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                // Convert ResultSet into JSON
+                return toArrayOfMaps(rs, -1, lookupMaps);
+            }
         }
     }
 
@@ -249,77 +231,67 @@ public class DatabaseHelper {
      * @throws SQLException if fails to query
      */
     public static long countQuery(String sql) throws SQLException {
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
+        try (
+                Connection conn = Global.getInstance().getDatabaseManager().getConnection();
+                Statement stmt = conn.createStatement()
+        ) {
             // Execute query
-            conn = Global.getInstance().getDatabaseManager().getConnection();
-            stmt = conn.createStatement();
-
             LOGGER.debug("SQL={}", sql);
-            rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                return rs.getLong(1);
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
             }
-        }
-        finally {
-            DatabaseManager.close(conn, stmt, rs);
         }
         return -1;
     }
 
     public static void toHtmlTable(String sql, StringBuilder output) {
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
+        try (
+                Connection conn = Global.getInstance().getDatabaseManager().getConnection();
+                Statement stmt = conn.createStatement()
+        ) {
             // Execute query
-            conn = Global.getInstance().getDatabaseManager().getConnection();
-            stmt = conn.createStatement();
 
             LOGGER.debug("SQL={}", sql);
-            rs = stmt.executeQuery(sql);
+            try (ResultSet rs = stmt.executeQuery(sql)) {
 
-            ResultSetMetaData rsMetaData = rs.getMetaData();
-            int numberOfColumns = rsMetaData.getColumnCount();
-            ArrayList<String> columnNames = new ArrayList<>();
-            for (int col = 1; col <= numberOfColumns; ++col) {
-                columnNames.add(rsMetaData.getColumnLabel(col));
-            }
+                ResultSetMetaData rsMetaData = rs.getMetaData();
+                int numberOfColumns = rsMetaData.getColumnCount();
+                ArrayList<String> columnNames = new ArrayList<>();
+                for (int col = 1; col <= numberOfColumns; ++col) {
+                    columnNames.add(rsMetaData.getColumnLabel(col));
+                }
 
-            // Generate HTML table
-            output.append("<table class='table table-sm table-bordered table-hover table-striped' style='width:100%; line-height:1.0;'>\n");
+                // Generate HTML table
+                output.append("<table class='table table-sm table-bordered table-hover table-striped' style='width:100%; line-height:1.0;'>\n");
 
-            output.append("<thead><tr>");
-            for (String columnName : columnNames) {
-                output.append("<th>");
-                output.append(columnName);
-                output.append("</th>");
-            }
-            output.append("</tr></thead>");
-
-            output.append("<tbody>");
-            while (rs.next()) {
-                output.append("<tr>");
+                output.append("<thead><tr>");
                 for (String columnName : columnNames) {
                     output.append("<th>");
-                    output.append(rs.getString(columnName));
+                    output.append(columnName);
                     output.append("</th>");
                 }
-                output.append("</tr>");
-            }
-            output.append("</tbody>");
+                output.append("</tr></thead>");
 
-            output.append("</table>");
+                output.append("<tbody>");
+                while (rs.next()) {
+                    output.append("<tr>");
+                    for (String columnName : columnNames) {
+                        output.append("<th>");
+                        output.append(rs.getString(columnName));
+                        output.append("</th>");
+                    }
+                    output.append("</tr>");
+                }
+                output.append("</tbody>");
+
+                output.append("</table>");
+            }
         }
         catch(SQLException e) {
             LOGGER.error(e);
             output.append("<b>").append(e.toString()).append("</b>");
         }
-        finally {
-            DatabaseManager.close(conn, stmt, rs);
-        }
-
     }
 }
