@@ -9,7 +9,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +32,9 @@ public class DatabaseHelper {
      *
      * @param sql statement
      * @return JsonArray or null if something bad happened
-     * @throws SQLException if fails to select data
+     * @throws Exception if fails to select data
      */
-    public static JsonArray selectToJsonArrayOfObjects(String sql) throws SQLException {
+    public static JsonArray selectToJsonArrayOfObjects(String sql) throws Exception {
         return selectToJsonArrayOfObjects(sql, null);
     }
 
@@ -39,19 +44,12 @@ public class DatabaseHelper {
      * @param sql statement
      * @param lookupMaps column to Map used to do lookup/replace on the data
      * @return JsonArray or null if something bad happened
-     * @throws SQLException if fails to select data
+     * @throws Exception if fails to select data
      */
-    public static JsonArray selectToJsonArrayOfObjects(String sql, Map<String,Map<String,String>> lookupMaps) throws SQLException {
-        try (
-                Connection conn = Global.getInstance().getDatabaseManager().getConnection();
-                Statement stmt = conn.createStatement()
-        ) {
-            // Execute query
-            LOGGER.debug("SQL={}", sql);
-            try (ResultSet rs = stmt.executeQuery(sql)) {
-                // Convert ResultSet into JSON
-                return JsonHelper.toArrayOfObjects(rs, -1, lookupMaps);
-            }
+    public static JsonArray selectToJsonArrayOfObjects(String sql, Map<String,Map<String,String>> lookupMaps) throws Exception {
+        try (JdbcTuple tuple = Global.getInstance().getDatabaseManager().executeSqlDirect(sql)) {
+            // Convert ResultSet into JSON
+            return JsonHelper.toArrayOfObjects(tuple.getResultSet(), -1, lookupMaps);
         }
     }
 
@@ -61,19 +59,12 @@ public class DatabaseHelper {
      * @param sql statement
      * @param lookupMaps column to Map used to do lookup/replace on the data
      * @return JsonArray or null if something bad happened
-     * @throws SQLException if fails to select data
+     * @throws Exception if fails to select data
      */
-    public static ArrayList<Map<String,String>> selectToArrayOfMaps(String sql, Map<String,Map<String,String>> lookupMaps) throws SQLException {
-        try (
-                Connection conn = Global.getInstance().getDatabaseManager().getConnection();
-                Statement stmt = conn.createStatement()
-        ){
-            // Execute query
-            LOGGER.debug("SQL: ", sql);
-            try (ResultSet rs = stmt.executeQuery(sql)) {
-                // Convert ResultSet into JSON
-                return toArrayOfMaps(rs, -1, lookupMaps);
-            }
+    public static ArrayList<Map<String,String>> selectToArrayOfMaps(String sql, Map<String,Map<String,String>> lookupMaps) throws Exception {
+        try (JdbcTuple tuple = Global.getInstance().getDatabaseManager().executeSqlDirect(sql)) {
+            // Convert ResultSet into JSON
+            return toArrayOfMaps(tuple.getResultSet(), -1, lookupMaps);
         }
     }
 
@@ -146,9 +137,7 @@ public class DatabaseHelper {
     public static long rowCount(String table) {
         final String sql = "SELECT COUNT(*) FROM "+ table;
         long count = 0;
-        try (
-            JdbcTuple triple = Global.getInstance().getDatabaseManager().executeSql(sql)
-        ){
+        try (JdbcTuple triple = Global.getInstance().getDatabaseManager().executeSql(sql)){
             if (triple.getResultSet().next()) {
                 count = triple.getResultSet().getLong(1);
             }
@@ -247,49 +236,40 @@ public class DatabaseHelper {
     }
 
     public static void toHtmlTable(String sql, StringBuilder output) {
-        try (
-                Connection conn = Global.getInstance().getDatabaseManager().getConnection();
-                Statement stmt = conn.createStatement()
-        ) {
-            // Execute query
+        try (JdbcTuple tuple = Global.getInstance().getDatabaseManager().executeSqlDirect(sql)){
+            ResultSetMetaData rsMetaData = tuple.getResultSet().getMetaData();
+            int numberOfColumns = rsMetaData.getColumnCount();
+            ArrayList<String> columnNames = new ArrayList<>();
+            for (int col = 1; col <= numberOfColumns; ++col) {
+                columnNames.add(rsMetaData.getColumnLabel(col));
+            }
 
-            LOGGER.debug("SQL={}", sql);
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+            // Generate HTML table
+            output.append("<table class='table table-sm table-bordered table-hover table-striped' style='width:100%; line-height:1.0;'>\n");
 
-                ResultSetMetaData rsMetaData = rs.getMetaData();
-                int numberOfColumns = rsMetaData.getColumnCount();
-                ArrayList<String> columnNames = new ArrayList<>();
-                for (int col = 1; col <= numberOfColumns; ++col) {
-                    columnNames.add(rsMetaData.getColumnLabel(col));
-                }
+            output.append("<thead><tr>");
+            for (String columnName : columnNames) {
+                output.append("<th>");
+                output.append(columnName);
+                output.append("</th>");
+            }
+            output.append("</tr></thead>");
 
-                // Generate HTML table
-                output.append("<table class='table table-sm table-bordered table-hover table-striped' style='width:100%; line-height:1.0;'>\n");
-
-                output.append("<thead><tr>");
+            output.append("<tbody>");
+            while (tuple.getResultSet().next()) {
+                output.append("<tr>");
                 for (String columnName : columnNames) {
                     output.append("<th>");
-                    output.append(columnName);
+                    output.append(tuple.getResultSet().getString(columnName));
                     output.append("</th>");
                 }
-                output.append("</tr></thead>");
-
-                output.append("<tbody>");
-                while (rs.next()) {
-                    output.append("<tr>");
-                    for (String columnName : columnNames) {
-                        output.append("<th>");
-                        output.append(rs.getString(columnName));
-                        output.append("</th>");
-                    }
-                    output.append("</tr>");
-                }
-                output.append("</tbody>");
-
-                output.append("</table>");
+                output.append("</tr>");
             }
+            output.append("</tbody>");
+
+            output.append("</table>");
         }
-        catch(SQLException e) {
+        catch(Exception e) {
             LOGGER.error(e);
             output.append("<b>").append(e.toString()).append("</b>");
         }
