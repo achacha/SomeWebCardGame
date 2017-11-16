@@ -191,7 +191,7 @@ public class DatabaseManager {
      * @return JdbcTuple
      * @throws SQLException if fails to execute SQL
      */
-    public JdbcTuple executeSqlDirect(String sql, PreparedStatementSetter setter) throws Exception {
+    public JdbcTuple executeSqlDirect(String sql, PreparedStatementSetter setter) throws SQLException {
         JdbcTuple triple = new JdbcTuple();
         triple.connection = databaseConnectionProvider.getConnection();
         triple.statement = DatabaseManager.prepareStatementDirect(triple.connection, sql, setter);
@@ -209,7 +209,7 @@ public class DatabaseManager {
      * @throws SQLException if execute fails
      * @see SqlProvider
      */
-    public JdbcTuple executeSql(String resourcePath, PreparedStatementSetter setter) throws Exception {
+    public JdbcTuple executeSql(String resourcePath, PreparedStatementSetter setter) throws SQLException {
         JdbcTuple triple = new JdbcTuple();
         String sql = sqlProvider.get(resourcePath);
         triple.connection = databaseConnectionProvider.getConnection();
@@ -226,10 +226,11 @@ public class DatabaseManager {
      * @return JdbcTuple
      * @throws SQLException if fails to execit SQL
      */
-    public JdbcTuple executeSqlDirect(String sql) throws Exception {
+    public JdbcTuple executeSqlDirect(String sql) throws SQLException {
         JdbcTuple triple = new JdbcTuple();
         triple.connection = databaseConnectionProvider.getConnection();
         triple.statement = triple.connection.createStatement();
+        LOGGER.debug("SQL={}", sql);
         triple.resultSet = triple.statement.executeQuery(sql);
         return triple;
     }
@@ -242,11 +243,12 @@ public class DatabaseManager {
      * @return JdbcTuple
      * @throws SQLException if fails to execute SQL
      */
-    public JdbcTuple executeSql(String resourcePath) throws Exception {
+    public JdbcTuple executeSql(String resourcePath) throws SQLException {
         JdbcTuple triple = new JdbcTuple();
         String sql = sqlProvider.get(resourcePath);
         triple.connection = databaseConnectionProvider.getConnection();
         triple.statement = triple.connection.createStatement();
+        LOGGER.debug("SQL={}", sql);
         triple.resultSet = triple.statement.executeQuery(sql);
         return triple;
     }
