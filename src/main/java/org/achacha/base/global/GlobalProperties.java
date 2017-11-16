@@ -29,7 +29,11 @@ public class GlobalProperties extends Properties implements JsonEmittable {
     private static final String KEY_URI_LOGIN_TARGET = "uri.login.target";
     private static final String KEY_URL_HOME_PUBLIC = "url.home.public";
 
-    /** WebContext path with leading / */
+    /**
+     * WebContext path with leading /
+     * We default to /junit and if this is not a test it will be replaced with
+     * a context path from the container
+     */
     private String webContextPath = "/junit";
 
     /**
