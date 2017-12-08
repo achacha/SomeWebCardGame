@@ -18,7 +18,7 @@ INSERT INTO public.item(inventory__id,type,quantity) VALUES
   ,(2,5,12)  --orange
   ,(2,6,6)   --red
 ;
-
+www
 -- Card data
 INSERT INTO public.card(id,player__id,name) VALUES
    (4, 2,'Patient Zero')
