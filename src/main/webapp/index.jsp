@@ -30,7 +30,7 @@
 
             text0 = game.add.text(0,0,'Planet text',  { fill: '#ffffff', fontSize: '8pt' });
             text1 = game.add.text(250,0,'Card 1 Text',  { fill: '#ffffff', fontSize: '8pt' });
-            text2 = game.add.text(500,0,'Card 2 Text',  { fill: '#ffffff', fontSizec: '8pt' });
+            text2 = game.add.text(500,0,'Card 2 Text',  { fill: '#ffffff', fontSize: '8pt' });
 
             var quasit1 = game.add.sprite(10,50, 'quasit');
             quasit1.inputEnabled = true;

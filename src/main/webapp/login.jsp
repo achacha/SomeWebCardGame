@@ -45,7 +45,8 @@
                         }
                     },
                     error: function (result) {
-                        console.log("Error on login submit: "+result);
+                        console.log("Error on login submit: "+result.responseJSON.message);
+                        $('#login_result').html('<span style="color:red">'+result.responseJSON.message+"</span>")
                     }
                 });
 
@@ -67,10 +68,11 @@
         </tr>
         <tr><td colspan="2">&nbsp;</td></tr>
         <tr>
-            <td colspan="2" style="text-align: center"><button class="btn btn-default" style="float: none" onclick="return doLogin()"><i class="fa fa-sign-in"></i> Login</button></td>
+            <td colspan="2" style="text-align: center">
+                <button class="btn btn-default" style="float: none" onclick="return doLogin()"><i class="fa fa-sign-in"></i> Login</button><br/>
+                <span id="login_result"></span>
+            </td>
         </tr>
-        <tr><td colspan="2">&nbsp;</td></tr>
-        <tr><td colspan="2"><span id="login_result"></span></td></tr>
     </table>
 </form>
 </body>
