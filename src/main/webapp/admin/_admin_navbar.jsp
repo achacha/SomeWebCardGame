@@ -47,7 +47,10 @@
 <%
         } // su
         else {
-            throw new RuntimeException("Insufficient permission to view page");
+            session.removeAttribute(CallContext.SESSION_REDIRECT_FROM);
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+            response.setHeader("Location", "/");
+            return;
         }
     } // login null check
 %>

@@ -19,6 +19,8 @@
             game.load.image('logo', 'images/phaser.png');
             game.load.image('quasit', 'images/quasit.png');
 
+            game.load.json('login', 'api/auth/login');
+            game.load.json('player', 'api/player');
         }
 
         function create() {
@@ -44,6 +46,11 @@
             quasit2.input.enableDrag();
             quasit2.inputEnabled = true;
             quasit2.events.onInputDown.add(card2_listener, this);
+
+            var login = game.cache.getJSON('login');
+            if (login !== undefined) {
+                game.add.text(0,10, login.user.fname, { fill: '#ffffff', fontSize: '8pt' });
+            }
         }
 
         function logo_listener() {

@@ -39,6 +39,7 @@
                                 else
                                     out.print("window.location = 'index.jsp';");
                             %>
+                            console.log("Success: "+result.responseJSON);
                         }
                         else {
                             console.log("Result fail on login");
