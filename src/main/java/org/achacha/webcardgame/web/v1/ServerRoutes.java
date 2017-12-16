@@ -3,8 +3,10 @@ package org.achacha.webcardgame.web.v1;
 import com.google.gson.JsonObject;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
+import org.achacha.webcardgame.web.MyApplication;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,11 +16,14 @@ import javax.ws.rs.core.Response;
 @Path("server")
 @Produces(MediaType.APPLICATION_JSON)
 public class ServerRoutes {
+    @Inject
+    MyApplication application;
+
     @GET
     @Path("status")
     @SecurityLevelRequired(SecurityLevel.PUBLIC)
     public Response getStatus() {
-        return Response.ok(JsonHelper.getSuccessObject()).build();
+        return Response.ok(JsonHelper.getSuccessObjectWithMessage(application.toString())).build();
     }
 
     @GET
