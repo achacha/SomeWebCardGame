@@ -1,8 +1,11 @@
 package org.achacha.webcardgame.web.v1;
 
 import com.google.gson.JsonObject;
+import org.achacha.base.context.CallContext;
+import org.achacha.base.context.CallContextTls;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
+import org.achacha.webcardgame.web.AbstractRoutes;
 import org.achacha.webcardgame.web.MyApplication;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
 
@@ -15,7 +18,7 @@ import javax.ws.rs.core.Response;
 
 @Path("server")
 @Produces(MediaType.APPLICATION_JSON)
-public class ServerRoutes {
+public class ServerRoutes extends AbstractRoutes {
     @Inject
     MyApplication application;
 
@@ -23,7 +26,14 @@ public class ServerRoutes {
     @Path("status")
     @SecurityLevelRequired(SecurityLevel.PUBLIC)
     public Response getStatus() {
-        return Response.ok(JsonHelper.getSuccessObjectWithMessage(application.toString())).build();
+        CallContext callContext = CallContextTls.get();
+
+        JsonObject obj = JsonHelper.getSuccessObject();
+        obj.addProperty("httpRequest", httpRequest.toString());
+        obj.addProperty("requestContext", requestContext.toString());
+        obj.addProperty("application", application.toString());
+        obj.addProperty("callContext", callContext.toString());
+        return Response.ok(obj).build();
     }
 
     @GET

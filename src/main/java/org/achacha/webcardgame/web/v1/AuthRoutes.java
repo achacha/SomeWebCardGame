@@ -7,6 +7,7 @@ import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.helper.LoginHelper;
+import org.achacha.webcardgame.web.AbstractRoutes;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +24,7 @@ import javax.ws.rs.core.Response;
 
 @Path("auth")
 @Produces(MediaType.APPLICATION_JSON)
-public class AuthRoutes {
+public class AuthRoutes extends AbstractRoutes {
     private static final Logger LOGGER = LogManager.getLogger(AuthRoutes.class);
 
     @GET

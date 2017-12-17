@@ -5,6 +5,7 @@ import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.game.dbo.PlayerDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDboFactory;
+import org.achacha.webcardgame.web.AbstractRoutes;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
 
 import javax.ws.rs.GET;
@@ -20,7 +21,7 @@ import java.util.Collection;
  */
 @Path("player")
 @Produces(MediaType.APPLICATION_JSON)
-public class PlayerRoutes {
+public class PlayerRoutes extends AbstractRoutes {
     /**
      * Get players associated with this login
      * @return Response
