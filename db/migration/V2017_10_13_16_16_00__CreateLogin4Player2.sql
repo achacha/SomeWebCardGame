@@ -20,10 +20,10 @@ INSERT INTO public.item(inventory__id,type,quantity) VALUES
 ;
 
 -- Card data
-INSERT INTO public.card(id,player__id,name) VALUES
-   (4, 2,'Patient Zero')
-  ,(5, 2,'Ol One Eye')
-  ,(6, 2,'Card Two')
+INSERT INTO public.card(id,player__id,name,level,xp,strength,agility,stamina) VALUES
+   (4, 2,'Patient Zero',6,18000,45,60,35)
+  ,(5, 2,'Ol One Eye',3,48000,30,75,60)
+  ,(6, 2,'Card Two',4,99900,80,30,90)
 ;
 
 INSERT INTO public.card_sticker(id,card__id,name) VALUES

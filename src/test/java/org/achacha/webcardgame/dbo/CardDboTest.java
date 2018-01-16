@@ -18,6 +18,13 @@ public class CardDboTest extends BaseInitializedTest {
 
         CardDbo one = cards.iterator().next();
         Assert.assertEquals(1, one.getId());
+        Assert.assertEquals(TestDataConstants.JUNIT_PLAYERID, one.getPlayerId());
+        Assert.assertEquals("Card 1", one.getName());
+        Assert.assertEquals(8, one.getLevel());
+        Assert.assertEquals(99990, one.getXp());
+        Assert.assertEquals(30, one.getStrength());
+        Assert.assertEquals(70, one.getAgility());
+        Assert.assertEquals(45, one.getStamina());
         Assert.assertNotNull(one.getStickers());
     }
 }

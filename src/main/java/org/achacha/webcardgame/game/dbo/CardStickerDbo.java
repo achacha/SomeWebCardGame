@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 /**
  * Card Sticker
+ * Contains special things that the card can do
  */
 public class CardStickerDbo extends BaseIndexedDbo {
     private static final Logger LOGGER = LogManager.getLogger(CardStickerDbo.class);
