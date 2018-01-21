@@ -13,6 +13,7 @@ public class TestDataConstants {
 
     // inventory
     public static final long JUNIT_INVENTORY_ID = 1;
-    public static final long JUNIT_PLAYERID = 1;
+    public static final long JUNIT_PLAYER__ID = 1;
     public static final long JUNIT_PLAYER_CARDID = 1;
+    public static final long JUNIT_ADVENTURE_ID = 1;
 }

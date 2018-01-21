@@ -10,7 +10,7 @@ import org.junit.Test;
 public class InventoryDboTest extends BaseInitializedTest {
     @Test
     public void testGetInventoryForLogin() {
-        InventoryDbo inventory = InventoryDboFactory.getByPlayerId(TestDataConstants.JUNIT_PLAYERID);
+        InventoryDbo inventory = InventoryDboFactory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
         Assert.assertNotNull(inventory);
         Assert.assertEquals(6, inventory.getItems().size());
     }

@@ -18,14 +18,14 @@ public class PlayerDboTest extends BaseInitializedTest {
 
         PlayerDbo player = players.get(0);
         Assert.assertEquals(1200, player.getEnergy());
-        Assert.assertEquals(TestDataConstants.JUNIT_PLAYERID, player.getId());
+        Assert.assertEquals(TestDataConstants.JUNIT_PLAYER__ID, player.getId());
     }
 
     @Test
     public void testGetPlayerForId() {
-        PlayerDbo player = PlayerDboFactory.getByLoginIdAndPlayerId(TestDataConstants.JUNIT_LOGINID, TestDataConstants.JUNIT_PLAYERID);
+        PlayerDbo player = PlayerDboFactory.getByLoginIdAndPlayerId(TestDataConstants.JUNIT_LOGINID, TestDataConstants.JUNIT_PLAYER__ID);
         Assert.assertNotNull(player);
         Assert.assertEquals(1200, player.getEnergy());
-        Assert.assertEquals(TestDataConstants.JUNIT_PLAYERID, player.getId());
+        Assert.assertEquals(TestDataConstants.JUNIT_PLAYER__ID, player.getId());
     }
 }

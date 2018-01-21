@@ -12,13 +12,13 @@ import java.util.Collection;
 public class CardDboTest extends BaseInitializedTest {
     @Test
     public void testGetCardsForPlayer() {
-        Collection<CardDbo> cards = CardDboFactory.getByPlayerId(TestDataConstants.JUNIT_PLAYERID);
+        Collection<CardDbo> cards = CardDboFactory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
         Assert.assertNotNull(cards);
         Assert.assertEquals(3, cards.size());
 
         CardDbo one = cards.iterator().next();
         Assert.assertEquals(1, one.getId());
-        Assert.assertEquals(TestDataConstants.JUNIT_PLAYERID, one.getPlayerId());
+        Assert.assertEquals(TestDataConstants.JUNIT_PLAYER__ID, one.getPlayerId());
         Assert.assertEquals("Card 1", one.getName());
         Assert.assertEquals(8, one.getLevel());
         Assert.assertEquals(99990, one.getXp());
