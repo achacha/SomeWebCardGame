@@ -1,0 +1,1 @@
+select * from public.enemy_card where encounter__id=?;

@@ -6,22 +6,22 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
- * Inventory
+ * Enemy card Sticker
+ * Contains special things that the enemy card can do
  */
-public class InventoryDbo extends BaseIndexedDbo {
-    private static final Logger LOGGER = LogManager.getLogger(InventoryDbo.class);
+public class EnemyCardStickerDbo extends BaseIndexedDbo {
+    private static final Logger LOGGER = LogManager.getLogger(EnemyCardStickerDbo.class);
 
-    /** Inventory id */
+    /** Card id */
     protected long id;
 
-    /** Player that owns this inventory */
-    protected long playerId;
+    /** Enemy card that this sticker is attached to */
+    protected long enemyCardId;
 
-    /** Items in this inventory */
-    protected List<ItemDbo> items;
+    /** Sticker name */
+    protected String name;
 
     @Override
     public long getId() {
@@ -31,15 +31,11 @@ public class InventoryDbo extends BaseIndexedDbo {
     @Override
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
-        this.playerId = rs.getLong("player__id");
-        this.items = ItemDboFactory.getItemsForInventory(this.id);
+        this.name = rs.getString("name");
+        this.enemyCardId = rs.getLong("enemy_card__id");
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
         }
-    }
-
-    public List<ItemDbo> getItems() {
-        return items;
     }
 }

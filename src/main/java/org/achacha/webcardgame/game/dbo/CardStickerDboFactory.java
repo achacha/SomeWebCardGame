@@ -8,12 +8,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 public class CardStickerDboFactory extends BaseDboFactory {
     private static final Logger LOGGER = LogManager.getLogger(CardStickerDbo.class);
 
-    public static Collection<CardStickerDbo> getByCardId(long cardId) {
+    public static List<CardStickerDbo> getByCardId(long cardId) {
         ArrayList<CardStickerDbo> dbos = new ArrayList<>();
         try (
                 Connection connection = dbm.getConnection();

@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Adventure
@@ -21,7 +21,7 @@ public class AdventureDbo extends BaseIndexedDbo {
     protected long playerId;
 
     /** Encounters in this Adventure */
-    protected Collection<EncounterDbo> encounters;
+    protected List<EncounterDbo> encounters;
 
     @Override
     public long getId() {
@@ -39,7 +39,7 @@ public class AdventureDbo extends BaseIndexedDbo {
         }
     }
 
-    public Collection<EncounterDbo> getEncounters() {
+    public List<EncounterDbo> getEncounters() {
         return encounters;
     }
 }

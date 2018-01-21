@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Encounter
@@ -19,6 +20,9 @@ public class EncounterDbo extends BaseIndexedDbo {
     /** Associated adventure */
     protected long adventureId;
 
+    // We may want more than 1 enemy?
+    protected List<EnemyCardDbo> enemies;
+
     @Override
     public long getId() {
         return this.id;
@@ -29,6 +33,8 @@ public class EncounterDbo extends BaseIndexedDbo {
         this.id = rs.getLong("id");
         this.adventureId = rs.getLong("adventure__id");
 
+        enemies = EnemyCardDboFactory.getByEncounterId(id);
+
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
         }
@@ -36,5 +42,9 @@ public class EncounterDbo extends BaseIndexedDbo {
 
     public long getAdventureId() {
         return adventureId;
+    }
+
+    public List<EnemyCardDbo> getEnemies() {
+        return enemies;
     }
 }

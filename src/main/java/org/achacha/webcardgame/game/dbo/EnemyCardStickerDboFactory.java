@@ -10,26 +10,26 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardDboFactory extends BaseDboFactory {
-    private static final Logger LOGGER = LogManager.getLogger(CardDbo.class);
+public class EnemyCardStickerDboFactory extends BaseDboFactory {
+    private static final Logger LOGGER = LogManager.getLogger(EnemyCardStickerDbo.class);
 
-    public static List<CardDbo> getByPlayerId(long playerId) {
-        ArrayList<CardDbo> dbos = new ArrayList<>();
+    public static List<EnemyCardStickerDbo> getByEnemyCardId(long cardId) {
+        ArrayList<EnemyCardStickerDbo> dbos = new ArrayList<>();
         try (
                 Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
-                        "/sql/Card/SelectByPlayerId.sql",
-                        p -> p.setLong(1, playerId));
+                        "/sql/EnemyCardSticker/SelectByEnemyCardId.sql",
+                        p -> p.setLong(1, cardId));
                 ResultSet rs = pstmt.executeQuery()
         ) {
             while (rs.next()) {
-                CardDbo dbo = new CardDbo();
+                EnemyCardStickerDbo dbo = new EnemyCardStickerDbo();
                 dbo.fromResultSet(rs);
                 dbos.add(dbo);
             }
         } catch (Exception sqle) {
-            LOGGER.error("Failed to find cards for playerId={}", playerId, sqle);
+            LOGGER.error("Failed to find enemy card stickers for enemyCardId={}", cardId, sqle);
         }
         return dbos;
 

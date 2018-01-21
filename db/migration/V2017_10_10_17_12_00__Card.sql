@@ -4,7 +4,7 @@
 CREATE TABLE card
 (
   id serial NOT NULL PRIMARY KEY,
-  player__id integer, -- Player id of the owner of this item
+  player__id integer,
   name character varying(256) NOT NULL,
   level integer,
   xp integer,
@@ -18,12 +18,12 @@ CREATE TABLE card
 WITH (
 OIDS=FALSE
 );
-ALTER TABLE item OWNER TO sawcog;
-COMMENT ON COLUMN card.player__id IS 'Player id of the owner of this inventory';
+ALTER TABLE card OWNER TO sawcog;
+COMMENT ON COLUMN card.player__id IS 'Player id owner of this card';
 
 
 --
--- Item
+-- Card sticker
 --
 CREATE TABLE card_sticker
 (
@@ -37,5 +37,5 @@ CREATE TABLE card_sticker
 WITH (
 OIDS=FALSE
 );
-ALTER TABLE item OWNER TO sawcog;
+ALTER TABLE card_sticker OWNER TO sawcog;
 COMMENT ON COLUMN card_sticker.card__id IS 'Card id owner of this sticker';

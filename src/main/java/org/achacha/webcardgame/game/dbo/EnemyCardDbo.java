@@ -9,16 +9,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Card
+ * Enemy card
  */
-public class CardDbo extends BaseIndexedDbo {
-    private static final Logger LOGGER = LogManager.getLogger(CardDbo.class);
+public class EnemyCardDbo extends BaseIndexedDbo {
+    private static final Logger LOGGER = LogManager.getLogger(EnemyCardDbo.class);
 
     /** Card id */
     protected long id;
 
-    /** Player that owns this inventory */
-    protected long playerId;
+    /** Encounter that owns this inventory */
+    protected long encounterId;
 
     /** Card name */
     protected String name;
@@ -50,7 +50,7 @@ public class CardDbo extends BaseIndexedDbo {
     protected int stamina;
 
     /** Card stickers */
-    protected List<CardStickerDbo> stickers;
+    protected List<EnemyCardStickerDbo> stickers;
 
     @Override
     public long getId() {
@@ -60,7 +60,7 @@ public class CardDbo extends BaseIndexedDbo {
     @Override
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
-        this.playerId = rs.getLong("player__id");
+        this.encounterId = rs.getLong("encounter__id");
         this.name = rs.getString("name");
 
         this.level = rs.getInt("level");
@@ -69,15 +69,15 @@ public class CardDbo extends BaseIndexedDbo {
         this.agility = rs.getInt("agility");
         this.stamina = rs.getInt("stamina");
 
-        this.stickers = CardStickerDboFactory.getByCardId(id);
+        this.stickers = EnemyCardStickerDboFactory.getByEnemyCardId(id);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
         }
     }
 
-    public long getPlayerId() {
-        return playerId;
+    public long getEncounterId() {
+        return encounterId;
     }
 
     public String getName() {
@@ -104,7 +104,7 @@ public class CardDbo extends BaseIndexedDbo {
         return stamina;
     }
 
-    public List<CardStickerDbo> getStickers() {
+    public List<EnemyCardStickerDbo> getStickers() {
         return stickers;
     }
 }

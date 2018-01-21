@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EncounterDboFactory extends BaseDboFactory {
-    private static final Logger LOGGER = LogManager.getLogger(ItemDbo.class);
+    private static final Logger LOGGER = LogManager.getLogger(EncounterDbo.class);
 
     /**
      * Get a list of encounters for a given adventure

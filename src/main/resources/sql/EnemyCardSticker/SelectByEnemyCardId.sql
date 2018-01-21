@@ -1,0 +1,1 @@
+select * from public.enemy_card_sticker where enemy_card__id=?;

@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Player
@@ -27,7 +27,7 @@ public class PlayerDbo extends BaseIndexedDbo {
     protected InventoryDbo inventory;
 
     /** Cards */
-    protected Collection<CardDbo> cards;
+    protected List<CardDbo> cards;
 
     @Override
     public long getId() {
