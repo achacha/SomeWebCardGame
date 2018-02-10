@@ -3,6 +3,7 @@ package org.achacha.base.db.provider;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * Connection provider using DB pool
+ * Connection provider using DB pool for a given JDBC connect URL
  */
 public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
     protected final HikariDataSource dataSource;
@@ -22,11 +23,13 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
         dataSource = new HikariDataSource(config);
     }
 
+    @NotNull
     @Override
     public Connection getConnection() throws SQLException {
         return getConnection(true);
     }
 
+    @NotNull
     @Override
     public Connection getConnection(boolean autoCommit) throws SQLException {
         int retries = 20;

@@ -5,6 +5,8 @@ import com.google.common.cache.CacheBuilder;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.global.Global;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.FileNotFoundException;
@@ -15,7 +17,8 @@ import java.util.concurrent.ExecutionException;
 /**
  * Provide SQL from resource files
  */
-public class ResourceSqlProvider extends SqlProvider {
+public class ResourceSqlProvider implements SqlProvider {
+    protected Logger LOGGER = LogManager.getLogger(SqlProvider.class);
 
     private final Cache<String, String> cachePathToSql;
 

@@ -7,18 +7,7 @@ import java.sql.Statement;
 /**
  * Contains DB objects that close when done via AutoCloseable using try-with-resources
  *
- * {@code
- *    final String SQL = "select * from NVPAIR where name=?";
- *    try (
- *           JdbcTuple triple = JdbcTuple.executeSql(SQL, pstmt -> { pstmt.setString(1, "foo"); })
- *    ){
- *       while (triple.getResultSet().next()) {
- *           System.out.println(triple.getResultSet().getString("name") + "=" + triple.getResultSet().getString("value"));
- *       }
- *    } catch (Exception e) {
- *       e.printStackTrace();
- *    }
- * }
+ * @see DatabaseManager#prepareStatement(java.sql.Connection, java.lang.String, org.achacha.base.db.PreparedStatementSetter)
  *
  * NOTE: if used without try-with-resources, you have to call close() explicitly
  */

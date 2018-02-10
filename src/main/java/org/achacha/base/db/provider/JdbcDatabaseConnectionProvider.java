@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 public abstract class JdbcDatabaseConnectionProvider implements DatabaseConnectionProvider {
     protected static final Logger LOGGER = LogManager.getLogger(DatabaseConnectionProvider.class);
 
-    final String jdbcUrl;
+    protected final String jdbcUrl;
 
     public JdbcDatabaseConnectionProvider(String jdbcUrl) {
         this.jdbcUrl = jdbcUrl;
