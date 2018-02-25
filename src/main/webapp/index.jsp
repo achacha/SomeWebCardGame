@@ -21,10 +21,9 @@
 
     window.onload = function() {
 
-        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-        var text0, text1, text2;
-        var card0, card1;
-        var cardtext0, cardtext1;
+        let game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+        let cards = [];
+        let cardtexts = [];
         function preload() {
 
             game.load.image('logo', 'images/phaser.png');
@@ -35,64 +34,52 @@
         }
 
         function create() {
+            // Central logo
+            let textStyleWhite = { fill: '#ffffff', fontSize: '8pt' };
 
-            var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
+            let logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
             logo.anchor.setTo(0.5, 0.5);
             logo.inputEnabled = true;
-            logo.events.onInputDown.add(logo_listener, this);
+            var text0 = game.add.text(0,0,'Planet text', textStyleWhite);
+            logo.events.onInputDown.add(getInputDownFn("Clicked on planet", text0), this);
 
-            var textStyleWhite = { fill: '#ffffff', fontSize: '8pt' };
-            text0 = game.add.text(0,0,'Planet text', textStyleWhite);
-            text1 = game.add.text(250,0,'Card 1 Text', textStyleWhite);
-            text2 = game.add.text(500,0,'Card 2 Text', textStyleWhite);
+            let player = game.cache.getJSON('player').data[0];
 
-            var player = game.cache.getJSON('player').data[0];
+            // Iterarate over cards and display them
+            for (i=0; i<player.cards.length; ++i) {
+                var c = player.cards[i];
+                text0 = game.add.text(200*(i+1), 0, player.cards[i].name, textStyleWhite);
+                var cardtext0 = game.add.text(0, 0, player.cards[i].name, { fill: '#ff00ff', fontSize: '8pt' });
+                var card0 = game.add.sprite(10 + i*65, 50, 'cardback');
+                card0.inputEnabled = true;
+                card0.input.enableDrag();
+                card0.inputEnabled = true;
+                card0.events.onInputDown.add(getInputDownFn("Clicked on card "+i, text0), this);
+                cards.push(card0);
+                cardtexts.push(cardtext0);
+            }
 
-            cardtext0 = game.add.text(0, 0, player.cards[0].name, { fill: '#ff00ff', fontSize: '8pt' });
-            card0 = game.add.sprite(10,50, 'cardback');
-            card0.inputEnabled = true;
-            card0.input.enableDrag();
-            card0.inputEnabled = true;
-            card0.events.onInputDown.add(card1_listener, this);
-
-
-            cardtext1 = game.add.text(0, 0, player.cards[1].name, { fill: '#ff00ff', fontSize: '8pt' });
-            card1 = game.add.sprite(75,50, 'cardback');
-            card1.inputEnabled = true;
-            card1.input.enableDrag();
-            card1.inputEnabled = true;
-            card1.events.onInputDown.add(card2_listener, this);
-
-            var login = game.cache.getJSON('login');
+            let login = game.cache.getJSON('login');
             if (login !== undefined) {
                 game.add.text(0,10, login.user.fname, { fill: '#ffffff', fontSize: '8pt' });
             }
         }
 
-        function logo_listener() {
-            if (!(text0.text !== "Clicked on planet"))
-                text0.text = "Clicked on planet, again.";
-            else
-                text0.text = "Clicked on planet";
-        }
-
-        function card1_listener() {
-            if (!(text1.text !== "Clicked on card 1"))
-                text1.text = "Clicked on card 1, again.";
-            else
-                text1.text = "Clicked on card 1";
-        }
-
-        function card2_listener() {
-            if (!(text2.text !== "Clicked on card 2"))
-                text2.text = "Clicked on card 2, again.";
-            else
-                text2.text = "Clicked on card 2";
+        function getInputDownFn(basetext, text0) {
+            return (function(sprite, pointer) {
+                console.log("clicked "+text0.text+"  this="+this);
+                if (!(text0.text !== basetext))
+                    text0.text = basetext+", again.";
+                else
+                    text0.text = basetext;
+            });
         }
 
         function update() {
-            cardtext0.alignTo(card0, Phaser.BOTTOM_CENTER, 0, 4);
-            cardtext1.alignTo(card1, Phaser.BOTTOM_CENTER, 0, 4);
+            for (i=0; i<cards.length; ++i) {
+                cardtexts[i].alignTo(cards[i], Phaser.BOTTOM_CENTER, 0, 4);
+
+            }
         }
     };
 </script>
