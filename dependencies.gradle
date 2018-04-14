@@ -1,6 +1,6 @@
 dependencies {
     // Kotlin support
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     //
     // Tomcat, Jersey
@@ -46,8 +46,6 @@ dependencies {
     compile group: 'com.zaxxer', name: 'HikariCP', version: "${hikariVersion}"
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
     compile group: 'org.flywaydb', name: 'flyway-core', version: "${flywaydbVersion}"
-    // https://mvnrepository.com/artifact/com.h2database/h2
-    testCompile group: 'com.h2database', name: 'h2', version: "${h2Version}"
 
     //
     // Logging
