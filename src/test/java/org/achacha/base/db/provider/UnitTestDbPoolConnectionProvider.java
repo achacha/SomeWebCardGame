@@ -7,7 +7,7 @@ import java.util.Properties;
  */
 public class UnitTestDbPoolConnectionProvider extends DbPoolConnectionProvider {
 
-    public UnitTestDbPoolConnectionProvider(String jdbcUrl, Properties properties) {
-        super(jdbcUrl, properties);
+    public UnitTestDbPoolConnectionProvider(Properties properties) {
+        super(properties);
     }
 }

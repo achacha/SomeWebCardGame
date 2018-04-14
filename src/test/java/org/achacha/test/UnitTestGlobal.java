@@ -34,9 +34,8 @@ public class UnitTestGlobal extends Global {
             if (databaseManager == null) {
                 final Properties dbProperties = getDbProperties("test.");
 
-                String jdbcUrl = dbProperties.getProperty("jdbcUrl");
                 databaseManager = new DatabaseManager(
-                        new UnitTestDbPoolConnectionProvider(jdbcUrl, dbProperties),
+                        new UnitTestDbPoolConnectionProvider(dbProperties),
                         new ResourceSqlProvider()
                 );
 

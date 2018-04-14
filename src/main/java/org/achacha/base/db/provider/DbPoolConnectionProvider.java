@@ -16,8 +16,8 @@ import java.util.Properties;
 public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
     protected final HikariDataSource dataSource;
 
-    public DbPoolConnectionProvider(String jdbcUrl, Properties properties) {
-        super(jdbcUrl);
+    public DbPoolConnectionProvider(Properties properties) {
+        super(properties);
 
         HikariConfig config = new HikariConfig(properties);
         dataSource = new HikariDataSource(config);
@@ -63,5 +63,4 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
     public DataSource getDataSource() {
         return dataSource;
     }
-
 }

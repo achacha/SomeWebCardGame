@@ -19,12 +19,11 @@ public class RootGlobal extends Global {
     @Override
     public void initDatabaseManager() {
         final Properties dbProperties = getDbProperties("");
-        String jdbcUrl = dbProperties.getProperty("jdbcUrl");
 
         // Configure DatabaseManager
         LOGGER.info("Creating database manager");
         databaseManager = new DatabaseManager(
-                new DbPoolConnectionProvider(jdbcUrl, dbProperties),
+                new DbPoolConnectionProvider(dbProperties),
                 new ResourceSqlProvider()
         );
     }
