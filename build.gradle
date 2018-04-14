@@ -75,10 +75,10 @@ compileTestKotlin {
 Flyway plugin handles DB migration
 */
 flyway {
-    url = "${homeProperties['db.jdbcUrl']}"
-    driver = "${homeProperties['db.driverClassName']}"
-    user = "${homeProperties['db.username']}"
-    password = "${homeProperties['db.password']}"
+    url = "${homeProperties['flyway.db.jdbcUrl']}"
+    driver = "${homeProperties['flyway.db.driverClassName']}"
+    user = "${homeProperties['flyway.db.username']}"
+    password = "${homeProperties['flyway.db.password']}"
     locations = [
             'filesystem:db/migration'
     ]
@@ -122,10 +122,10 @@ clean.dependsOn cleanJs
 //
 task flywayCleanTest(type: FlywayCleanTask) {
     description 'Migrate Test database and populate test data'
-    url = "${homeProperties['test.db.jdbcUrl']}"
-    driver = "${homeProperties['test.db.driverClassName']}"
-    user = "${homeProperties['test.db.username']}"
-    password = "${homeProperties['test.db.password']}"
+    url = "${homeProperties['flyway.test.db.jdbcUrl']}"
+    driver = "${homeProperties['flyway.test.db.driverClassName']}"
+    user = "${homeProperties['flyway.test.db.username']}"
+    password = "${homeProperties['flyway.test.db.password']}"
     locations = [
             'filesystem:db/migration',
             'filesystem:db/migration_test'
@@ -134,10 +134,10 @@ task flywayCleanTest(type: FlywayCleanTask) {
 
 task flywayMigrateTest(type: FlywayMigrateTask, dependsOn: flywayCleanTest) {
     description 'Migrate Test database and populate test data'
-    url = "${homeProperties['test.db.jdbcUrl']}"
-    driver = "${homeProperties['test.db.driverClassName']}"
-    user = "${homeProperties['test.db.username']}"
-    password = "${homeProperties['test.db.password']}"
+    url = "${homeProperties['flyway.test.db.jdbcUrl']}"
+    driver = "${homeProperties['flyway.test.db.driverClassName']}"
+    user = "${homeProperties['flyway.test.db.username']}"
+    password = "${homeProperties['flyway.test.db.password']}"
     locations = [
             'filesystem:db/migration',
             'filesystem:db/migration_test'
