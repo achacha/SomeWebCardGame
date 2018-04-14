@@ -117,6 +117,9 @@ task cleanJs(type: Delete) {
 war.dependsOn copyJs
 clean.dependsOn cleanJs
 
+//
+// Flyway tasks
+//
 task flywayCleanTest(type: FlywayCleanTask) {
     description 'Migrate Test database and populate test data'
     url = "${homeProperties['test.db.jdbcUrl']}"
@@ -128,6 +131,7 @@ task flywayCleanTest(type: FlywayCleanTask) {
             'filesystem:db/migration_test'
     ]
 }
+
 task flywayMigrateTest(type: FlywayMigrateTask, dependsOn: flywayCleanTest) {
     description 'Migrate Test database and populate test data'
     url = "${homeProperties['test.db.jdbcUrl']}"
@@ -140,3 +144,18 @@ task flywayMigrateTest(type: FlywayMigrateTask, dependsOn: flywayCleanTest) {
     ]
 }
 
+//
+// Yarn Tasks
+//
+task yarnOutdated(type: YarnTask, dependsOn: yarnSetup) {
+    group 'node'
+    description 'Report on outdated dependencies'
+
+    args = ['outdated']
+}
+task yarnUpgrade(type: YarnTask, dependsOn: yarnSetup) {
+    group 'node'
+    description 'Upgrade outdated dependencies to their latest versions'
+
+    args = ['upgrade']
+}
