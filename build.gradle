@@ -2,7 +2,7 @@ import org.flywaydb.gradle.task.FlywayCleanTask
 import org.flywaydb.gradle.task.FlywayMigrateTask
 
 buildscript {
-    ext.kotlin_version = '1.2.31'
+    ext.kotlin_version = '1.2.40'
     repositories {
         mavenCentral()
     }
@@ -147,13 +147,19 @@ task flywayMigrateTest(type: FlywayMigrateTask, dependsOn: flywayCleanTest) {
 //
 // Yarn Tasks
 //
-task yarnOutdated(type: YarnTask, dependsOn: yarnSetup) {
+task yarnInstall(type: YarnTask, dependsOn: yarnSetup) {
+    group 'node'
+    description 'Yarn install'
+
+    args = ['install']
+}
+task yarnOutdated(type: YarnTask, dependsOn: yarnInstall) {
     group 'node'
     description 'Report on outdated dependencies'
 
     args = ['outdated']
 }
-task yarnUpgrade(type: YarnTask, dependsOn: yarnSetup) {
+task yarnUpgrade(type: YarnTask, dependsOn: yarnInstall) {
     group 'node'
     description 'Upgrade outdated dependencies to their latest versions'
 
