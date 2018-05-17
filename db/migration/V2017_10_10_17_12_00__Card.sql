@@ -19,6 +19,7 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE card OWNER TO sawcog;
+GRANT ALL ON card TO sawcog;
 COMMENT ON COLUMN card.player__id IS 'Player id owner of this card';
 
 
@@ -38,4 +39,5 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE card_sticker OWNER TO sawcog;
+GRANT ALL ON card_sticker TO sawcog;
 COMMENT ON COLUMN card_sticker.card__id IS 'Card id owner of this sticker';

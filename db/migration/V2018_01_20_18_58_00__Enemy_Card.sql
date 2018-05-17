@@ -19,6 +19,7 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE enemy_card OWNER TO sawcog;
+GRANT ALL ON enemy_card TO sawcog;
 COMMENT ON COLUMN enemy_card.encounter__id IS 'Encounter id owner of this enemy card';
 
 
@@ -38,4 +39,5 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE enemy_card_sticker OWNER TO sawcog;
+GRANT ALL ON enemy_card_sticker TO sawcog;
 COMMENT ON COLUMN enemy_card_sticker.enemy_card__id IS 'Enemy Card id owner of this sticker';

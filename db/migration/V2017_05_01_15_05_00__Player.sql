@@ -35,6 +35,7 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE inventory OWNER TO sawcog;
+GRANT ALL ON inventory TO sawcog;
 COMMENT ON COLUMN inventory.player__id IS 'Player id of the owner of this inventory';
 
 
@@ -55,6 +56,7 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE item OWNER TO sawcog;
+GRANT ALL ON item TO sawcog;
 COMMENT ON COLUMN item.inventory__id IS 'Inventory id owner of this item';
 COMMENT ON COLUMN item.type IS 'Item type';
 COMMENT ON COLUMN item.quantity IS 'Quantity of the item';

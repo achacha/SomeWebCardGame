@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.util.Set;
 
-public class TestDboHelper {
+public class DboHelperTest {
     @Test
     public void testGetAllDboClassNames() {
         Set<Class<? extends BaseDbo>> classes = DboHelper.getAllDboClasses();

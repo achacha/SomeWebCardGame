@@ -5,7 +5,7 @@ import org.achacha.test.TestDataConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestLoginDbo extends BaseInitializedTest {
+public class LoginDboTest extends BaseInitializedTest {
     @Test
     public void testDboRead() {
         LoginUserDbo loginById = LoginUserDboFactory.findById(TestDataConstants.JUNIT_LOGINID);

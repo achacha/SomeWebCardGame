@@ -1,21 +1,19 @@
 package org.achacha.base.db.provider;
 
-import org.achacha.test.BaseInitializedTest;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-
-public class TestSqlResourceProvider extends BaseInitializedTest {
+public class ResourceSqlProviderTest {
 
     private ResourceSqlProvider resourceSqlProvider = new ResourceSqlProvider();
+
     @Test
-    public void testResourceLoading() throws IOException {
+    public void testResourceLoading() {
         Assert.assertEquals("select * from public.GLOBAL_PROPERTIES", resourceSqlProvider.get("/sql/Test/TestText.sql"));
     }
 
     @Test
-    public void resourceNotFound() throws IOException {
+    public void resourceNotFound() {
         try {
             resourceSqlProvider.get("/does/not/Exist.sql");
         }

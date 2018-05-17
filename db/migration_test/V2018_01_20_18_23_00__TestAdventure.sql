@@ -1,6 +1,6 @@
-INSERT INTO public.adventure(id,player__id) VALUES
+INSERT INTO adventure(id,player__id) VALUES
   (1,1);
 
-INSERT INTO public.encounter(id,adventure__id) VALUES
+INSERT INTO encounter(id,adventure__id) VALUES
   (1,1)  -- More to do here
 ;

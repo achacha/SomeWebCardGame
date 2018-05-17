@@ -20,6 +20,8 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: "${gsonVersion}"
     // https://mvnrepository.com/artifact/com.google.guava/guava
     compile group: 'com.google.guava', name: 'guava', version: "${guavaVersion}"
+    // https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine
+    compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: "${caffeineVersion}"
     // https://mvnrepository.com/artifact/org.reflections/reflections
     compile group: 'org.reflections', name: 'reflections', version: "${reflectionsVersion}"
 

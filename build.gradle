@@ -2,7 +2,7 @@ import org.flywaydb.gradle.task.FlywayCleanTask
 import org.flywaydb.gradle.task.FlywayMigrateTask
 
 buildscript {
-    ext.kotlin_version = '1.2.40'
+    ext.kotlin_version = '1.2.41'
     repositories {
         mavenCentral()
     }
@@ -75,6 +75,7 @@ compileTestKotlin {
 Flyway plugin handles DB migration
 */
 flyway {
+    description 'Migrate database and populate data'
     url = "${homeProperties['flyway.db.jdbcUrl']}"
     driver = "${homeProperties['flyway.db.driverClassName']}"
     user = "${homeProperties['flyway.db.username']}"
@@ -121,7 +122,7 @@ clean.dependsOn cleanJs
 // Flyway tasks
 //
 task flywayCleanTest(type: FlywayCleanTask) {
-    description 'Migrate Test database and populate test data'
+    description 'Clean Test database'
     url = "${homeProperties['flyway.test.db.jdbcUrl']}"
     driver = "${homeProperties['flyway.test.db.driverClassName']}"
     user = "${homeProperties['flyway.test.db.username']}"

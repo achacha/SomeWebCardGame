@@ -15,6 +15,7 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE adventure OWNER TO sawcog;
+GRANT ALL ON adventure TO sawcog;
 COMMENT ON COLUMN adventure.player__id IS 'Player id of the owner of this adventure';
 
 
@@ -33,4 +34,5 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE encounter OWNER TO sawcog;
+GRANT ALL ON encounter TO sawcog;
 COMMENT ON COLUMN encounter.adventure__id IS 'Adventure id owner of this item';

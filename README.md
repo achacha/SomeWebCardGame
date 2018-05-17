@@ -47,7 +47,6 @@ Trobleshooting
 ---
 **org.hsqldb.HsqlException: Database lock acquisition failure**
 IntelliJ is still connected to the DB, select Database view and disconnect it 
-
   
 **Nothing is showing up when going to http://localhost:8080/**
 Check if src/main/webapp/js exists, if not run **copyJs** gradle task
@@ -56,3 +55,6 @@ Check if src/main/webapp/js exists, if not run **copyJs** gradle task
 This is due to node living in /usr/local/bin/node and for some odd reason /usr/local/bin is not
 in IntelliJ tool path.  Run this from command line if needed but that step is not really
 needed inside IntelliJ since we are building artifact inside the IDE.
+
+**global_properties relation is missing**
+Unit test config is probably specifying $MODULE_DIR$ and it should be blank to default to project base dir

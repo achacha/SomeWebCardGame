@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.util.Collection;
 
-public class TestLoginAttrDbo extends BaseInitializedTest {
+public class LoginAttrDboTest extends BaseInitializedTest {
     @Test
     public void testDboRead() {
         // Single attribute by id

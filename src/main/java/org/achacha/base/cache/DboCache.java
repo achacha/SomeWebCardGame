@@ -1,9 +1,8 @@
 package org.achacha.base.cache;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.CacheStats;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.stats.CacheStats;
 import com.google.gson.JsonObject;
 import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.base.db.JdbcTuple;
@@ -17,7 +16,6 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Cache for specific indexed Dbo
@@ -72,7 +70,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
         this.sqlSelectAll = sqlSelectAll;
         this.sqlSelectById = sqlSelectById;
         this.isPreloaded = preloadData;
-        this.data = CacheBuilder.newBuilder().build();
+        this.data = Caffeine.newBuilder().build();
 
         if (preloadData) {
             // Load all data
@@ -92,7 +90,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
             }
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Preloaded cache for {}, count={}", dboClass.getSimpleName(), data.size());
+                LOGGER.debug("Preloaded cache for {}, count={}", dboClass.getSimpleName(), data.estimatedSize());
             }
         }
     }
@@ -112,42 +110,33 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
             return null;
         }
 
-        try {
-            return data.get(id, () -> {
-                try (
-                        JdbcTuple tuple = Global.getInstance().getDatabaseManager().executeSql(
-                                sqlSelectById,
-                                p -> p.setLong(1, id)
-                        )
-                ) {
-                    if (tuple.getResultSet().next()) {
-                        if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("Loading item into cache from DB, class={} id={}", dboClass.getSimpleName(), id);
-                        }
-                        E dbo = dboClass.newInstance();
-                        dbo.fromResultSet(tuple.getResultSet());
-                        return dbo;
-                    } else {
-                        // This does not exist in DB, don't check again in the future
-                        if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("Item not found in DB, class={} id={}", dboClass.getSimpleName(), id);
-                        }
-                        doesNotExist.put(id, Boolean.TRUE);
-                        return null;
+        return data.get(id, (key) -> {
+            try (
+                    JdbcTuple tuple = Global.getInstance().getDatabaseManager().executeSql(
+                            sqlSelectById,
+                            p -> p.setLong(1, id)
+                    )
+            ) {
+                if (tuple.getResultSet().next()) {
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("Loading item into cache from DB, class={} id={}", dboClass.getSimpleName(), id);
                     }
-                } catch (Exception sqle) {
-                    LOGGER.error("Failed to load {} with id={} using &sql={}", dboClass.getSimpleName(), id, sqlSelectById, sqle);
+                    E dbo = dboClass.newInstance();
+                    dbo.fromResultSet(tuple.getResultSet());
+                    return dbo;
+                } else {
+                    // This does not exist in DB, don't check again in the future
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("Item not found in DB, class={} id={}", dboClass.getSimpleName(), id);
+                    }
+                    doesNotExist.put(id, Boolean.TRUE);
                     return null;
                 }
-            });
-        } catch (CacheLoader.InvalidCacheLoadException cle) {
-            // This exception happens when null is returned by CacheLoader lambda
-            // At this point the id was already added to the doesNotExist collection
-            return null;
-        } catch (ExecutionException e) {
-            LOGGER.error("Failed to load {} with id={}", dboClass.getSimpleName(), id, e);
-            return null;
-        }
+            } catch (Exception sqle) {
+                LOGGER.error("Failed to load {} with id={} using &sql={}", dboClass.getSimpleName(), id, sqlSelectById, sqle);
+                return null;
+            }
+        });
     }
 
     /**
@@ -173,7 +162,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
      * @return size of cache
      */
     public long size() {
-        return data.size();
+        return data.estimatedSize();
     }
 
     /**
@@ -197,8 +186,8 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
         obj.addProperty("load_count", stats.loadCount());
         obj.addProperty("total_load_time", stats.totalLoadTime());
         obj.addProperty("load_success_count", stats.loadSuccessCount());
-        obj.addProperty("load_exception_count", stats.loadExceptionCount());
-        obj.addProperty("load_exception_rate", stats.loadExceptionRate());
+        obj.addProperty("load_failure_count", stats.loadFailureCount());
+        obj.addProperty("load_failure_rate", stats.loadFailureRate());
 
         obj.add(JsonHelper.DATA, JsonHelper.toJsonArray(values()));
 
@@ -208,7 +197,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
     @Override
     public JsonObject toJsonObject() {
         JsonObject obj = new JsonObject();
-        obj.addProperty("size", data.size());
+        obj.addProperty("size", data.estimatedSize());
         return obj;
     }
 }

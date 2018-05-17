@@ -1,7 +1,7 @@
 package org.achacha.base.db.provider;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.global.Global;
 import org.apache.commons.io.IOUtils;
@@ -12,7 +12,6 @@ import javax.annotation.Nonnull;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Provide SQL from resource files
@@ -23,7 +22,7 @@ public class ResourceSqlProvider implements SqlProvider {
     private final Cache<String, String> cachePathToSql;
 
     public ResourceSqlProvider() {
-        cachePathToSql = CacheBuilder
+        cachePathToSql = Caffeine
                 .newBuilder()
                 .build();
     }
@@ -49,17 +48,18 @@ public class ResourceSqlProvider implements SqlProvider {
      * @return SQL string
      */
     public String get(String resourcePath) {
-        try {
-            String sql = cachePathToSql.get(resourcePath, () -> loadResource(resourcePath));
-            if (sql == null)
-                throw new RuntimeException("Resource not found: " + resourcePath);
+        String sql = cachePathToSql.get(resourcePath, (key) -> {
+            try {
+                return loadResource(resourcePath);
+            } catch (IOException e) {
+                LOGGER.error("Failed to load resource="+key, e);
+                return null;
+            }
+        });
+        if (sql == null)
+            throw new RuntimeException("Resource not found: " + resourcePath);
 
-            LOGGER.debug("Loading resource SQL at path='{}' with sql={}", resourcePath, sql);
-            return sql;
-        }
-        catch (ExecutionException ee) {
-            LOGGER.warn("Failed to execute cache loader for: "+resourcePath+", "+ee.getMessage());
-            throw new RuntimeException("Failed to execute cache loader for: "+resourcePath, ee);
-        }
+        LOGGER.debug("Loading resource SQL at path='{}' with sql={}", resourcePath, sql);
+        return sql;
     }
 }

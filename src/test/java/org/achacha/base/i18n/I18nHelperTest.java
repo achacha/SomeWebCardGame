@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.Locale;
 
-public class TestI18nHelper {
+public class I18nHelperTest {
     @Test
     public void testGetLocale() {
         Locale locale = I18nHelper.getLocale("en-us");

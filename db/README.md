@@ -21,10 +21,9 @@ Postgres: Development database
   	to do this manually, type the following into the postgres command line:
   	- CREATE DATABASE necropolis WITH OWNER sawcog;
   	- CREATE DATABASE necropolis_test WITH OWNER sawcog;
-  
+
   - Test connection to verify that sawcog user can login and use necropolis database
-  	
-  	psql -d necropolis -U sawcog -W -h localhost
+  	- psql -d necropolis -U sawcog -W -h localhost
 
 
 Configuring postgresql to allow tcpip connection (assumed v9.5+, adjust as needed)

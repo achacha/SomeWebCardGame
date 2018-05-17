@@ -1,1 +1,1 @@
-SELECT * FROM public.global_properties
+SELECT * FROM global_properties

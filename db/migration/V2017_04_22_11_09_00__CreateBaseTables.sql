@@ -32,6 +32,7 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE login OWNER TO sawcog;
+GRANT ALL ON login TO sawcog;
 
 -- Attributes name/value pairs per login
 CREATE TABLE login_attr
@@ -48,8 +49,8 @@ WITH (
 OIDS = FALSE
 )
 ;
-ALTER TABLE login_attr
-  OWNER TO sawcog;
+ALTER TABLE login_attr OWNER TO sawcog;
+GRANT ALL ON login_attr TO sawcog;
 COMMENT ON COLUMN login_attr.name IS 'Attribute name';
 COMMENT ON COLUMN login_attr.value IS 'Value of the attribute';
 COMMENT ON TABLE login_attr
@@ -70,6 +71,7 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE event_log OWNER TO sawcog;
+GRANT ALL ON event_log TO sawcog;
 
 -- -----------------------------------------------------
 -- Global name/value pairs
@@ -87,3 +89,4 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE global_properties OWNER TO sawcog;
+GRANT ALL ON global_properties TO sawcog;
