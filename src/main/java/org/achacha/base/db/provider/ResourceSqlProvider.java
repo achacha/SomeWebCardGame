@@ -47,6 +47,7 @@ public class ResourceSqlProvider implements SqlProvider {
      * @param resourcePath String
      * @return SQL string
      */
+    @Override
     public String get(String resourcePath) {
         String sql = cachePathToSql.get(resourcePath, (key) -> {
             try {

@@ -5,7 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.stats.CacheStats;
 import com.google.gson.JsonObject;
 import org.achacha.base.db.BaseIndexedDbo;
-import org.achacha.base.db.JdbcTuple;
+import org.achacha.base.db.JdbcSession;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonEmittable;
 import org.achacha.base.json.JsonHelper;
@@ -75,7 +75,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
         if (preloadData) {
             // Load all data
             try (
-                    JdbcTuple tuple = Global.getInstance().getDatabaseManager().executeSql(
+                    JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSql(
                             sqlSelectAll,
                             p -> {}
                     )
@@ -112,7 +112,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
 
         return data.get(id, (key) -> {
             try (
-                    JdbcTuple tuple = Global.getInstance().getDatabaseManager().executeSql(
+                    JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSql(
                             sqlSelectById,
                             p -> p.setLong(1, id)
                     )

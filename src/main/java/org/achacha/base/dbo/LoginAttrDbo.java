@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -105,8 +104,6 @@ public class LoginAttrDbo extends BaseIndexedDbo {
             else {
                 LOGGER.error("Failed to insert LoginAttrDbo="+this);
             }
-        } catch (IOException sqle) {
-            LOGGER.error("Failed to update login_attr, id={}", id, sqle);
         }
     }
 
@@ -143,8 +140,6 @@ public class LoginAttrDbo extends BaseIndexedDbo {
             if (pstmt.executeUpdate() != 1) {
                 LOGGER.warn("Unable to update login_attr, id={}", id);
             }
-        } catch (IOException sqle) {
-            LOGGER.error("Failed to update login_attr, id={}", id, sqle);
         }
     }
 }

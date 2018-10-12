@@ -5,7 +5,7 @@ import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
 import org.achacha.base.db.BaseDboFactory;
 import org.achacha.base.db.DatabaseManager;
-import org.achacha.base.db.JdbcTuple;
+import org.achacha.base.db.JdbcSession;
 import org.achacha.base.global.Global;
 import org.achacha.base.logging.Event;
 
@@ -112,7 +112,7 @@ public class EventLogDboFactory extends BaseDboFactory {
         List<EventLogDbo> events = new ArrayList<>();
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                JdbcTuple triple = dbm.executeSql("/sql/EventLog/SelectTodayLast250.sql")
+                JdbcSession triple = dbm.executeSql("/sql/EventLog/SelectTodayLast250.sql")
         ) {
             while (triple.getResultSet().next()) {
                 EventLogDbo dbo = new EventLogDbo();

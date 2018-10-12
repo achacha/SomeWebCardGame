@@ -4,7 +4,7 @@ import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
 import org.achacha.base.db.BaseDboFactory;
 import org.achacha.base.db.DatabaseManager;
-import org.achacha.base.db.JdbcTuple;
+import org.achacha.base.db.JdbcSession;
 import org.achacha.base.global.Global;
 import org.achacha.base.security.SecurityHelper;
 
@@ -22,7 +22,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
     @Nullable
     public static LoginUserDbo findById(long idToFind) {
         try (
-                JdbcTuple triple = Global.getInstance().getDatabaseManager().executeSql(
+                JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
                         "/sql/Login/SelectById.sql",
                         p -> p.setLong(1, idToFind)
                 )
@@ -50,7 +50,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
     @Nullable
     public static LoginUserDbo findByEmail(String emailToFind) {
         try (
-                JdbcTuple triple = Global.getInstance().getDatabaseManager().executeSql(
+                JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
                         "/sql/Login/SelectByEmail.sql",
                         p -> p.setString(1, emailToFind)
                 )
@@ -99,7 +99,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
     @Nullable
     public static LoginUserDbo login(String email, String pwd) {
         try (
-                JdbcTuple triple = Global.getInstance().getDatabaseManager().executeSql(
+                JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
                         "/sql/Login/Login.sql",
                         p -> {
                             p.setString(1, email);
@@ -136,7 +136,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
         }
 
         try (
-                JdbcTuple triple = Global.getInstance().getDatabaseManager().executeSql(
+                JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
                         "/sql/Login/Impersonate.sql",
                         p -> p.setString(1, email)
                 )

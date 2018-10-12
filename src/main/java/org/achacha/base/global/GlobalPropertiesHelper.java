@@ -1,6 +1,6 @@
 package org.achacha.base.global;
 
-import org.achacha.base.db.JdbcTuple;
+import org.achacha.base.db.JdbcSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +22,7 @@ public class GlobalPropertiesHelper {
     public static void load(GlobalProperties properties, String application) {
         if (null == application) {
             try (
-                    JdbcTuple triple = Global.getInstance().getDatabaseManager().executeSql("/sql/GlobalProperties/SelectAll.sql")
+                    JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql("/sql/GlobalProperties/SelectAll.sql")
             ) {
                 populate(properties, triple.getResultSet());
             } catch (Exception sqle) {
@@ -30,7 +30,7 @@ public class GlobalPropertiesHelper {
             }
         } else {
             try (
-                    JdbcTuple triple = Global.getInstance().getDatabaseManager().executeSql(
+                    JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
                             "/sql/GlobalProperties/SelectAll.sql"
                     )
             ) {

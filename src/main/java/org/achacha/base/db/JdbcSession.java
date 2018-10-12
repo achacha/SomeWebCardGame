@@ -11,10 +11,11 @@ import java.sql.Statement;
  *
  * NOTE: if used without try-with-resources, you have to call close() explicitly
  */
-public class JdbcTuple implements AutoCloseable {
+public class JdbcSession implements AutoCloseable {
     Connection connection;
     Statement statement;
     ResultSet resultSet;
+    int updateResult;
 
     public Connection getConnection() {
         return connection;
