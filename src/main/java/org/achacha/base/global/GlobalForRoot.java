@@ -6,14 +6,13 @@ import org.achacha.base.db.provider.ResourceSqlProvider;
 
 import java.util.Properties;
 
-public class RootGlobal extends Global {
-    public RootGlobal() {
+public class GlobalForRoot extends Global {
+    public GlobalForRoot() {
         super("ROOT", null);
     }
 
     @Override
     public void initChild() {
-
     }
 
     @Override

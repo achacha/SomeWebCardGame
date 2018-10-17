@@ -1,7 +1,6 @@
 package org.achacha.test;
 
 import org.achacha.base.global.Global;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.AfterClass;
@@ -10,7 +9,6 @@ import org.mockito.Mockito;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import java.net.URLClassLoader;
 
 public class BaseInitializedTest {
     private static final Logger LOGGER = LogManager.getLogger(BaseInitializedTest.class);
@@ -23,7 +21,7 @@ public class BaseInitializedTest {
         if (Global.getInstance() == null) {
             LOGGER.info("Global begin initialized");
             //TODO: Find a clean way to display classpath
-            LOGGER.info("SystemClassLoader.classpath=[\n\t"+ StringUtils.join(((URLClassLoader)BaseInitializedTest.class.getClassLoader()).getURLs(), "\n\t")+"]");
+            //LOGGER.info("SystemClassLoader.classpath=[\n\t"+ StringUtils.join(((URLClassLoader)BaseInitializedTest.class.getClassLoader()).getURLs(), "\n\t")+"]");
 
             // Mock ServletContext
             ServletContext sc = Mockito.mock(ServletContext.class);
@@ -33,7 +31,7 @@ public class BaseInitializedTest {
             ServletContextEvent sce = Mockito.mock(ServletContextEvent.class);
             Mockito.when(sce.getServletContext()).thenReturn(sc);
 
-            Global.setInstance(new UnitTestGlobal());
+            Global.setInstance(new GlobalForTest());
             Global.getInstance().init(sce);
         }
         else {

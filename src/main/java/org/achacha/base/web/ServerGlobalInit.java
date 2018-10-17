@@ -1,7 +1,7 @@
 package org.achacha.base.web;
 
 import org.achacha.base.global.Global;
-import org.achacha.base.global.RootGlobal;
+import org.achacha.base.global.GlobalForRoot;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -12,7 +12,7 @@ public class ServerGlobalInit implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-            Global.setInstance(new RootGlobal());
+            Global.setInstance(new GlobalForRoot());
             Global.getInstance().init(servletContextEvent);
     }
 
