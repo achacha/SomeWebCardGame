@@ -3,6 +3,12 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     //
+    // JEE
+    //
+    // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: "${jaxbVersion}"
+
+    //
     // Tomcat, Jersey
     //
     // https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-catalina
@@ -38,6 +44,8 @@ dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: "${commonsCodecVersion}"
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
     compile group: 'org.apache.commons', name: 'commons-text', version: "${commonsTextVersion}"
+    // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: "${commonsBeanUtils}"
 
     //
     // Database
