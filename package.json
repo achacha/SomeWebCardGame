@@ -13,14 +13,15 @@
   "author": "achacha",
   "license": "UNLICENSED",
   "dependencies": {
+    "axios": "^0.18.0",
     "bootstrap": "~v4",
     "font-awesome": "^4.7.0",
     "jquery": "~3",
-    "jquery-ui": "~>1.12",
     "phaser-ce": "~2.10",
-    "popper.js": "^1.12.9",
     "requirejs": "~2",
-    "tether": "~>1.4"
+    "popper.js": "^1.12.9",
+    "tether": "~>1.4",
+    "vue": "~2.5"
   },
   "devDependencies": {},
   "repository": "git@github.com:achacha/SomeWebCardGame.git"
