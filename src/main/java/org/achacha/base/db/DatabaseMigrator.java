@@ -12,13 +12,14 @@ public class DatabaseMigrator {
     private static final Logger LOGGER = LogManager.getLogger(DatabaseMigrator.class);
 
     public static void migrateTestDatabase(JdbcDatabaseConnectionProvider databaseConnectionProvider) {
-        Flyway flyway = new Flyway();
+        Flyway flyway = Flyway.configure()
+                .dataSource(databaseConnectionProvider.getDataSource())
+                .locations("filesystem:db/migration")
+                .load();
 
         LOGGER.info("Migrating: {}", databaseConnectionProvider.toString());
 
         // Migrate
-        flyway.setDataSource(databaseConnectionProvider.getDataSource());
-        flyway.setLocations("filesystem:db/migration");
         flyway.clean();
         flyway.migrate();
     }
