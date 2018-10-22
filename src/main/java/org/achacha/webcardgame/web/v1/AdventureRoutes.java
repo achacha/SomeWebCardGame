@@ -35,13 +35,13 @@ public class AdventureRoutes extends AbstractRoutes {
         // Get player by id for this login, if null then this login does not have such a player
         PlayerDbo player = PlayerDboFactory.getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
         if (player == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("Player not found, playerId="+playerId)).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
 
         List<AdventureDbo> adventures = AdventureDboFactory.getByPlayerId(player.getId());
         if (adventures == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("Adventures not found for playerId="+playerId)).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound", "Adventures not found for playerId="+playerId)).build();
 
 
-        return Response.ok(JsonHelper.getSuccessWithData(adventures)).build();
+        return Response.ok(JsonHelper.getSuccessObject(adventures)).build();
     }
 }

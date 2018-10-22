@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
 import org.achacha.base.global.Global;
+import org.achacha.base.i18n.UIMessageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -48,83 +49,69 @@ public class JsonHelper {
      * @return Simple success object
      */
     public static JsonObject getSuccessObject() {
-        return getSuccessObjectWithMessage(null);
+        return getSuccessObject(null, null);
+    }
+
+    /**
+     * @param data Object converted to data
+     * @return Success object
+     */
+    public static JsonObject getSuccessObject(Object data) {
+        return getSuccessObject(null, data);
     }
 
     /**
      * Standard success object
      * success:true
      *
-     * @param message String to add as 'message'
+     * @param key String to add as 'key' (null if none)
+     * @param data Object to serialize to JSON (null if none)
      * @return JsonObject
      */
-    public static JsonObject getSuccessObjectWithMessage(String message) {
-        JsonObject obj = new JsonObject();
+    public static JsonObject getSuccessObject(String key, Object data) {
+        JsonObject jobj = new JsonObject();
 
-        obj.addProperty(SUCCESS, true);
-        if (null != message) { obj.addProperty(MESSAGE, message); }
-
-        return obj;
-    }
-
-    /**
-     * Standard success object with data
-     * success:true
-     *
-     * @param datum JsonEmittable
-     * @return JsonObject
-     */
-    public static JsonObject getSuccessWithData(JsonEmittable datum) {
-        JsonObject obj = new JsonObject();
-
-        obj.addProperty(SUCCESS, true);
-        if (null != datum) {
-            obj.add(DATA, datum.toJsonObject());
+        jobj.addProperty(SUCCESS, true);
+        if (null != key) {
+            String message = UIMessageHelper.getInstance().getLocalizedMsg(key);
+            jobj.addProperty(MESSAGE, message);
         }
 
-        return obj;
-    }
-
-    /**
-     * Standard success object with collection of data
-     * success:true
-     *
-     * @param data JsonEmittable
-     * @return JsonObject
-     */
-    public static JsonObject getSuccessWithData(Collection<? extends JsonEmittable> data) {
-        JsonObject obj = new JsonObject();
-
-        obj.addProperty(SUCCESS, true);
-        if (null != data) {
-            JsonArray ary = new JsonArray();
-            data.forEach(d -> {
-                ary.add(d.toJsonObject());
-            });
-            obj.add(DATA, ary);
+        // Serialize to JsonObject
+        if (data != null) {
+            JsonElement je = Global.getInstance().getGson().toJsonTree(data);
+            jobj.add(DATA, je);
         }
 
-        return obj;
+        return jobj;
     }
 
     /**
      * Standard fail object
      * success:false
      *
-     * @param message for error
+     * @param key String to add as 'key' (null if none)
+     * @param data Object to serialize to JSON (null if none)
      * @return JsonObject
      */
-    public static JsonObject getFailObject(String message) {
-        
-        JsonObject obj = new JsonObject();
+    public static JsonObject getFailObject(String key, Object data) {
 
-        obj.addProperty(SUCCESS, false);
+        JsonObject jobj = new JsonObject();
 
-        if (null != message) {
-            obj.addProperty(MESSAGE, message);
+        jobj.addProperty(SUCCESS, false);
+
+        if (null != key) {
+            String message = UIMessageHelper.getInstance().getLocalizedMsg(key);
+            jobj.addProperty(MESSAGE, message);
         }
 
-        return obj;
+        // Serialize to JsonObject
+        if (data != null) {
+            JsonElement je = Global.getInstance().getGson().toJsonTree(data);
+            jobj.add(DATA, je);
+        }
+
+        return jobj;
     }
 
     /**
@@ -245,7 +232,7 @@ public class JsonHelper {
             while (rs.next() && n > 0) {
                 JsonObject obj = new JsonObject();
                 for (int col = 1; col <= numberOfColumns; ++col) {
-                    Object v = null;
+                    Object v;
                     try {
                         v = rs.getObject(col);
                     }catch(SQLException ex){
@@ -253,7 +240,7 @@ public class JsonHelper {
                         // Then lets load it out of the database as a null.
                         v = null;
                     }
-                    if (null != v) {
+                    if (v != null) {
                         String columnName = columnNames.get(col - 1);
                         if (null != lookupMaps) {
                             // Lookup requested
@@ -273,7 +260,7 @@ public class JsonHelper {
                             v = null;
                         }
 
-                        obj.addProperty(columnNames.get(col - 1), v.toString());
+                        obj.addProperty(columnNames.get(col - 1), v != null ? v.toString() : "null");
                     }
                 }
                 ary.add(obj);
@@ -312,7 +299,7 @@ public class JsonHelper {
             while (rs.next() && n > 0) {
                 JsonArray subary = new JsonArray();
                 for (int col = 1; col <= numberOfColumns; ++col) {
-                    Object v = null;
+                    Object v;
                     try {
                         v = rs.getObject(col);
                     }catch(SQLException ex){
@@ -416,7 +403,7 @@ public class JsonHelper {
             LinkedList<String> paths = new LinkedList<>(Arrays.asList(StringUtils.split(entry.getKey(), '.')));
 
             // If array is >1 using [,,] notation, else just a String
-            String value = entry.getValue().length > 1 ? entry.getValue().toString() : entry.getValue()[0];
+            String value = entry.getValue().length > 1 ? Arrays.toString(entry.getValue()) : entry.getValue()[0];
             if (paths.size() > 0)
                 addToJsonObject(obj, paths, value);
         }
@@ -478,7 +465,7 @@ public class JsonHelper {
             return "\"\"";
         }
 
-        char c = 0;
+        char c;
         int i;
         int len = value.length();
         StringBuilder sb = new StringBuilder(len + 4);
@@ -541,9 +528,9 @@ public class JsonHelper {
     public static String toStringPrettyPrint(JsonElement e) {
         return Global.getInstance().getGsonPretty().toJson(e);
     }
-    
+
     public static String dquote(String s){return "\"" + s + "\"";}
-    
+
     public static String squote(String s){return "'" + s + "'";}
 
     /**

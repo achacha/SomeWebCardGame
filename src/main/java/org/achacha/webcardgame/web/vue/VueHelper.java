@@ -10,18 +10,18 @@ public class VueHelper {
     public static JsonObject buildData() {
         CallContext ctx = CallContextTls.get();
         Preconditions.checkNotNull(ctx);
-        Preconditions.checkNotNull(ctx.getLogin());
 
         JsonObject jobj = new JsonObject();
-        jobj.addProperty(
-                "welcomeMessage",
-                UIMessageHelper.getInstance().getLocalizedMsg(
-                        "home.welcome",
-                        ctx.getLogin().getFname()
-                )
-        );
-        jobj.add("login", ctx.getLogin().toJsonObject());
-
+        if (ctx.getLogin() != null) {
+            jobj.addProperty(
+                    "welcomeMessage",
+                    UIMessageHelper.getInstance().getLocalizedMsg(
+                            "home.welcome",
+                            ctx.getLogin().getFname()
+                    )
+            );
+            jobj.add("login", ctx.getLogin().toJsonObject());
+        }
         return jobj;
     }
 }

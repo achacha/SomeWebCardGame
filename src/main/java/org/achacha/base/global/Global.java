@@ -17,8 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.servlet.ServletContextEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,11 +60,6 @@ public abstract class Global {
      * Database manager
      */
     protected DatabaseManager databaseManager;
-
-    /**
-     * Instance specific script engine instance
-     */
-    protected ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
 
     /** Gson for convert to/from Json, pretty version does user indented formatting */
     protected Gson gson;
@@ -326,12 +319,5 @@ public abstract class Global {
 
     public Mode getMode() {
         return mode;
-    }
-
-    /**
-     * @return ScriptEngine
-     */
-    public ScriptEngine getScriptEngine() {
-        return scriptEngine;
     }
 }

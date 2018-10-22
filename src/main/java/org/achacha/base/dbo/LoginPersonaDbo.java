@@ -3,10 +3,12 @@ package org.achacha.base.dbo;
 import com.google.gson.JsonObject;
 import org.achacha.base.json.JsonHelper;
 
+import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+@Table(schema="public", name="login")
 public class LoginPersonaDbo extends LoginUserDbo {
 
     protected String lname;

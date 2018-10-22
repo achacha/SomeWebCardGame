@@ -4,6 +4,7 @@ import org.achacha.base.db.BaseIndexedDbo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -11,6 +12,7 @@ import java.sql.SQLException;
  * Card Sticker
  * Contains special things that the card can do
  */
+@Table(schema="public", name="card_sticker")
 public class CardStickerDbo extends BaseIndexedDbo {
     private static final Logger LOGGER = LogManager.getLogger(CardStickerDbo.class);
 

@@ -11,25 +11,25 @@ import static org.hamcrest.core.Is.is;
 
 public class JsonHelperTest {
     @Test
-    public void testGetSuccessObject() throws Exception {
+    public void testGetSuccessObject() {
         JsonObject obj = JsonHelper.getSuccessObject();
         Assert.assertThat(obj.toString(), is("{\"success\":true}"));
     }
 
     @Test
-    public void testGetSuccessObjectWithMessage() throws Exception {
-        JsonObject obj = JsonHelper.getSuccessObjectWithMessage("Engage!");
+    public void testGetSuccessObjectWithMessage() {
+        JsonObject obj = JsonHelper.getSuccessObject("Engage!");
         Assert.assertThat(
                 obj.toString(),
-                is("{\"success\":true,\"message\":\"Engage!\"}"));
+                is("{\"success\":true,\"data\":\"Engage!\"}"));
     }
 
     @Test
-    public void testGetFailObject() throws Exception {
-        JsonObject obj = JsonHelper.getFailObject("Cantdoit...");
+    public void testGetFailObject() {
+        JsonObject obj = JsonHelper.getFailObject(null, "Cantdoit...");
         Assert.assertThat(
                 obj.toString(),
-                is("{\"success\":false,\"message\":\"Cantdoit...\"}"));
+                is("{\"success\":false,\"data\":\"Cantdoit...\"}"));
     }
 
     @Test

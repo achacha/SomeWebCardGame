@@ -1,27 +1,34 @@
 package org.achacha.webcardgame.web.v1;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
+import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
 import org.achacha.base.dbo.LoginUserDbo;
 import org.achacha.base.json.JsonHelper;
-import org.achacha.base.security.SecurityHelper;
 import org.achacha.base.security.SecurityLevel;
-import org.achacha.webcardgame.helper.LoginHelper;
 import org.achacha.webcardgame.web.AbstractRoutes;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * /api/auth/
+ */
 @Path("auth")
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthRoutes extends AbstractRoutes {
@@ -59,16 +66,50 @@ public class AuthRoutes extends AbstractRoutes {
     @Path("login")
     @SecurityLevelRequired(SecurityLevel.PUBLIC)
     public Response doLogin(@FormParam("email") String email, @FormParam("pwd") String password) {
-        String hashPassword = SecurityHelper.encodeSaltPassword(password, email);
-        if (LoginHelper.isAbleToLogIn(email, hashPassword)) {
-            LOGGER.debug("Login success: email={} hashPassword={}", email, hashPassword);
+        CallContext.LoginResult loginResult = CallContextTls.get().login(email, password);
+
+        if (loginResult == CallContext.LoginResult.SUCCESS) {
+            LOGGER.debug("Login success: email={}", email);
             JsonObject obj = JsonHelper.getSuccessObject();
             return Response.ok().entity(obj).build();
         }
         else {
-            LOGGER.debug("Login fail: email={} hashPassword={}", email, hashPassword);
-            JsonObject obj = JsonHelper.getFailObject("Failed to authenticate user");
-            return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity(obj).build();
+            LOGGER.debug("Login fail: email={}", email);
+            JsonObject obj = JsonHelper.getFailObject("login.fail", null);
+            return Response.status(HttpServletResponse.SC_FORBIDDEN).entity(obj).build();
         }
+    }
+
+    /**
+     * Impersonate existing user if current user is superuser
+     * @param email to impersonate
+     * @return Response
+     */
+    @PUT
+    @Path("login")
+    @SecurityLevelRequired(SecurityLevel.ADMIN)
+    public Response impersonate(@QueryParam("email") String email) {
+        Preconditions.checkState(StringUtils.isNotEmpty(email));
+
+        CallContext ctx = CallContextTls.get();
+        switch(ctx.impersonate(email)) {
+            case LOGIN_IMPERSONATE:
+                return Response.ok(JsonHelper.getSuccessObject()).build();
+        }
+
+        return Response.status(500).entity(JsonHelper.getFailObject("login.fail", null)).build();
+    }
+
+    /**
+     * Logout currently logged in user
+     * @return Response
+     */
+    @DELETE
+    @Path("login")
+    @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
+    public Response doLogout() {
+        CallContextTls.get().logout();
+        return Response.ok(JsonHelper.getSuccessObject()).build();
+
     }
 }

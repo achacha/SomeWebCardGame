@@ -1,12 +1,8 @@
 package org.achacha.webcardgame.helper;
 
-import com.google.common.net.MediaType;
-import com.google.gson.JsonObject;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
 import org.achacha.base.global.Global;
-import org.achacha.base.json.JsonHelper;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.logging.log4j.LogManager;
@@ -18,9 +14,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -33,32 +27,6 @@ import java.util.function.Supplier;
  */
 public class ResponseHelper {
     private static final Logger LOGGER = LogManager.getLogger(ResponseHelper.class);
-
-    /**
-     * Response 401 unauthorized
-     * @param message String to display inside JSON response
-     * @return Response built and ready to return
-     */
-    public static Response getAuthFailed(String message) {
-        return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity(JsonHelper.getFailObject(message)).build();
-    }
-
-    /**
-     * Return JSON object as response
-     * Sets Content-Type to 'text/html' for Extjs to handle file uploads correctly.
-     * Status is 200
-     *
-     * @param response HttpServletResponse
-     * @param obj JsonObject
-     */
-    public static void returnFileUploadSuccess(HttpServletResponse response, JsonObject obj) {
-        response.setContentType(MediaType.HTML_UTF_8.toString());
-        try {
-            response.getWriter().println(obj);
-        } catch (IOException e) {
-            LOGGER.error("Failed to send object", e);
-        }
-    }
 
     /**
      * Do 302 redirect to url
@@ -264,19 +232,13 @@ public class ResponseHelper {
     }
 
     public static String toHtml(CallContext ctx) {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append("<h2>CallContext</h2>\n");
-
-        buffer.append("<table class='table table-bordered table-sm'>");
-        buffer.append("<tr><th>Method</th><td>").append(ctx.getMethod()).append("</td></tr>");
-        buffer.append("<tr><th>BaseUrl</th><td>").append(ctx.getBaseUrl()).append("</td></tr>");
-        buffer.append("<tr><th>Created Time</th><td>").append(ctx.getCreatedTime()).append("</td></tr>");
-        buffer.append("</table>");
-
-        buffer.append(toHtml(ctx.getRequest()));
-
-        return buffer.toString();
+        return "<h2>CallContext</h2>\n" +
+                "<table class='table table-bordered table-sm'>" +
+                "<tr><th>Method</th><td>" + ctx.getMethod() + "</td></tr>" +
+                "<tr><th>BaseUrl</th><td>" + ctx.getBaseUrl() + "</td></tr>" +
+                "<tr><th>Created Time</th><td>" + ctx.getCreatedTime() + "</td></tr>" +
+                "</table>" +
+                toHtml(ctx.getRequest());
     }
 
     /**
@@ -528,15 +490,13 @@ public class ResponseHelper {
     /**
      * Redirect to the login page via 302 so URL can change to login page
      * @param context CallContext
-     * @throws ServletException if fails to redirect to login lage
-     * @throws IOException if fails to redirect to login lage
      */
-    public static void redirectToLogin(CallContext context) throws ServletException, IOException {
+    public static void redirectToLogin(CallContext context) {
         String loginUrl = Global.getInstance().getProperties().getUrlPublicHome() + Global.getInstance().getProperties().getUriHomeLogin();
         LOGGER.debug("Redirecting to login URL={}", loginUrl);
         redirectUrlVia302(context.getResponse(), loginUrl);
     }
-    
+
     /**
      * Redirect to JSP page internally
      * NOTE: This will keep requested URL unchanged
@@ -549,40 +509,5 @@ public class ResponseHelper {
         LOGGER.debug("Servlet dispatcher redirect: {}", jspPath);
         context.getRequest().getRequestDispatcher(jspPath).forward(context.getRequest(), context.getResponse());
     }
-
-    /**
-     * Write favicon data
-     * @param context CallContext
-     * @param servletContext ServletContext
-     * @return JsonObject  (null if successfully written)
-     */
-    public static JsonObject sendFavicon(CallContext context, ServletContext servletContext) {
-        try {
-            context.getResponse().setContentType(CallContext.CONTENT_TYPE_IMAGE_FAVICON);
-            InputStream faviconStream = servletContext.getResourceAsStream(CallContext.FAVICON_ICO);
-            IOUtils.copy(faviconStream, context.getResponse().getOutputStream());
-            return null;
-        }
-        catch(IOException ioe) {
-            return context.returnError(ioe);
-        }
-    }
-
-    /**
-     * Write robots.txt file
-     * @param context CallContext
-     * @param servletContext ServletContext
-     * @return JsonObject  (null if successfully written)
-     */
-    public static JsonObject sendRobotsTxt(CallContext context, ServletContext servletContext) {
-        try {
-            context.getResponse().setContentType(MediaType.PLAIN_TEXT_UTF_8.toString());
-            InputStream stream = servletContext.getResourceAsStream(CallContext.ROBOTS_TXT);
-            IOUtils.copy(stream, context.getResponse().getOutputStream());
-            return null;
-        }
-        catch(IOException ioe) {
-            return context.returnError(ioe);
-        }
-    }
 }
+

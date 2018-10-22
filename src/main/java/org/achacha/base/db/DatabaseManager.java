@@ -2,6 +2,7 @@ package org.achacha.base.db;
 
 import org.achacha.base.db.provider.JdbcDatabaseConnectionProvider;
 import org.achacha.base.db.provider.SqlProvider;
+import org.achacha.base.dbo.LoginUserDboFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -74,7 +75,7 @@ public class DatabaseManager {
      *
      */
     public JdbcSession select(String key, @Nullable PreparedStatementSetter setter) throws SQLException {
-        String sql = loadSql(key);
+        String sql = sqlProvider.get(key);
         JdbcSession session = new JdbcSession();
         session.connection = getConnection();
         if (setter != null) {
@@ -100,7 +101,7 @@ public class DatabaseManager {
      * @return JdbcSession
      */
     public JdbcSession update(String key, PreparedStatementSetter setter) throws SQLException {
-        String sql = loadSql(key);
+        String sql = sqlProvider.get(key);
         JdbcSession session = new JdbcSession();
         session.connection = getConnection();
 
@@ -113,20 +114,18 @@ public class DatabaseManager {
         return session;
     }
 
-    @Nonnull
-    private String loadSql(String key) throws SQLException {
-        String sql = sqlProvider.get(key);
-        if (sql == null) {
-            throw new SQLException("Failed to load SQL at: " + key);
-        }
-        return sql;
-    }
-
     /**
      * @return JdbcDatabaseConnectionProvider
      */
     public JdbcDatabaseConnectionProvider getDatabaseConnectionProvider() {
         return databaseConnectionProvider;
+    }
+
+    /**
+     * @return SqlProvider
+     */
+    public SqlProvider getSqlProvider() {
+        return sqlProvider;
     }
 
     /**
@@ -210,7 +209,7 @@ public class DatabaseManager {
      * @return PreparedStatement with parameters set
      * @throws SQLException is fails to prepare statement
      */
-    public static PreparedStatement prepareStatementDirect(Connection conn, String sql, PreparedStatementSetter setter) throws SQLException {
+    public PreparedStatement prepareStatementDirect(Connection conn, String sql, PreparedStatementSetter setter) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         setter.prepare(pstmt);
         LOGGER.debug("SQL: " + DatabaseHelper.toString(pstmt));
@@ -270,7 +269,7 @@ public class DatabaseManager {
     public JdbcSession executeSqlDirect(String sql, PreparedStatementSetter setter) throws SQLException {
         JdbcSession triple = new JdbcSession();
         triple.connection = databaseConnectionProvider.getConnection();
-        triple.statement = DatabaseManager.prepareStatementDirect(triple.connection, sql, setter);
+        triple.statement = prepareStatementDirect(triple.connection, sql, setter);
         triple.resultSet = ((PreparedStatement)triple.statement).executeQuery();
         return triple;
     }
@@ -289,7 +288,7 @@ public class DatabaseManager {
         JdbcSession triple = new JdbcSession();
         String sql = sqlProvider.get(resourcePath);
         triple.connection = databaseConnectionProvider.getConnection();
-        triple.statement = DatabaseManager.prepareStatementDirect(triple.connection, sql, setter);
+        triple.statement = prepareStatementDirect(triple.connection, sql, setter);
         triple.resultSet = ((PreparedStatement)triple.statement).executeQuery();
         return triple;
     }
@@ -327,5 +326,20 @@ public class DatabaseManager {
         LOGGER.debug("SQL={}", sql);
         triple.resultSet = triple.statement.executeQuery(sql);
         return triple;
+    }
+
+    /**
+     * TODO: This needs to be done better
+     */
+    @Nullable
+    public static BaseIndexedDbo loadObjectById(Class<? extends BaseIndexedDbo> clz, long id) {
+        switch(clz.getSimpleName()) {
+            case "LoginUserDbo" :
+                return LoginUserDboFactory.findById(id);
+
+            default:
+                LOGGER.error("Not yet implemented: "+clz);
+                return null;
+        }
     }
 }

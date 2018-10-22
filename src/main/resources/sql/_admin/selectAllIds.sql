@@ -1,0 +1,1 @@
+select id from ${TABLE} order by id asc

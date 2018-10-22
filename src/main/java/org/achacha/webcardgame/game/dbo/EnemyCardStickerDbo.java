@@ -4,6 +4,7 @@ import org.achacha.base.db.BaseIndexedDbo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -11,6 +12,7 @@ import java.sql.SQLException;
  * Enemy card Sticker
  * Contains special things that the enemy card can do
  */
+@Table(schema="public", name="enemy_card_sticker")
 public class EnemyCardStickerDbo extends BaseIndexedDbo {
     private static final Logger LOGGER = LogManager.getLogger(EnemyCardStickerDbo.class);
 

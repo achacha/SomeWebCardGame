@@ -25,7 +25,7 @@ public class LoginHelper {
         return  isStaticUri(uri)
                 || uri.startsWith(Global.getInstance().getProperties().getUriHomeLogin())
                 || isLoginTargetUri(uri)
-        ;
+                ;
     }
 
     /**

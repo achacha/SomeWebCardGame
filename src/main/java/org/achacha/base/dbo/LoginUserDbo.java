@@ -6,13 +6,11 @@ import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.global.Global;
 import org.achacha.base.i18n.I18nHelper;
-import org.achacha.base.security.SecurityHelper;
 import org.achacha.base.security.SecurityLevel;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.security.InvalidParameterException;
+import javax.persistence.Table;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +18,7 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.TimeZone;
 
+@Table(schema="public", name="login")
 public class LoginUserDbo extends BaseIndexedDbo {
     protected static final Logger LOGGER = LogManager.getLogger(LoginUserDbo.class);
 
@@ -31,6 +30,9 @@ public class LoginUserDbo extends BaseIndexedDbo {
 
     /** User password */
     protected String pwd;
+
+    /** User salt */
+    protected String salt;
 
     /** User first name */
     protected String fname;
@@ -66,6 +68,10 @@ public class LoginUserDbo extends BaseIndexedDbo {
         return pwd;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
     public String getFname() {
         return fname;
     }
@@ -99,6 +105,7 @@ public class LoginUserDbo extends BaseIndexedDbo {
         id = rs.getLong("id");
         email = rs.getString("email");
         pwd = rs.getString("pwd");
+        salt = rs.getString("salt");
         fname = rs.getString("fname");
         securityLevel = SecurityLevel.valueOf(rs.getInt("security_level"));
         superuser = rs.getBoolean("is_superuser");
@@ -113,6 +120,7 @@ public class LoginUserDbo extends BaseIndexedDbo {
 
     /**
      * Limited view of the object
+     * NOTE: We omit password and salt in non-admin object
      * @return JsonObject
      */
     @Override
@@ -134,6 +142,9 @@ public class LoginUserDbo extends BaseIndexedDbo {
     public JsonObject toJsonObjectAdmin() {
         JsonObject obj = toJsonObject();
         if (pwd !=null) obj.addProperty("pwd", pwd);
+        if (salt !=null) obj.addProperty("salt", pwd);
+        if (locale != null) obj.addProperty("locale", locale.toString());
+        if (timezone != null) obj.addProperty("timezone", timezone.getID());
         obj.addProperty("is_su", superuser);
         obj.addProperty("is_active", active);
         if (securityLevel != null) obj.addProperty("security_level", securityLevel.toString());
@@ -143,7 +154,7 @@ public class LoginUserDbo extends BaseIndexedDbo {
     /**
      * Save last_login_on timestamp to now
      */
-    public void saveLastLoginOnNow() {
+    public void touch() {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
                 Connection connection = dbm.getConnection();
@@ -163,35 +174,44 @@ public class LoginUserDbo extends BaseIndexedDbo {
         this.impersonator = impersonator;
     }
 
-    /**
-     * Salt and digest the password then save it
-     *
-     * @param password String clear text password
-     */
-    public void savePassword(String password) {
-        if (StringUtils.isBlank(password))
-            throw new InvalidParameterException("Password cannot be blank");
+//    /**
+//     * Salt and digest the password then save it
+//     *
+//     * @param password String clear text password
+//     */
+//    public void savePassword(String password) {
+//        if (StringUtils.isBlank(password))
+//            throw new InvalidParameterException("Password cannot be blank");
+//
+//        String saltedPassword = SecurityHelper.encodeSaltPassword(password, email);
+//        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+//        try (
+//                Connection connection = dbm.getConnection();
+//                PreparedStatement pstmt = dbm.prepareStatement(
+//                        connection,
+//                        "/sql/Login/UpdatePasswordById.sql",
+//                        p -> {
+//                            p.setString(1, saltedPassword);
+//                            p.setLong(2, id);
+//                        }
+//                )
+//        ) {
+//            int rowsAffected = pstmt.executeUpdate();
+//            if (1 != rowsAffected) {
+//                LOGGER.warn("Unable to update password [{}] for login_id={}", saltedPassword, id);
+//            }
+//        } catch (Exception sqle) {
+//            LOGGER.error("Failed to find login", sqle);
+//        }
+//    }
 
-        String saltedPassword = SecurityHelper.encodeSaltPassword(password, email);
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-        try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatement(
-                        connection,
-                        "/sql/Login/UpdatePasswordById.sql",
-                        p -> {
-                            p.setString(1, saltedPassword);
-                            p.setLong(2, id);
-                        }
-                )
-        ) {
-            int rowsAffected = pstmt.executeUpdate();
-            if (1 != rowsAffected) {
-                LOGGER.warn("Unable to update password [{}] for login_id={}", saltedPassword, id);
-            }
-        } catch (Exception sqle) {
-            LOGGER.error("Failed to find login", sqle);
-        }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     @SuppressWarnings("unused")

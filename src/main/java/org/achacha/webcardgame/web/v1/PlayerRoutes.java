@@ -30,7 +30,7 @@ public class PlayerRoutes extends AbstractRoutes {
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response getAllPlayersForThisLogin() {
         Collection<PlayerDbo> players = PlayerDboFactory.getByLoginId(CallContextTls.get().getLogin().getId());
-        return Response.ok(JsonHelper.getSuccessWithData(players)).build();
+        return Response.ok(JsonHelper.getSuccessObject(players)).build();
     }
 
     /**
@@ -44,8 +44,8 @@ public class PlayerRoutes extends AbstractRoutes {
     public Response getPlayer(@PathParam("id") long id) {
         PlayerDbo player = PlayerDboFactory.getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), id);
         if (player == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("Object not found, id="+id)).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.not.found", "Object not found, id="+id)).build();
         else
-            return Response.ok(JsonHelper.getSuccessWithData(player)).build();
+            return Response.ok(JsonHelper.getSuccessObject(player)).build();
     }
 }

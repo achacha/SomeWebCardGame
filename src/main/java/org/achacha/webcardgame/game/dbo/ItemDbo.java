@@ -5,12 +5,14 @@ import org.achacha.webcardgame.game.data.ItemType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * Inventory item
  */
+@Table(schema="public", name="item")
 public class ItemDbo extends BaseIndexedDbo {
     private static final Logger LOGGER = LogManager.getLogger(ItemDbo.class);
 

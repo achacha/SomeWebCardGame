@@ -10,9 +10,9 @@ import java.lang.reflect.Type;
 /**
  * Serializes using Gson into JSON string and intended to be read-only
  */
-public class LocalizedKeyAdapter implements JsonSerializer<LocalizedKey> {
+public class LocalizedKeyAdapter<T extends LocalizedKeyResource> implements JsonSerializer<T> {
     @Override
-    public JsonElement serialize(LocalizedKey src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
         return new JsonPrimitive(UIMessageHelper.getInstance().getLocalizedMsg(src.getKey()));
     }
 }

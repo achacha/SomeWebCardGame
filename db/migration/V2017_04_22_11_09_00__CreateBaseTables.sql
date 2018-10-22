@@ -6,7 +6,8 @@ CREATE TABLE login
   -- Login data
   id serial NOT NULL PRIMARY KEY,
   email character varying(256) DEFAULT NULL,
-  pwd character varying(100) NOT NULL,
+  pwd character varying(128) NOT NULL,
+  salt character varying(128) NOT NULL,
   created_on timestamp without time zone NOT NULL DEFAULT now(),
   last_login_on timestamp without time zone NOT NULL DEFAULT now(),
   security_level integer DEFAULT 0,                       -- Security level, defaults to 0 which allows public access only

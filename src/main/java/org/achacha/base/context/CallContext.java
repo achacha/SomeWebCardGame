@@ -1,17 +1,14 @@
 package org.achacha.base.context;
 
 import com.google.common.net.MediaType;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.achacha.base.dbo.EventLogDboFactory;
 import org.achacha.base.dbo.LoginUserDbo;
 import org.achacha.base.dbo.LoginUserDboFactory;
 import org.achacha.base.global.Global;
-import org.achacha.base.i18n.UIMessageHelper;
-import org.achacha.base.json.JsonEmittable;
-import org.achacha.base.json.JsonHelper;
 import org.achacha.base.logging.Event;
+import org.achacha.base.security.SecurityHelper;
 import org.achacha.webcardgame.helper.ResponseHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +18,6 @@ import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -43,7 +39,7 @@ public class CallContext {
     public static final String SESSION_LOGIN_PARAM = "login";
 
     public enum LoginResult { SUCCESS, FAILURE, LOCKOUT }
-    
+
     // Creation time of this Context
     private long createdTimeMillis = System.currentTimeMillis();
 
@@ -166,82 +162,61 @@ public class CallContext {
     }
 
     /**
-     * Parse POST body that contains JsonObject
-     * @return JsonObject parsed from body
-     * @throws RuntimeException if can't parse or content type mismatch
-     */
-    @Nonnull
-    public JsonObject getJsonObjectFromRequestBody() {
-        return parsePostBodyIntoJson().getAsJsonObject();
-    }
-
-    /**
-     * Parse POST body that contains JsonObject
-     * @return JsonObject parsed from body
-     * @throws RuntimeException if can't parse or content type mismatch
-     */
-    @Nonnull
-    public JsonArray getJsonArrayFromRequestBody() {
-        return parsePostBodyIntoJson().getAsJsonArray();
-    }
-
-    /**
-     * Parse HTTP request body in JsonElement
-     * @return JsonElement
-     */
-    private JsonElement parsePostBodyIntoJson() {
-        if (requestJsonElement == null) {
-            if (!isRequestContentType(MediaType.JSON_UTF_8))
-                throw new RuntimeException("Expected: application/json");
-
-            try {
-                requestJsonElement = JsonHelper.fromInputStream(request.getInputStream());
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to parse HTTP input stream", e);
-            }
-        }
-
-        return requestJsonElement;
-    }
-
-    /**
      * Set current user logged in, save to session
-     * @param loginDbo LoginUserDbo
+     * @param login LoginUserDbo
      */
-    public void setLogin(LoginUserDbo loginDbo) {
-        if (null == loginDbo) {
+    public void setLogin(LoginUserDbo login) {
+        if (null == login) {
+            // To logout a user call logout() which handles session invalidation
             LOGGER.error("Set login called with a null object");
         }
         else {
-            login = loginDbo;
-            request.getSession().setAttribute(SESSION_LOGIN_PARAM, loginDbo);
+            this.login = login;
+            request.getSession().setAttribute(SESSION_LOGIN_PARAM, login);
 
             // Update timestamp for last_login_on
-            login.saveLastLoginOnNow();
+            login.touch();
         }
     }
 
     /**
      * Perform a login by checking the database and if valid adding this login user to session
-     * @param username String dto LoginAttamptDto with all fields present
+     * @param email String dto LoginAttamptDto with all fields present
      * @param pwd String password
      * @return LoginResult
      */
-    public LoginResult login(String username, String pwd) {
-        // Try to login the user
-        LoginUserDbo login = LoginUserDboFactory.login(username, pwd);
-        if (null != login) {
-            // Login success
-            setLogin(login);
-            EventLogDboFactory.insertFromContex(Event.LOGIN, login.toJsonObject());
-            return LoginResult.SUCCESS;
-        }
-        else {
+    public LoginResult login(String email, String pwd) {
+        if (StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(pwd)) {
+            LoginUserDbo attemptLogin = LoginUserDboFactory.findByEmail(email);
+            if (attemptLogin != null) {
+                String hashPassword = SecurityHelper.encodeSaltPassword(pwd, attemptLogin.getSalt());
+                if (Global.getInstance().isDevelopment()) {
+                    // This should only be visible in development mode
+                    LOGGER.debug("Login attempt email={} pwd={} hash={}", email, pwd, hashPassword);
+                }
+                else {
+                    LOGGER.debug("Login attempt email={} pwd=****** hash={}", email, hashPassword);
+                }
+                if (hashPassword.equals(attemptLogin.getPwd())) {
+                    // Login success
+                    setLogin(attemptLogin);
+                    EventLogDboFactory.insertFromContex(Event.LOGIN, login.toJsonObject());
+                    return LoginResult.SUCCESS;
+                }
+            }
+
             // Login failed, log event
             JsonObject obj = new JsonObject();
-            obj.addProperty("usename", username);
+            obj.addProperty("email", email);
+            obj.addProperty("pwd", pwd);
             EventLogDboFactory.insertInternal(Event.LOGIN_FAIL, obj);
+
+            // Remove any existing login
+            Optional<HttpSession> optSession = CallContextTls.get().getSession();
+            optSession.ifPresent(session -> session.removeAttribute(CallContext.SESSION_LOGIN_PARAM));
         }
+
+        // TODO: Keep track of failed logins? Or do manage it based on caller IP?
 
         // Default is always false, return true must be a result of a valid login
         return LoginResult.FAILURE;
@@ -261,8 +236,6 @@ public class CallContext {
                 data.addProperty("impersonator", login.getId());
                 EventLogDboFactory.insertFromContex(Event.LOGIN_IMPERSONATE, data);
 
-                impersonated.setImpersonator(login);
-                setLogin(impersonated);
                 return Event.LOGIN_IMPERSONATE;
             }
             else {
@@ -288,6 +261,9 @@ public class CallContext {
             // Invalidate session
             session.invalidate();
         }
+
+        // Clear out the login
+        this.login = null;
     }
 
     /**
@@ -310,239 +286,6 @@ public class CallContext {
     }
 
     /**
-     * Create JSON object as response
-     * Status is 200 - HttpServletResponse.SC_OK
-     *
-     * @return JsonObject written to response
-     */
-    @Nonnull
-    public JsonObject returnSuccess() {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        JsonObject obj = JsonHelper.getSuccessObject();
-
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send error object="+obj+" for "+this, e);
-        }
-
-        return obj;
-    }
-
-    /**
-     * Create JSON object as response
-     * Attach message and data elements if not null
-     * Status is 200 - HttpServletResponse.SC_OK
-     *
-     * @param message String
-     * @return JsonObject written to response
-     */
-    @Nonnull
-    public JsonObject returnSuccess(String message) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        JsonObject obj = JsonHelper.getSuccessObject();
-
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        if (null != message)
-            obj.addProperty(JsonHelper.MESSAGE, message);
-
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send error object="+obj+" for "+this, e);
-        }
-
-        return obj;
-    }
-
-    /**
-     * Create JSON object as response
-     * Attach message and data elements if not null
-     * Status is 200 - HttpServletResponse.SC_OK
-     *
-     * @param message String
-     * @param data JsonElement to be added inside return object as 'data'
-     * @return JsonObject written to response
-     */
-    @Nonnull
-    public JsonObject returnSuccess(String message, JsonElement data) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        JsonObject obj = JsonHelper.getSuccessObject();
-
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        if (null != message)
-            obj.addProperty(JsonHelper.MESSAGE, message);
-
-        if (null != data)
-            obj.add(JsonHelper.DATA, data);
-
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send error object="+obj+" for "+this, e);
-        }
-
-        return obj;
-    }
-
-    /**
-     * Create JSON object as response
-     * Attach message and data elements if not null
-     * Status is 200 - HttpServletResponse.SC_OK
-     *
-     * @param message String
-     * @param data JsonEmittable to be added inside return object as 'data'
-     * @return JsonObject written to response
-     */
-    @Nonnull
-    public JsonObject returnSuccess(String message, JsonEmittable data) {
-        return returnSuccess(message, data.toJsonObject());
-    }
-
-    /**
-     * Send JSON object as response
-     * Adds authorized state to this object
-     *
-     * Status is 200 - HttpServletResponse.SC_OK
-     *
-     * @param obj JsonObject to return as response
-     * @return JsonObject written to response
-     */
-    @Nonnull
-    public JsonObject returnSuccess(JsonObject obj) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send error object="+obj+" for "+this, e);
-        }
-
-        return obj;
-    }
-
-    /**
-     * Default response for methods not implemented
-     *
-     * Status is 501 - HttpServletResponse.SC_NOT_IMPLEMENTED
-     *
-     * @return JsonObject written to response
-     */
-    @Nonnull
-    public JsonObject returnNotImplemented() {
-        response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        LOGGER.info("Returning not implemented for URI={}", request.getRequestURI());
-
-        JsonObject obj = JsonHelper.getFailObject(UIMessageHelper.getInstance().getLocalizedMsg("general.notimplemented"));
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send error object="+obj+" for "+this, e);
-        }
-        return obj;
-    }
-
-    /**
-     * Return exception in error message
-     * Status is 500 - HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-     * FailObject returned - { success:false, ... }
-     * Message is from the exception
-     *
-     * @param t if not null expanded and added
-     * @return JsonObject written to response
-     */
-    @Nonnull
-    public JsonObject returnError(Throwable t) {
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        JsonObject obj = JsonHelper.getFailObject(t.getLocalizedMessage());
-        JsonHelper.putException(obj, t);
-
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        LOGGER.error("Returning error, object=" + obj.toString() + " for " + this, t);
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send error object="+obj+" for "+this, e);
-        }
-
-        return obj;
-    }
-
-    /**
-     * Returns message about unsupported media type
-     * Status is 415 - HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE
-     *
-     * @param expected MediaType
-     * @return JsonObject written to response
-     */
-    @Nonnull
-    public JsonObject returnInvalidContentType(MediaType expected) {
-        response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        JsonObject obj = JsonHelper.getFailObject(UIMessageHelper.getInstance().getLocalizedMsg("error.invalid.content.type", expected));
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        LOGGER.warn("Returning unsupported media type={}, expected={}", request.getContentType(), expected);
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send error object="+obj+" for "+this, e);
-        }
-
-        return obj;
-    }
-
-    /**
-     * Return exception in error message, do not log as error (warn instead)
-     * Status is 500 - HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-     * FailObject returned - { success:false, ... }
-     * Message is from the exception
-     *
-     * @param t if not null expanded and added
-     * @return JsonObject written to response
-     */
-    @Nonnull
-    public JsonObject returnErrorLogAsWarn(Throwable t) {
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        JsonObject obj = JsonHelper.getFailObject(t.getLocalizedMessage());
-        if (null != t) { JsonHelper.putException(obj, t); }
-
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        LOGGER.warn("Returning error, object=" + obj.toString() + " for this=" + this, t);
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send error object="+obj+" for this="+this, e);
-        }
-
-        return obj;
-    }
-
-    /**
      * @param request HttpServletRequest
      * @return Uri relative to web context (with leading /)
      */
@@ -560,113 +303,6 @@ public class CallContext {
     }
 
     /**
-     * Return non-localize fail message
-     * @param message String actual message
-     * @param data String
-     * @return JsonObject
-     */
-    @Nonnull
-    public JsonObject returnNonLocalizedFail(String message, String data) {
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        JsonObject obj = JsonHelper.getFailObject(message);
-        obj.addProperty(JsonHelper.DATA, data);
-
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        LOGGER.warn("Returning error, object=" + obj.toString() + " for " + this+" message="+message+" data="+data);
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send non-localized fail object="+obj+" for "+this, e);
-        }
-
-        return obj;
-    }
-
-    /**
-     * Return error JsonObject about missing parameter
-     * @param paramName String
-     * @return JsonObject
-     */
-    @Nonnull
-    public JsonObject returnMissingParameter(String paramName) {
-        return returnFail("error.missing.param", paramName);
-    }
-
-    /**
-     * Return error JsonObject about missing object
-     * @param paramName String
-     * @return JsonObject
-     */
-    @Nonnull
-    public JsonObject returnMissingObject(String paramName) {
-        response.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
-        return returnFail("error.missing.object", paramName);
-    }
-
-    /**
-     * Return error JsonObject about missing parameter
-     * @param paramName String
-     * @return JsonObject
-     */
-    @Nonnull
-    public JsonObject returnNotFound(String paramName) {
-        return returnFail("error.not.found", paramName);
-    }
-
-    /**
-     * Return localize fail message
-     * @param key String key to localized message
-     * @param data String
-     * @return JsonObject
-     */
-    @Nonnull
-    public JsonObject returnFail(String key, String data) {
-        response.setContentType(MediaType.JSON_UTF_8.toString());
-
-        JsonObject obj = JsonHelper.getFailObject(UIMessageHelper.getInstance().getLocalizedMsg(key, data));
-        obj.addProperty(JsonHelper.DATA, data);
-
-        obj.addProperty(JsonHelper.AUTHORIZED, null != login);
-
-        LOGGER.warn("Returning localized fail object=" + obj.toString() + " for " + this+" key="+key+" data="+data);
-        try {
-            response.getWriter().println(obj.toString());
-        } catch (IOException e) {
-            LOGGER.error("Failed to send fail object="+obj+" for "+this, e);
-        }
-
-        return obj;
-    }
-
-    /**
-     * Makes sure request parameter is provided and not blank
-     * @param param String
-     * @return true if exists and not blank
-     */
-    public boolean isParamBlankOrMissing(String param) {
-        return StringUtils.isBlank(request.getParameter(param));
-    }
-
-    /**
-     * Parse body for JSON and save it in this context
-     * Does not validate content-type
-     * @return JsonElement or null
-     * @see #isRequestContentType(MediaType)
-     */
-    public JsonElement fromBody() {
-        if (requestJsonElement == null) {
-            try {
-                requestJsonElement = JsonHelper.fromInputStream(request.getInputStream());
-            } catch (IOException e) {
-                LOGGER.error("Failed to parse body for JSON", e);
-            }
-        }
-        return requestJsonElement;
-    }
-
-    /**
      * Checks HTTP request content-type
      * @param expected MediaType
      * @return true if is that media type
@@ -674,5 +310,12 @@ public class CallContext {
     public boolean isRequestContentType(MediaType expected) {
         MediaType mt = MediaType.parse(request.getContentType());
         return mt.type().equals(expected.type()) && mt.subtype().equals(expected.subtype());
+    }
+
+    /**
+     * @return true is valid user is logged in and is superuser
+     */
+    public boolean isLoggedInAsSuperuser() {
+        return (login != null && login.isSuperuser());
     }
 }

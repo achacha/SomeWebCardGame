@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.persistence.Table;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +18,7 @@ import java.sql.SQLException;
 /**
  * Attribute associated with LoginPersona
  */
+@Table(schema="public", name="login_attr")
 public class LoginAttrDbo extends BaseIndexedDbo {
     protected static final Logger LOGGER = LogManager.getLogger(LoginAttrDbo.class);
 

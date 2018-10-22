@@ -4,7 +4,7 @@ package org.achacha.base.i18n;
  * String key that needs to be localized
  * Serializes into JSON string and intended to be read-only
  */
-public class LocalizedKey {
+public class LocalizedKey implements LocalizedKeyResource {
     private final String key;
 
     public String getKey() {

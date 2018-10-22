@@ -11,74 +11,70 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public abstract class BaseMessageHelper {
-    private static final Logger LOGGER = LogManager.getLogger(BaseMessageHelper.class);
+    static final Logger LOGGER = LogManager.getLogger(BaseMessageHelper.class);
 
-    // The base name of the all error message properties files.
-    private static final Utf8Control utf8Contol = new Utf8Control();
-    
-    protected Utf8Control getUtf8Control(){return utf8Contol;}
-    
     public abstract String getBundleName();
-    
-    /** Get the localized error message using the user's current locale.  A non-null
+
+    /**
+     * Get the localized error message using the user's current locale.  A non-null
      * string is always returned.  When a bundle cannot be loaded, the empty string
-     * is returned.  When a key is not found, than the offending key is returned in 
+     * is returned.  When a key is not found, than the offending key is returned in
      * a string.  Neither of these errors should happen in production.
-     * 
-     * @param key the error message key
-     * @param parms optional values for filling placeholders in value string 
+     *
+     * @param key   the error message key
+     * @param parms optional values for filling placeholders in value string
      * @return the localized message
      */
-    public String getLocalizedMsg(String key, Object... parms)
-    {
+    public String getLocalizedMsg(String key, Object... parms) {
         return getLocalizedMsg(getUserLocale(), key, parms);
     }
-    
-    /** Get the localized error message using the specified locale.  A non-null
+
+    /**
+     * Get the localized error message using the specified locale.  A non-null
      * string is always returned.  When a bundle cannot be loaded, the empty string
-     * is returned.  When a key is not found, than the offending key is returned in 
-     * a string.  Neither of these errors should happen in production. 
-     * 
+     * is returned.  When a key is not found, than the offending key is returned in
+     * a string.  Neither of these errors should happen in production.
+     *
      * @param locale Locale
-     * @param key the error message key
+     * @param key    the error message key
      * @param params optional values for filling placeholders in value string
      * @return the localized message
      */
-    public String getLocalizedMsg(Locale locale, String key, Object... params)
-    {
+    public String getLocalizedMsg(Locale locale, String key, Object... params) {
         // ResourceBundle manages its own caches so we don't have to preload bundles.
-        ResourceBundle bundle = ResourceBundle.getBundle(getBundleName(), locale, utf8Contol);
-        if (bundle == null)
-        {
-            LOGGER.error("Unable to load bundle " + getBundleName() + " with locale " +
-                    locale.getDisplayName() + "");
+        ResourceBundle bundle = ResourceBundle.getBundle(getBundleName(), locale);
+        if (bundle == null) {
+            LOGGER.error("Unable to load bundle " + getBundleName() + " with locale " + locale.getDisplayName() + "");
             return "";
         }
-        
+
         // Get the value of the key.
-        String value = null;
-        try {value = bundle.getString(key);}
-         catch (MissingResourceException e)
-          {
-             return "Key \"" + key + "\" not found in bundle " + getBundleName() + "";
-          }
-        
+        String value;
+        try {
+            value = bundle.getString(key);
+        } catch (MissingResourceException e) {
+            LOGGER.debug("Key `{}` not found in bundle {}", key, getBundleName());
+            return String.format(key, params);
+        }
+
         // We found a value that might have placeholders.  If we start getting
         // IllegalArgumentExceptions here, we can wrap the format call in a try block.
-        if (params.length > 0) value = MessageFormat.format(value, params);
+        if (params != null && params.length > 0)
+            value = MessageFormat.format(value, params);
+
         return value;
     }
-    
+
     /**
      * Get user locale for this login, if not logged in use client provided,
      * then fall back to default.
+     *
      * @return Locale
      */
     public Locale getUserLocale() {
         CallContext context = CallContextTls.get();
         if (null == context) {
-//            if (LOGGER.isDebugEnabled())
-//                LOGGER.debug("Message resolution is missing CallContext (possibly called in JSP before login), using default Locale");
+            LOGGER.debug("Message resolution is missing CallContext (possibly called in JSP before login), using default Locale");
             return Locale.getDefault();
         }
 

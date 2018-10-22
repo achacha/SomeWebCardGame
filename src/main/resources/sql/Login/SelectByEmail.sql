@@ -1,1 +1,1 @@
-SELECT id,email,fname,pwd,security_level,is_superuser,is_active,locale,timezone FROM public.login WHERE email = ?
+SELECT id,email,fname,pwd,salt,security_level,is_superuser,is_active,locale,timezone FROM public.login WHERE email = ?

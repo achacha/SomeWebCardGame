@@ -16,7 +16,7 @@ import java.io.InputStream;
 /**
  * Provide SQL from resource files
  */
-public class ResourceSqlProvider implements SqlProvider {
+public class ResourceSqlProvider extends SqlProvider {
     protected Logger LOGGER = LogManager.getLogger(SqlProvider.class);
 
     private final Cache<String, String> cachePathToSql;
@@ -31,7 +31,7 @@ public class ResourceSqlProvider implements SqlProvider {
      * Load one SQL resource at given path
      * @param key String
      * @return String SQL
-     * @throws IOException
+     * @throws IOException if cannot load resource
      */
     @Nonnull
     private static String loadResource(@Nonnull String key) throws IOException {
@@ -46,14 +46,17 @@ public class ResourceSqlProvider implements SqlProvider {
      * Get SQL from resource path
      * @param resourcePath String
      * @return SQL string
+     * @exception RuntimeException when not found or unable to load
      */
+    @Nonnull
     @Override
     public String get(String resourcePath) {
         String sql = cachePathToSql.get(resourcePath, (key) -> {
             try {
                 return loadResource(resourcePath);
             } catch (IOException e) {
-                LOGGER.error("Failed to load resource="+key, e);
+                // Exception thrown when this returns null
+                LOGGER.debug("Failed to load resource="+key, e);
                 return null;
             }
         });
