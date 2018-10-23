@@ -80,28 +80,6 @@ public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
     }
 
     /**
-     * Delete login attribute by id
-     * TODO: Move to base
-     * @param id long
-     */
-    public void deleteById(long id) {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-        try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatement(
-                        connection,
-                        "/sql/LoginAttr/DeleteById.sql",
-                        p -> p.setLong(1, id))
-        ) {
-            if (pstmt.executeUpdate() != 1) {
-                LoginAttrDbo.LOGGER.warn("Unable to delete login_attr, id={}", id);
-            }
-        } catch (Exception e) {
-            LoginAttrDbo.LOGGER.error("Failed to find login_attr", e);
-        }
-    }
-
-    /**
      * Delete by playerId and name
      *
      * @param loginId long

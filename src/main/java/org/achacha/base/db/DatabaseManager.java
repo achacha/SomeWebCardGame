@@ -359,7 +359,7 @@ public class DatabaseManager {
     }
 
     /**
-     * TODO: This needs to be done better
+     * Load Dbo based on object id
      */
     @Nullable
     public BaseIndexedDbo byId(Class<? extends BaseIndexedDbo> clz, long id) {

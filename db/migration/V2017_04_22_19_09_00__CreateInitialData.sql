@@ -1,5 +1,4 @@
 -- By default Global will load properties with NULL, then overlay the application specific ones
--- TODO: CLEANUP
 INSERT into global_properties(name,value) VALUES
   ('uri.home','/'),
   ('uri.login.home','/login.jsp'),

@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import javax.persistence.Table;
 import java.lang.reflect.Constructor;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 /**
@@ -90,5 +92,32 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
 
         return null;
     }
+
+    /**
+     * Delete by id
+     * @param id long
+     */
+    public void deleteById(long id) {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+        final String sql = dbm.getSqlProvider()
+                .builder("/sql/base/DeleteById.sql")
+                .withToken("TABLE", table.schema()+"."+table.name())
+                .build();
+        try (
+                Connection connection = dbm.getConnection();
+                PreparedStatement pstmt = dbm.prepareStatementDirect(
+                        connection,
+                        sql,
+                        p -> p.setLong(1, id))
+        ) {
+            if (pstmt.executeUpdate() != 1) {
+                LOGGER.warn("Unable to delete, id={}", id);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed to delete, id="+id, e);
+        }
+    }
+
+
 
 }

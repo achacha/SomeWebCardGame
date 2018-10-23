@@ -81,13 +81,12 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
                     )
             ) {
                 while (tuple.getResultSet().next()) {
-                    //TODO: Fix deprecated
-                    E dbo = dboClass.newInstance();
+                    E dbo = dboClass.getConstructor().newInstance();
                     dbo.fromResultSet(tuple.getResultSet());
                     data.put(dbo.getId(), dbo);
                 }
-            } catch (Exception sqle) {
-                LOGGER.error("Failed to load all for {} using &sql={}", dboClass.getSimpleName(), sqlSelectById, sqle);
+            } catch (Exception e) {
+                LOGGER.error("Failed to load all for {} using &sql={}", dboClass.getSimpleName(), sqlSelectById, e);
             }
 
             if (LOGGER.isDebugEnabled()) {
@@ -122,8 +121,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
                     if (LOGGER.isDebugEnabled()) {
                         LOGGER.debug("Loading item into cache from DB, class={} id={}", dboClass.getSimpleName(), id);
                     }
-                    // TODO: Fix deprecated
-                    E dbo = dboClass.newInstance();
+                    E dbo = dboClass.getConstructor().newInstance();
                     dbo.fromResultSet(tuple.getResultSet());
                     return dbo;
                 } else {
@@ -134,8 +132,8 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
                     doesNotExist.put(id, Boolean.TRUE);
                     return null;
                 }
-            } catch (Exception sqle) {
-                LOGGER.error("Failed to load {} with id={} using &sql={}", dboClass.getSimpleName(), id, sqlSelectById, sqle);
+            } catch (Exception e) {
+                LOGGER.error("Failed to load {} with id={} using &sql={}", dboClass.getSimpleName(), id, sqlSelectById, e);
                 return null;
             }
         });
