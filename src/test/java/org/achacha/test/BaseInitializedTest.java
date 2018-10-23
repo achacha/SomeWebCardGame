@@ -17,11 +17,11 @@ public class BaseInitializedTest {
     public static void init() {
         LOGGER.debug("+++INIT");
 
-        //TODO: check if this can be initialized only once
         if (Global.getInstance() == null) {
             LOGGER.info("Global begin initialized");
-            //TODO: Find a clean way to display classpath
-            //LOGGER.info("SystemClassLoader.classpath=[\n\t"+ StringUtils.join(((URLClassLoader)BaseInitializedTest.class.getClassLoader()).getURLs(), "\n\t")+"]");
+
+            // Display classpath jars
+            //ClasspathHelper.forJavaClassPath().forEach(System.out::println);
 
             // Mock ServletContext
             ServletContext sc = Mockito.mock(ServletContext.class);
