@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CardDboFactory extends BaseDboFactory<CardDbo> {
-    public CardDboFactory(Class<CardDbo> clz) {
-        super(clz);
+    public CardDboFactory() {
+        super(CardDbo.class);
     }
 
     public List<CardDbo> getByPlayerId(long playerId) {

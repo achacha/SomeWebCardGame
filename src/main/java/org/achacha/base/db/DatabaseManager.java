@@ -2,35 +2,12 @@ package org.achacha.base.db;
 
 import org.achacha.base.db.provider.JdbcDatabaseConnectionProvider;
 import org.achacha.base.db.provider.SqlProvider;
-import org.achacha.base.dbo.LoginAttrDbo;
-import org.achacha.base.dbo.LoginAttrDboFactory;
-import org.achacha.base.dbo.LoginPersonaDbo;
-import org.achacha.base.dbo.LoginPersonaDboFactory;
-import org.achacha.base.dbo.LoginUserDbo;
-import org.achacha.base.dbo.LoginUserDboFactory;
-import org.achacha.webcardgame.game.dbo.AdventureDbo;
-import org.achacha.webcardgame.game.dbo.AdventureDboFactory;
-import org.achacha.webcardgame.game.dbo.CardDbo;
-import org.achacha.webcardgame.game.dbo.CardDboFactory;
-import org.achacha.webcardgame.game.dbo.CardStickerDbo;
-import org.achacha.webcardgame.game.dbo.CardStickerDboFactory;
-import org.achacha.webcardgame.game.dbo.EncounterDbo;
-import org.achacha.webcardgame.game.dbo.EncounterDboFactory;
-import org.achacha.webcardgame.game.dbo.EnemyCardDbo;
-import org.achacha.webcardgame.game.dbo.EnemyCardDboFactory;
-import org.achacha.webcardgame.game.dbo.EnemyCardStickerDbo;
-import org.achacha.webcardgame.game.dbo.EnemyCardStickerDboFactory;
-import org.achacha.webcardgame.game.dbo.InventoryDbo;
-import org.achacha.webcardgame.game.dbo.InventoryDboFactory;
-import org.achacha.webcardgame.game.dbo.ItemDbo;
-import org.achacha.webcardgame.game.dbo.ItemDboFactory;
-import org.achacha.webcardgame.game.dbo.PlayerDbo;
-import org.achacha.webcardgame.game.dbo.PlayerDboFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Handle database connections and execute queries
@@ -75,20 +53,17 @@ public class DatabaseManager {
         this.databaseConnectionProvider = databaseConnectionProvider;
         this.sqlProvider = sqlProvider;
 
-        // TODO: This will be done using annotations/reflections
-        this.factories.put(LoginUserDbo.class, new LoginUserDboFactory(LoginUserDbo.class));
-        this.factories.put(LoginAttrDbo.class, new LoginAttrDboFactory(LoginAttrDbo.class));
-        this.factories.put(LoginPersonaDbo.class, new LoginPersonaDboFactory(LoginPersonaDbo.class));
-
-        this.factories.put(AdventureDbo.class, new AdventureDboFactory(AdventureDbo.class));
-        this.factories.put(CardDbo.class, new CardDboFactory(CardDbo.class));
-        this.factories.put(CardStickerDbo.class, new CardStickerDboFactory(CardStickerDbo.class));
-        this.factories.put(EncounterDbo.class, new EncounterDboFactory(EncounterDbo.class));
-        this.factories.put(EnemyCardDbo.class, new EnemyCardDboFactory(EnemyCardDbo.class));
-        this.factories.put(EnemyCardStickerDbo.class, new EnemyCardStickerDboFactory(EnemyCardStickerDbo.class));
-        this.factories.put(InventoryDbo.class, new InventoryDboFactory(InventoryDbo.class));
-        this.factories.put(ItemDbo.class, new ItemDboFactory(ItemDbo.class));
-        this.factories.put(PlayerDbo.class, new PlayerDboFactory(PlayerDbo.class));
+        // Get all Dbo factories and map by class they back
+        Set<Class<? extends BaseDboFactory>> factoryClasses = DboHelper.getAllDboFactories();
+        factoryClasses.forEach(clz->{
+            BaseDboFactory<? extends BaseIndexedDbo> factory = null;
+            try {
+                factory = clz.getConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                LOGGER.error("Failed to create Dbo factory, clz="+clz, e);
+            }
+            this.factories.put(factory.getDboClass(), factory);
+        });
     }
 
     /**

@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EncounterDboFactory extends BaseDboFactory<EncounterDbo> {
-    public EncounterDboFactory(Class<EncounterDbo> clz) {
-        super(clz);
+    public EncounterDboFactory() {
+        super(EncounterDbo.class);
     }
 
     /**

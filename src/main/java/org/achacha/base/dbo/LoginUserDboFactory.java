@@ -13,8 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
-    public LoginUserDboFactory(Class<LoginUserDbo> clz) {
-        super(clz);
+    public LoginUserDboFactory() {
+        super(LoginUserDbo.class);
     }
 
     /**

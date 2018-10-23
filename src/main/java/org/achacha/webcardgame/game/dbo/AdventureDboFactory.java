@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdventureDboFactory extends BaseDboFactory<AdventureDbo> {
-    public AdventureDboFactory(Class<AdventureDbo> clz) {
-        super(clz);
+    public AdventureDboFactory() {
+        super(AdventureDbo.class);
     }
 
     public List<AdventureDbo> getByPlayerId(long playerId) {

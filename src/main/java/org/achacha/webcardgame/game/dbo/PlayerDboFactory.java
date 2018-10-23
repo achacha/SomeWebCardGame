@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerDboFactory extends BaseDboFactory<PlayerDbo> {
-    public PlayerDboFactory(Class<PlayerDbo> clz) {
-        super(clz);
+    public PlayerDboFactory() {
+        super(PlayerDbo.class);
     }
 
     /**

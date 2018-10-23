@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
-    public LoginAttrDboFactory(Class<LoginAttrDbo> clz) {
-        super(clz);
+    public LoginAttrDboFactory() {
+        super(LoginAttrDbo.class);
     }
 
     /**

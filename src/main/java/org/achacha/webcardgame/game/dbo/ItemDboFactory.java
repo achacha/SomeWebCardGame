@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDboFactory extends BaseDboFactory<ItemDbo> {
-    public ItemDboFactory(Class<ItemDbo> clz) {
-        super(clz);
+    public ItemDboFactory() {
+        super(ItemDbo.class);
     }
 
     /**

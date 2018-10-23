@@ -12,8 +12,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class LoginPersonaDboFactory extends BaseDboFactory<LoginPersonaDbo> {
-    public LoginPersonaDboFactory(Class<LoginPersonaDbo> clz) {
-        super(clz);
+    public LoginPersonaDboFactory() {
+        super(LoginPersonaDbo.class);
     }
 
     /**

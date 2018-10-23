@@ -9,8 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class InventoryDboFactory extends BaseDboFactory<InventoryDbo> {
-    public InventoryDboFactory(Class<InventoryDbo> clz) {
-        super(clz);
+    public InventoryDboFactory() {
+        super(InventoryDbo.class);
     }
 
     public InventoryDbo getByPlayerId(long playerId) {

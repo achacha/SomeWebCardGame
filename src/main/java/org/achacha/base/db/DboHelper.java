@@ -64,4 +64,15 @@ public class DboHelper {
         reflections.getTypesAnnotatedWith(CachedDbo.class).forEach(c -> set.add((Class<? extends BaseIndexedDbo>) c));
         return set;
     }
+
+    /**
+     * @return Set of Class of type BaseDboFactory
+     */
+    public static Set<Class<? extends BaseDboFactory>> getAllDboFactories() {
+        Reflections reflections = new Reflections(getConfiguration());
+
+        Set<Class<? extends BaseDboFactory>> classes = new HashSet<>(reflections.getSubTypesOf(BaseDboFactory.class));
+        classes.removeIf(clz -> Modifier.isAbstract(clz.getModifiers()));  // Remove abstract classes
+        return classes;
+    }
 }

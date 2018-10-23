@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnemyCardStickerDboFactory extends BaseDboFactory<EnemyCardStickerDbo> {
-    public EnemyCardStickerDboFactory(Class<EnemyCardStickerDbo> clz) {
-        super(clz);
+    public EnemyCardStickerDboFactory() {
+        super(EnemyCardStickerDbo.class);
     }
 
     public List<EnemyCardStickerDbo> getByEnemyCardId(long cardId) {
