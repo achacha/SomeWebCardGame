@@ -28,6 +28,9 @@ public class ItemDbo extends BaseIndexedDbo {
     /** Quantity stack */
     protected long quantity;
 
+    public ItemDbo() {
+    }
+
     @Override
     public long getId() {
         return this.id;

@@ -3,16 +3,12 @@ package org.achacha.base.dbo;
 
 import com.google.gson.JsonObject;
 import org.achacha.base.db.BaseIndexedDbo;
-import org.achacha.base.db.DatabaseManager;
-import org.achacha.base.global.Global;
 import org.achacha.base.i18n.I18nHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
@@ -54,6 +50,9 @@ public class LoginUserDbo extends BaseIndexedDbo {
 
     /** Current impersinator of this user */
     transient protected LoginUserDbo impersonator;
+
+    public LoginUserDbo() {
+    }
 
     @Override
     public long getId() {
@@ -151,60 +150,9 @@ public class LoginUserDbo extends BaseIndexedDbo {
         return obj;
     }
 
-    /**
-     * Save last_login_on timestamp to now
-     */
-    public void touch() {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-        try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatement(
-                        connection,
-                        "/sql/Login/UpdateLastLoginOn.sql",
-                        p -> p.setLong(1, id)
-                )
-        ) {
-            pstmt.executeUpdate();
-        } catch (Exception sqle) {
-            LOGGER.error("Failed to update last_login_on timestamp", sqle);
-        }
-    }
-
     public void setImpersonator(LoginUserDbo impersonator) {
         this.impersonator = impersonator;
     }
-
-//    /**
-//     * Salt and digest the password then save it
-//     *
-//     * @param password String clear text password
-//     */
-//    public void savePassword(String password) {
-//        if (StringUtils.isBlank(password))
-//            throw new InvalidParameterException("Password cannot be blank");
-//
-//        String saltedPassword = SecurityHelper.encodeSaltPassword(password, email);
-//        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-//        try (
-//                Connection connection = dbm.getConnection();
-//                PreparedStatement pstmt = dbm.prepareStatement(
-//                        connection,
-//                        "/sql/Login/UpdatePasswordById.sql",
-//                        p -> {
-//                            p.setString(1, saltedPassword);
-//                            p.setLong(2, id);
-//                        }
-//                )
-//        ) {
-//            int rowsAffected = pstmt.executeUpdate();
-//            if (1 != rowsAffected) {
-//                LOGGER.warn("Unable to update password [{}] for login_id={}", saltedPassword, id);
-//            }
-//        } catch (Exception sqle) {
-//            LOGGER.error("Failed to find login", sqle);
-//        }
-//    }
-
 
     public void setPwd(String pwd) {
         this.pwd = pwd;

@@ -25,6 +25,9 @@ public class EnemyCardStickerDbo extends BaseIndexedDbo {
     /** Sticker name */
     protected String name;
 
+    public EnemyCardStickerDbo() {
+    }
+
     @Override
     public long getId() {
         return this.id;

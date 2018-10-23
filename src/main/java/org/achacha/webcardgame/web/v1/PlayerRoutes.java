@@ -1,6 +1,7 @@
 package org.achacha.webcardgame.web.v1;
 
 import org.achacha.base.context.CallContextTls;
+import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.game.dbo.PlayerDbo;
@@ -29,7 +30,7 @@ public class PlayerRoutes extends AbstractRoutes {
     @GET
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response getAllPlayersForThisLogin() {
-        Collection<PlayerDbo> players = PlayerDboFactory.getByLoginId(CallContextTls.get().getLogin().getId());
+        Collection<PlayerDbo> players = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginId(CallContextTls.get().getLogin().getId());
         return Response.ok(JsonHelper.getSuccessObject(players)).build();
     }
 
@@ -42,7 +43,7 @@ public class PlayerRoutes extends AbstractRoutes {
     @Path("{id}")
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response getPlayer(@PathParam("id") long id) {
-        PlayerDbo player = PlayerDboFactory.getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), id);
+        PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), id);
         if (player == null)
             return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.not.found", "Object not found, id="+id)).build();
         else

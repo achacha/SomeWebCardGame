@@ -1,5 +1,6 @@
 package org.achacha.webcardgame.dbo;
 
+import org.achacha.base.global.Global;
 import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
 import org.achacha.webcardgame.game.dbo.CardDbo;
@@ -10,9 +11,11 @@ import org.junit.Test;
 import java.util.Collection;
 
 public class CardDboTest extends BaseInitializedTest {
+    private CardDboFactory factory = Global.getInstance().getDatabaseManager().getFactory(CardDbo.class);
+
     @Test
     public void testGetCardsForPlayer() {
-        Collection<CardDbo> cards = CardDboFactory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
+        Collection<CardDbo> cards = factory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
         Assert.assertNotNull(cards);
         Assert.assertEquals(3, cards.size());
 

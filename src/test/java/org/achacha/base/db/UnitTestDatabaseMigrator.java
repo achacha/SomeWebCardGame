@@ -8,7 +8,6 @@ import org.junit.Assert;
 public class UnitTestDatabaseMigrator {
 
     public static void migrateTestDatabase() {
-        Flyway flyway = new Flyway();
         UnitTestDbPoolConnectionProvider dbConnProvider = (UnitTestDbPoolConnectionProvider) Global.getInstance().getDatabaseManager().databaseConnectionProvider;
 
         System.out.println(dbConnProvider.toString());
@@ -18,8 +17,11 @@ public class UnitTestDatabaseMigrator {
         Assert.assertTrue("Test database name MUST end with '_test'", dbConnProvider.getJdbcProperties().getProperty("jdbcUrl").endsWith("_test"));
 
         // Migrate
-        flyway.setDataSource(dbConnProvider.getDataSource());
-        flyway.setLocations("filesystem:db/migration", "filesystem:db/migration_test");
+        Flyway flyway = Flyway.configure()
+                .dataSource(dbConnProvider.getDataSource())
+                .locations("filesystem:db/migration", "filesystem:db/migration_test")
+                .load();
+
         flyway.clean();
         flyway.migrate();
         flyway.validate();

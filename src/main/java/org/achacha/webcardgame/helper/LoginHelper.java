@@ -2,17 +2,12 @@ package org.achacha.webcardgame.helper;
 
 import com.google.common.net.HttpHeaders;
 import org.achacha.base.context.CallContext;
-import org.achacha.base.context.CallContextTls;
-import org.achacha.base.dbo.LoginUserDbo;
-import org.achacha.base.dbo.LoginUserDboFactory;
 import org.achacha.base.global.Global;
 import org.achacha.base.global.GlobalProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 public class LoginHelper {
     protected static final Logger LOGGER = LogManager.getLogger(LoginHelper.class);
@@ -43,21 +38,6 @@ public class LoginHelper {
      */
     public static boolean isLoginTargetUri(String uri) {
         return uri.startsWith(Global.getInstance().getProperties().getUriLoginTarget());
-    }
-
-    public static boolean isAbleToLogIn(String email, String hashPassword) {
-        LoginUserDbo user = LoginUserDboFactory.findByEmail(email);
-        if (user != null && hashPassword.equals(user.getPwd())) {
-            CallContextTls.get().setLogin(user);
-            LOGGER.debug("Login success: email={} hashPassword={}", email, hashPassword);
-            return true;
-        }
-        else {
-            LOGGER.debug("Login fail: email={} hashPassword={}", email, hashPassword);
-            Optional<HttpSession> optSession = CallContextTls.get().getSession();
-            optSession.ifPresent(session -> session.removeAttribute(CallContext.SESSION_LOGIN_PARAM));
-            return false;
-        }
     }
 
     /**

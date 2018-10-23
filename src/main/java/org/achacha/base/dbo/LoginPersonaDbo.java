@@ -1,6 +1,7 @@
 package org.achacha.base.dbo;
 
 import com.google.gson.JsonObject;
+import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 
 import javax.persistence.Table;
@@ -22,6 +23,9 @@ public class LoginPersonaDbo extends LoginUserDbo {
     protected String phone2;
 
     protected Collection<LoginAttrDbo> attrs;
+
+    public LoginPersonaDbo() {
+    }
 
     @Override
     public void fromResultSet(ResultSet rs) throws SQLException {
@@ -68,7 +72,7 @@ public class LoginPersonaDbo extends LoginUserDbo {
      */
     public synchronized Collection<LoginAttrDbo> getAttrs() {
         if (attrs == null) {
-            attrs = LoginAttrFactoryDbo.findByLoginId(id);
+            attrs = Global.getInstance().getDatabaseManager().<LoginAttrDboFactory>getFactory(LoginAttrDbo.class).findByLoginId(id);
         }
         return attrs;
     }

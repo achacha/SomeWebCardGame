@@ -1,8 +1,8 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseDboFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.achacha.base.db.DatabaseManager;
+import org.achacha.base.global.Global;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,10 +10,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnemyCardStickerDboFactory extends BaseDboFactory {
-    private static final Logger LOGGER = LogManager.getLogger(EnemyCardStickerDbo.class);
+public class EnemyCardStickerDboFactory extends BaseDboFactory<EnemyCardStickerDbo> {
+    public EnemyCardStickerDboFactory(Class<EnemyCardStickerDbo> clz) {
+        super(clz);
+    }
 
-    public static List<EnemyCardStickerDbo> getByEnemyCardId(long cardId) {
+    public List<EnemyCardStickerDbo> getByEnemyCardId(long cardId) {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         ArrayList<EnemyCardStickerDbo> dbos = new ArrayList<>();
         try (
                 Connection connection = dbm.getConnection();

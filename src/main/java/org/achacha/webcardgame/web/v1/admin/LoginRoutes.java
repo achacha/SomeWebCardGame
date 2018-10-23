@@ -2,8 +2,9 @@ package org.achacha.webcardgame.web.v1.admin;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
+import org.achacha.base.db.BaseDboFactory;
 import org.achacha.base.dbo.LoginUserDbo;
-import org.achacha.base.dbo.LoginUserDboFactory;
+import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityHelper;
 import org.achacha.base.security.SecurityLevel;
@@ -37,7 +38,8 @@ public class LoginRoutes extends AbstractRoutes {
     public Response getFullUserById(@PathParam("id") long id) {
         Preconditions.checkState(id > 0);
 
-        LoginUserDbo login = LoginUserDboFactory.findById(id);
+        BaseDboFactory<LoginUserDbo> factory = Global.getInstance().getDatabaseManager().getFactory(LoginUserDbo.class);
+        LoginUserDbo login = factory.byId(id);
 
         return Response.ok(login).build();
     }
@@ -54,7 +56,8 @@ public class LoginRoutes extends AbstractRoutes {
         String newPwd = data.get("pwd").getAsString();
         Preconditions.checkState(StringUtils.isNotBlank(newPwd));
 
-        LoginUserDbo login = LoginUserDboFactory.findById(loginId);
+        BaseDboFactory<LoginUserDbo> factory = Global.getInstance().getDatabaseManager().getFactory(LoginUserDbo.class);
+        LoginUserDbo login = factory.byId(loginId);
         if (login != null) {
             SecurityHelper.savePassword(login, newPwd);
             jobj = JsonHelper.getSuccessObject();

@@ -1,17 +1,20 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseDboFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.achacha.base.db.DatabaseManager;
+import org.achacha.base.global.Global;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class InventoryDboFactory extends BaseDboFactory {
-    private static final Logger LOGGER = LogManager.getLogger(InventoryDbo.class);
+public class InventoryDboFactory extends BaseDboFactory<InventoryDbo> {
+    public InventoryDboFactory(Class<InventoryDbo> clz) {
+        super(clz);
+    }
 
-    public static InventoryDbo getByPlayerId(long playerId) {
+    public InventoryDbo getByPlayerId(long playerId) {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         InventoryDbo dbo = null;
         try (
                 Connection connection = dbm.getConnection();

@@ -11,14 +11,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class LoginPersonaDboFactory extends BaseDboFactory {
+public class LoginPersonaDboFactory extends BaseDboFactory<LoginPersonaDbo> {
+    public LoginPersonaDboFactory(Class<LoginPersonaDbo> clz) {
+        super(clz);
+    }
+
     /**
      * Find login with persona by id
      *
      * @param idToFind long
      * @return LoginPersonaDbo or null if not found
      */
-    public static LoginPersonaDbo findById(long idToFind) {
+    public LoginPersonaDbo findById(long idToFind) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
                 Connection connection = dbm.getConnection();
@@ -48,7 +52,7 @@ public class LoginPersonaDboFactory extends BaseDboFactory {
      * @param limit      int
      * @return List of LoginPersonaDbo
      */
-    public static Collection<LoginPersonaDbo> findSearch(String searchTerm, int limit) {
+    public Collection<LoginPersonaDbo> findSearch(String searchTerm, int limit) {
         List<LoginPersonaDbo> personas = new ArrayList<>();
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (

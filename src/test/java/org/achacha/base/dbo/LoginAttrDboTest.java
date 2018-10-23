@@ -1,5 +1,6 @@
 package org.achacha.base.dbo;
 
+import org.achacha.base.global.Global;
 import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
 import org.junit.Assert;
@@ -10,25 +11,29 @@ import java.util.Collection;
 public class LoginAttrDboTest extends BaseInitializedTest {
     @Test
     public void testDboRead() {
+        LoginAttrDboFactory factoryAttr = Global.getInstance().getDatabaseManager().getFactory(LoginAttrDbo.class);
+
         // Single attribute by id
-        LoginAttrDbo dbo = LoginAttrFactoryDbo.findById(1);
+        LoginAttrDbo dbo = factoryAttr.byId(1);
         Assert.assertNotNull(dbo);
         Assert.assertEquals(1, dbo.getId());
         Assert.assertEquals("color", dbo.getName());
         Assert.assertEquals("red", dbo.getValue());
 
         // Attributes by playerId
-        LoginUserDbo login = LoginUserDboFactory.findById(TestDataConstants.JUNIT_LOGINID);
+        LoginUserDbo login = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).byId(TestDataConstants.JUNIT_LOGINID);
         Assert.assertNotNull(login);
-        Collection<LoginAttrDbo> attrs = LoginAttrFactoryDbo.findByLoginId(login.getId());
+        Collection<LoginAttrDbo> attrs = factoryAttr.findByLoginId(login.getId());
         Assert.assertEquals(3, attrs.size());
         Assert.assertTrue(attrs.contains(dbo));
     }
 
     @Test
     public void testCreateDelete() throws Exception {
+        LoginAttrDboFactory factoryAttr = Global.getInstance().getDatabaseManager().getFactory(LoginAttrDbo.class);
+
         // Pre-delete
-        LoginAttrFactoryDbo.deleteByLoginIdAndName(TestDataConstants.JUNIT_LOGINID, "test.create");
+        factoryAttr.deleteByLoginIdAndName(TestDataConstants.JUNIT_LOGINID, "test.create");
 
         // Create new object and save to DB
         LoginAttrDbo dbo = new LoginAttrDbo();
@@ -40,7 +45,7 @@ public class LoginAttrDboTest extends BaseInitializedTest {
         Assert.assertNotEquals(0, dbo.getId());
 
         // Verify exists
-        dbo = LoginAttrFactoryDbo.findById(dbo.getId());
+        dbo = factoryAttr.byId(dbo.getId());
         Assert.assertNotNull(dbo);
         Assert.assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
         Assert.assertEquals("test.create", dbo.getName());
@@ -49,14 +54,14 @@ public class LoginAttrDboTest extends BaseInitializedTest {
         // Update and reload to verify update worked
         dbo.setValue("updated");
         dbo.save();
-        dbo = LoginAttrFactoryDbo.findById(dbo.getId());
+        dbo = factoryAttr.byId(dbo.getId());
         Assert.assertNotNull(dbo);
         Assert.assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
         Assert.assertEquals("test.create", dbo.getName());
         Assert.assertEquals("updated", dbo.getValue());
 
         // Delete and verify it is gone
-        LoginAttrFactoryDbo.deleteById(dbo.getId());
-        Assert.assertNull(LoginAttrFactoryDbo.findById(dbo.getId()));
+        factoryAttr.deleteById(dbo.getId());
+        Assert.assertNull(factoryAttr.byId(dbo.getId()));
     }
 }

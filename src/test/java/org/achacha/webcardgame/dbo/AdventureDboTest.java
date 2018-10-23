@@ -1,5 +1,6 @@
 package org.achacha.webcardgame.dbo;
 
+import org.achacha.base.global.Global;
 import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
 import org.achacha.webcardgame.game.dbo.AdventureDbo;
@@ -12,9 +13,11 @@ import org.junit.Test;
 import java.util.List;
 
 public class AdventureDboTest extends BaseInitializedTest {
+    private AdventureDboFactory factory = Global.getInstance().getDatabaseManager().getFactory(AdventureDbo.class);
+
     @Test
     public void testGetItemsForInventory() {
-        List<AdventureDbo> adventures = AdventureDboFactory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
+        List<AdventureDbo> adventures = factory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
         Assert.assertNotNull(adventures);
         Assert.assertEquals(1, adventures.size());
 

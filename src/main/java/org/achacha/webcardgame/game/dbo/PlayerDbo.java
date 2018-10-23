@@ -1,6 +1,7 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +32,9 @@ public class PlayerDbo extends BaseIndexedDbo {
     /** Cards */
     protected List<CardDbo> cards;
 
+    public PlayerDbo() {
+    }
+
     @Override
     public long getId() {
         return this.id;
@@ -42,8 +46,8 @@ public class PlayerDbo extends BaseIndexedDbo {
         this.loginId = rs.getLong("login__id");
         this.energy = rs.getLong("energy");
 
-        this.inventory = InventoryDboFactory.getByPlayerId(this.id);
-        this.cards = CardDboFactory.getByPlayerId(this.id);
+        this.inventory = Global.getInstance().getDatabaseManager().<InventoryDboFactory>getFactory(InventoryDbo.class).getByPlayerId(this.id);
+        this.cards = Global.getInstance().getDatabaseManager().<CardDboFactory>getFactory(CardDbo.class).getByPlayerId(this.id);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);

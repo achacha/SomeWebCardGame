@@ -5,42 +5,15 @@ import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.global.Global;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class LoginAttrFactoryDbo extends BaseDboFactory {
-    /**
-     * Find login attribute by id
-     *
-     * @param id long
-     * @return LoginAttrDbo or null if not found
-     */
-    @Nullable
-    public static LoginAttrDbo findById(long id) {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-        try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatement(
-                        connection,
-                        "/sql/LoginAttr/SelectById.sql",
-                        p -> p.setLong(1, id));
-                ResultSet rs = pstmt.executeQuery()
-        ) {
-            if (rs.next()) {
-                LoginAttrDbo dbo = new LoginAttrDbo();
-                dbo.fromResultSet(rs);
-                return dbo;
-            } else {
-                LoginAttrDbo.LOGGER.debug("Failed to find login_attr id={}", id);
-            }
-        } catch (Exception e) {
-            LoginAttrDbo.LOGGER.error("Failed to find login_attr", e);
-        }
-        return null;
+public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
+    public LoginAttrDboFactory(Class<LoginAttrDbo> clz) {
+        super(clz);
     }
 
     /**
@@ -50,7 +23,7 @@ public class LoginAttrFactoryDbo extends BaseDboFactory {
      * @param name String
      * @return true if deleted or false if it did not exist in the first place
      */
-    public static LoginAttrDbo findByLoginIdAndName(long loginId, String name) {
+    public LoginAttrDbo findByLoginIdAndName(long loginId, String name) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
                 Connection connection = dbm.getConnection();
@@ -84,7 +57,7 @@ public class LoginAttrFactoryDbo extends BaseDboFactory {
      * @return Collection of LoginDbo
      */
     @Nonnull
-    public static Collection<LoginAttrDbo> findByLoginId(long userId) {
+    public Collection<LoginAttrDbo> findByLoginId(long userId) {
         ArrayList<LoginAttrDbo> attrs = new ArrayList<>();
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
@@ -108,10 +81,10 @@ public class LoginAttrFactoryDbo extends BaseDboFactory {
 
     /**
      * Delete login attribute by id
-     *
+     * TODO: Move to base
      * @param id long
      */
-    public static void deleteById(long id) {
+    public void deleteById(long id) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
                 Connection connection = dbm.getConnection();
@@ -135,7 +108,7 @@ public class LoginAttrFactoryDbo extends BaseDboFactory {
      * @param name String
      * @return true if deleted or false if it did not exist in the first place
      */
-    public static boolean deleteByLoginIdAndName(long loginId, String name) {
+    public boolean deleteByLoginIdAndName(long loginId, String name) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
                 Connection connection = dbm.getConnection();

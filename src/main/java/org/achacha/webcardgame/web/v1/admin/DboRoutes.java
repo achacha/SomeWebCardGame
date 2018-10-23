@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import org.achacha.base.db.AdminDboFactory;
 import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.base.db.DboHelper;
+import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
@@ -79,7 +80,7 @@ public class DboRoutes {
         Set<Class<? extends BaseIndexedDbo>> indexedDbos = DboHelper.getIndexedDboClasses();
         Optional<Class<? extends BaseIndexedDbo>> clz = indexedDbos.stream().filter(cls->cls.getSimpleName().equals(simpleName)).findFirst();
         if (clz.isPresent()) {
-            BaseIndexedDbo dbo = AdminDboFactory.getDboById(clz.get(), id);
+            BaseIndexedDbo dbo = Global.getInstance().getDatabaseManager().byId(clz.get(), id);
             if (dbo != null)
                 return Response.ok(
                         JsonHelper.getSuccessObject(simpleName, dbo)

@@ -1,8 +1,8 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseDboFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.achacha.base.db.DatabaseManager;
+import org.achacha.base.global.Global;
 
 import javax.annotation.Nonnull;
 import java.sql.Connection;
@@ -11,8 +11,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemDboFactory extends BaseDboFactory {
-    private static final Logger LOGGER = LogManager.getLogger(ItemDbo.class);
+public class ItemDboFactory extends BaseDboFactory<ItemDbo> {
+    public ItemDboFactory(Class<ItemDbo> clz) {
+        super(clz);
+    }
 
     /**
      * Get a list of items for a given inventory
@@ -20,7 +22,8 @@ public class ItemDboFactory extends BaseDboFactory {
      * @return List of items (never null)
      */
     @Nonnull
-    public static List<ItemDbo> getItemsForInventory(long inventoryId) {
+    public List<ItemDbo> getItemsForInventory(long inventoryId) {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         List<ItemDbo> items = new ArrayList<>();
         try (
                 Connection connection = dbm.getConnection();

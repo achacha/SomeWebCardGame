@@ -1,6 +1,7 @@
 package org.achacha.base.db;
 
 import com.google.common.base.Preconditions;
+import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,7 +12,7 @@ import java.util.TreeSet;
 /**
  * Admin methods
  */
-public class AdminDboFactory extends BaseDboFactory {
+public class AdminDboFactory {
     private static final Logger LOGGER = LogManager.getLogger(AdminDboFactory.class);
 
     public static Set<Long> getAllIds(Class<? extends BaseIndexedDbo> clz) {
@@ -21,13 +22,13 @@ public class AdminDboFactory extends BaseDboFactory {
 
         String tableName = table[0].schema()+"."+table[0].name();
 
-        final String SQL = dbm.getSqlProvider()
+        final String SQL = Global.getInstance().getDatabaseManager().getSqlProvider()
                 .builder("/sql/_admin/selectAllIds.sql")
                 .withToken("TABLE", tableName)
                 .build();
 
         Set<Long> ids = new TreeSet<>();
-        try (JdbcSession session = dbm.executeSqlDirect(SQL)) {
+        try (JdbcSession session = Global.getInstance().getDatabaseManager().executeSqlDirect(SQL)) {
             while (session.getResultSet().next()) {
                 ids.add(session.getResultSet().getLong("id"));
             }
@@ -36,9 +37,5 @@ public class AdminDboFactory extends BaseDboFactory {
             LOGGER.error("Failed to get ids for tableName="+tableName, e);
         }
         return ids;
-    }
-
-    public static BaseIndexedDbo getDboById(Class<? extends BaseIndexedDbo> clz, long id) {
-        return DatabaseManager.loadObjectById(clz, id);
     }
 }

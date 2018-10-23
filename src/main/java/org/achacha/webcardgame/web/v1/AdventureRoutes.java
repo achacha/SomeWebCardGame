@@ -1,6 +1,7 @@
 package org.achacha.webcardgame.web.v1;
 
 import org.achacha.base.context.CallContextTls;
+import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.game.dbo.AdventureDbo;
@@ -33,11 +34,11 @@ public class AdventureRoutes extends AbstractRoutes {
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response getAdventures(@QueryParam("playerId") long playerId) {
         // Get player by id for this login, if null then this login does not have such a player
-        PlayerDbo player = PlayerDboFactory.getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
+        PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
         if (player == null)
             return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
 
-        List<AdventureDbo> adventures = AdventureDboFactory.getByPlayerId(player.getId());
+        List<AdventureDbo> adventures = Global.getInstance().getDatabaseManager().<AdventureDboFactory>getFactory(AdventureDbo.class).getByPlayerId(player.getId());
         if (adventures == null)
             return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound", "Adventures not found for playerId="+playerId)).build();
 

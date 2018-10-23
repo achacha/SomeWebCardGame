@@ -3,7 +3,6 @@ package org.achacha.base.dbo;
 import com.google.gson.JsonObject;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
-import org.achacha.base.db.BaseDboFactory;
 import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.db.JdbcSession;
 import org.achacha.base.global.Global;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class EventLogDboFactory extends BaseDboFactory {
+public class EventLogDboFactory {
     /**
      * Insert event for the currently logged in user
      *

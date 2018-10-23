@@ -1,8 +1,8 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseDboFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.achacha.base.db.DatabaseManager;
+import org.achacha.base.global.Global;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,8 +12,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerDboFactory extends BaseDboFactory {
-    private static final Logger LOGGER = LogManager.getLogger(PlayerDbo.class);
+public class PlayerDboFactory extends BaseDboFactory<PlayerDbo> {
+    public PlayerDboFactory(Class<PlayerDbo> clz) {
+        super(clz);
+    }
 
     /**
      * Get all PlayerDbo objects associated with a login id
@@ -21,7 +23,8 @@ public class PlayerDboFactory extends BaseDboFactory {
      * @return List of PlayerDbo, never null
      */
     @Nonnull
-    public static List<PlayerDbo> getByLoginId(long loginId) {
+    public List<PlayerDbo> getByLoginId(long loginId) {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         List<PlayerDbo> dbos = new ArrayList<>();
         try (
                 Connection connection = dbm.getConnection();
@@ -49,7 +52,8 @@ public class PlayerDboFactory extends BaseDboFactory {
      * @return PlayerDbo or null
      */
     @Nullable
-    public static PlayerDbo getByLoginIdAndPlayerId(long loginId, long playerId) {
+    public PlayerDbo getByLoginIdAndPlayerId(long loginId, long playerId) {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         PlayerDbo dbo = null;
         try (
                 Connection connection = dbm.getConnection();

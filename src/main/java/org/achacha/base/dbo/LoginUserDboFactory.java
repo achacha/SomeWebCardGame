@@ -12,33 +12,9 @@ import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-public class LoginUserDboFactory extends BaseDboFactory {
-    /**
-     * Find login by id
-     *
-     * @param idToFind int
-     * @return LoginUserDbo or null if not found
-     */
-    @Nullable
-    public static LoginUserDbo findById(long idToFind) {
-        try (
-                JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
-                        "/sql/Login/SelectById.sql",
-                        p -> p.setLong(1, idToFind)
-                )
-        ) {
-            if (triple.getResultSet().next()) {
-                LoginUserDbo dbo = new LoginUserDbo();
-                dbo.fromResultSet(triple.getResultSet());
-                return dbo;
-            } else {
-                LoginUserDbo.LOGGER.warn("Failed to find login id={}", idToFind);
-            }
-        } catch (Exception sqle) {
-            LoginUserDbo.LOGGER.error("Failed to find login", sqle);
-        }
-
-        return null;
+public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
+    public LoginUserDboFactory(Class<LoginUserDbo> clz) {
+        super(clz);
     }
 
     /**
@@ -48,7 +24,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
      * @return LoginUserDbo or null if not found
      */
     @Nullable
-    public static LoginUserDbo findByEmail(String emailToFind) {
+    public LoginUserDbo findByEmail(String emailToFind) {
         try (
                 JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
                         "/sql/Login/SelectByEmail.sql",
@@ -73,7 +49,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
      * This method is for testing purposes only. Deletes on non-transient data should instead flip deleted flag.
      * @param email String
      */
-    public static void deleteForRealByEmail(String email) {
+    public void deleteForRealByEmail(String email) {
         DatabaseManager dm = Global.getInstance().getDatabaseManager();
         try (
                 Connection connection = dm.getConnection();
@@ -97,7 +73,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
      * @return LoginUserDbo if valid login or null otherwise
      */
     @Nullable
-    public static LoginUserDbo login(String email, String pwd) {
+    public LoginUserDbo login(String email, String pwd) {
         try (
                 JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
                         "/sql/Login/Login.sql",
@@ -127,7 +103,7 @@ public class LoginUserDboFactory extends BaseDboFactory {
      * @return LoginUserDbo if valid user or null otherwise
      */
     @Nullable
-    public static LoginUserDbo impersonate(String email) {
+    public LoginUserDbo impersonate(String email) {
         CallContext context = CallContextTls.get();
 
         if (!context.getLogin().superuser) {
@@ -153,4 +129,24 @@ public class LoginUserDboFactory extends BaseDboFactory {
         }
         return null;
     }
+
+    /**
+     * Save last_login_on timestamp to now
+     */
+    public void touch(LoginUserDbo dbo) {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+        try (
+                Connection connection = dbm.getConnection();
+                PreparedStatement pstmt = dbm.prepareStatement(
+                        connection,
+                        "/sql/Login/UpdateLastLoginOn.sql",
+                        p -> p.setLong(1, dbo.getId())
+                )
+        ) {
+            pstmt.executeUpdate();
+        } catch (Exception sqle) {
+            LoginUserDbo.LOGGER.error("Failed to update last_login_on timestamp", sqle);
+        }
+    }
+
 }

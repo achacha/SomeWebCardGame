@@ -81,6 +81,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
                     )
             ) {
                 while (tuple.getResultSet().next()) {
+                    //TODO: Fix deprecated
                     E dbo = dboClass.newInstance();
                     dbo.fromResultSet(tuple.getResultSet());
                     data.put(dbo.getId(), dbo);
@@ -121,6 +122,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
                     if (LOGGER.isDebugEnabled()) {
                         LOGGER.debug("Loading item into cache from DB, class={} id={}", dboClass.getSimpleName(), id);
                     }
+                    // TODO: Fix deprecated
                     E dbo = dboClass.newInstance();
                     dbo.fromResultSet(tuple.getResultSet());
                     return dbo;

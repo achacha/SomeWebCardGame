@@ -1,6 +1,7 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,6 +26,9 @@ public class AdventureDbo extends BaseIndexedDbo {
     /** Encounters in this Adventure */
     protected List<EncounterDbo> encounters;
 
+    public AdventureDbo() {
+    }
+
     @Override
     public long getId() {
         return this.id;
@@ -34,7 +38,7 @@ public class AdventureDbo extends BaseIndexedDbo {
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.playerId = rs.getLong("player__id");
-        this.encounters = EncounterDboFactory.getEncountersForAdventure(this.id);
+        this.encounters = Global.getInstance().getDatabaseManager().<EncounterDboFactory>getFactory(EncounterDbo.class).getEncountersForAdventure(this.id);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);

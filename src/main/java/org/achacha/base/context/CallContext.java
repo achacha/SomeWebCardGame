@@ -175,7 +175,7 @@ public class CallContext {
             request.getSession().setAttribute(SESSION_LOGIN_PARAM, login);
 
             // Update timestamp for last_login_on
-            login.touch();
+            Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).touch(login);
         }
     }
 
@@ -187,7 +187,7 @@ public class CallContext {
      */
     public LoginResult login(String email, String pwd) {
         if (StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(pwd)) {
-            LoginUserDbo attemptLogin = LoginUserDboFactory.findByEmail(email);
+            LoginUserDbo attemptLogin = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).findByEmail(email);
             if (attemptLogin != null) {
                 String hashPassword = SecurityHelper.encodeSaltPassword(pwd, attemptLogin.getSalt());
                 if (Global.getInstance().isDevelopment()) {
@@ -229,7 +229,7 @@ public class CallContext {
      */
     public Event impersonate(String email) {
         if (login.isSuperuser()) {
-            LoginUserDbo impersonated  = LoginUserDboFactory.impersonate(email);
+            LoginUserDbo impersonated = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).impersonate(email);
             if (null != impersonated) {
                 JsonObject data = new JsonObject();
                 data.addProperty("impersonated", impersonated.getId());

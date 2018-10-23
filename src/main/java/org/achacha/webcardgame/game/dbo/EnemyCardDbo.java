@@ -1,6 +1,7 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,6 +55,9 @@ public class EnemyCardDbo extends BaseIndexedDbo {
     /** Card stickers */
     protected List<EnemyCardStickerDbo> stickers;
 
+    public EnemyCardDbo() {
+    }
+
     @Override
     public long getId() {
         return this.id;
@@ -71,7 +75,7 @@ public class EnemyCardDbo extends BaseIndexedDbo {
         this.agility = rs.getInt("agility");
         this.stamina = rs.getInt("stamina");
 
-        this.stickers = EnemyCardStickerDboFactory.getByEnemyCardId(id);
+        this.stickers = Global.getInstance().getDatabaseManager().<EnemyCardStickerDboFactory>getFactory(EnemyCardStickerDbo.class).getByEnemyCardId(id);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);

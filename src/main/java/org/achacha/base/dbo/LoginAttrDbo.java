@@ -27,6 +27,9 @@ public class LoginAttrDbo extends BaseIndexedDbo {
     private String name;
     private String value;
 
+    public LoginAttrDbo() {
+    }
+
     public long getLoginId() {
         return loginId;
     }
