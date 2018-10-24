@@ -1,6 +1,5 @@
 package org.achacha.base.db;
 
-import com.google.common.base.Preconditions;
 import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,9 +35,7 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
         this.dboClass = dboClass;
         this.LOGGER = LogManager.getLogger(dboClass);
 
-        Table[] tables = dboClass.getDeclaredAnnotationsByType(Table.class);
-        Preconditions.checkState(Preconditions.checkNotNull(tables).length > 0);
-        this.table = tables[0];
+        this.table = DboHelper.getTableAnnotation(dboClass);
     }
 
     public Class<T> getDboClass() {

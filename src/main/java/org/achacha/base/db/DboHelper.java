@@ -1,11 +1,14 @@
 package org.achacha.base.db;
 
+import com.google.common.base.Preconditions;
 import org.achacha.base.cache.CachedDbo;
 import org.reflections.Configuration;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
+import javax.annotation.Nonnull;
+import javax.persistence.Table;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
@@ -74,5 +77,25 @@ public class DboHelper {
         Set<Class<? extends BaseDboFactory>> classes = new HashSet<>(reflections.getSubTypesOf(BaseDboFactory.class));
         classes.removeIf(clz -> Modifier.isAbstract(clz.getModifiers()));  // Remove abstract classes
         return classes;
+    }
+
+    /**
+     * Get table from @Table on Dbo
+     * Will throw exception if annotation missing
+     * @param dboClass Dbo class
+     * @param <T> extends BaseIndexedDbo
+     * @return Table
+     */
+    @Nonnull
+    public static <T extends BaseIndexedDbo> Table getTableAnnotation(Class<T> dboClass) {
+        Table[] tables = dboClass.getDeclaredAnnotationsByType(Table.class);
+        Preconditions.checkState(Preconditions.checkNotNull(tables).length > 0);
+        return tables[0];
+    }
+
+    @Nonnull
+    public static <T extends BaseIndexedDbo> String getTable(Class<T> dboClass) {
+        Table table = getTableAnnotation(dboClass);
+        return table.schema()+"."+table.name();
     }
 }
