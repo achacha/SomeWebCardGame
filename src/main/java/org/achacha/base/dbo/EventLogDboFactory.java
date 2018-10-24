@@ -103,6 +103,28 @@ public class EventLogDboFactory {
     }
 
     /**
+     * Get last 250 events within 1 day
+     *
+     * @return List of last 250 events in 1 day period
+     */
+    public static Collection<EventLogDbo> loadLast250Today() {
+        List<EventLogDbo> events = new ArrayList<>();
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+        try (
+                JdbcSession triple = dbm.executeSql("/sql/EventLog/SelectTodayLast250.sql")
+        ) {
+            while (triple.getResultSet().next()) {
+                EventLogDbo dbo = new EventLogDbo();
+                dbo.fromResultSet(triple.getResultSet());
+                events.add(dbo);
+            }
+        } catch (Exception sqle) {
+            EventLogDbo.LOGGER.error("Failed to insert event without data", sqle);
+        }
+        return events;
+    }
+
+    /**
      * Get last 250 events
      *
      * @return List of last 250 events
@@ -111,7 +133,7 @@ public class EventLogDboFactory {
         List<EventLogDbo> events = new ArrayList<>();
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                JdbcSession triple = dbm.executeSql("/sql/EventLog/SelectTodayLast250.sql")
+                JdbcSession triple = dbm.executeSql("/sql/EventLog/SelectAnyLast250.sql")
         ) {
             while (triple.getResultSet().next()) {
                 EventLogDbo dbo = new EventLogDbo();

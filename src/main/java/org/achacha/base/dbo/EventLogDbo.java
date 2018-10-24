@@ -14,7 +14,7 @@ public class EventLogDbo extends BaseDbo {
 
     protected long id;
     protected Timestamp createdOn;
-    protected int eventId;
+    protected Event event;
     protected int loginId;
     protected String data;
 
@@ -26,8 +26,8 @@ public class EventLogDbo extends BaseDbo {
         return createdOn;
     }
 
-    public int getEventId() {
-        return eventId;
+    public Event getEvent() {
+        return event;
     }
 
     public int getLoginId() {
@@ -45,15 +45,8 @@ public class EventLogDbo extends BaseDbo {
     public void fromResultSet(ResultSet rs) throws SQLException {
         id = rs.getLong("id");
         createdOn = rs.getTimestamp("created_on");
-        eventId = rs.getInt("event_id");
+        event = Event.valueOf(rs.getInt("event_id"));
         loginId = rs.getInt("login_id");
         data = rs.getString("data");
-    }
-
-    /**
-     * @return Internal event name
-     */
-    public String getEventName() {
-        return Event.valueOf(eventId).getResourceKey();
     }
 }

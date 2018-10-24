@@ -1,0 +1,1 @@
+SELECT * FROM public.event_log ORDER BY id DESC LIMIT 250

@@ -33,9 +33,10 @@
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="serverStatus.jsp">Server Status</a>
                     <a class="dropdown-item" href="dbStatus.jsp">Database Status</a>
-                    <%--<a class="dropdown-item" href="callContextDump.jsp">CallContext Dump</a>--%>
-                    <%--<a class="dropdown-item" href="callContextLog.jsp">CallContext Log</a>--%>
-                    <%--<a class="dropdown-item" href="eventlogTodayLast250.jsp">Event Log - Last 250 Today</a>--%>
+                    <a class="dropdown-item" href="callContextDump.jsp">CallContext Dump</a>
+                    <a class="dropdown-item" href="callContextLog.jsp">CallContext Log</a>
+                    <a class="dropdown-item" href="eventlogTodayLast250.jsp">Event Log - Last 250 - 1 day range</a>
+                    <a class="dropdown-item" href="eventlogAnyLast250.jsp">Event Log - Last 250</a>
                     <a class="dropdown-item" href="dboViewer.jsp">Dbo Viewer</a>
                     <%--<div class="dropdown-divider"></div>--%>
                     <%--<a class="dropdown-item" href="#">Separated link</a>--%>

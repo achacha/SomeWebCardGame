@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
@@ -63,10 +64,12 @@ public class LoginUserDbo extends BaseIndexedDbo {
         return email;
     }
 
+    @Transient
     public String getPwd() {
         return pwd;
     }
 
+    @Transient
     public String getSalt() {
         return salt;
     }
@@ -124,12 +127,19 @@ public class LoginUserDbo extends BaseIndexedDbo {
      */
     @Override
     public JsonObject toJsonObject() {
-        JsonObject obj = super.toJsonObject();
+        JsonObject obj = new JsonObject();   // Do not call super, we don't want pwd/salt to be part of the object for security reasons
         obj.addProperty("id", id);
+        obj.addProperty("securityLevel", securityLevel.level());
+        obj.addProperty("superuser", superuser);
+        obj.addProperty("active", active);
         if (email != null) obj.addProperty("email", email);
         if (fname != null) obj.addProperty("fname", email);
         if (locale != null) obj.addProperty("locale", locale.toString());
         if (timezone != null) obj.addProperty("timezone", timezone.getID());
+        if(impersonator!=null) {
+            obj.addProperty("impersonator.id", impersonator.id);
+            obj.addProperty("impersonator.email", impersonator.email);
+        }
         return obj;
     }
 
