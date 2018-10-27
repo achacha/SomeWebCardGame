@@ -7,6 +7,10 @@ INSERT INTO encounter(id,adventure__id) VALUES
 INSERT INTO enemy_card(id,encounter__id,name,level,xp,strength,agility,stamina) VALUES
   (3,2,'Goblin 1',8,100,30,70,45)
   ,(4,2,'Goblin 2',6,80,65,65,40)
+  ,(5,2,'Goblin 2',6,80,65,65,40)
+  ,(6,2,'Goblin 2',6,80,65,65,40)
+  ,(7,2,'Goblin 2',6,80,65,65,40)
+  ,(8,2,'Goblin 2',6,80,65,65,40)
 ;
 
 INSERT INTO enemy_card_sticker(id,enemy_card__id,name) VALUES

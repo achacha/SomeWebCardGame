@@ -57,6 +57,11 @@ public class AdventureDboTest extends BaseInitializedTest {
         Assert.assertEquals("Enemy 2", enemyCardDbo.getName());
         Assert.assertNotNull(enemyCardDbo.getStickers());
         Assert.assertEquals(2, enemyCardDbo.getStickers().size());
+    }
 
+    @Test
+    public void builder() {
+        AdventureDbo adventure = AdventureDbo.builder(2, 100).build();
+        Assert.assertEquals(2, adventure.getEncounters().size());
     }
 }

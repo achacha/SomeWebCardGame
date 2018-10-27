@@ -27,12 +27,11 @@ import java.util.List;
 public class AdventureRoutes extends AbstractRoutes {
     /**
      * Get adventure by playerId for this login
-     * @param playerId long
-     * @return Response
      */
     @GET
+    @Path("active")
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
-    public Response getAdventures(@QueryParam("playerId") long playerId) {
+    public Response getActiveAdventures(@QueryParam("playerId") long playerId) {
         // Get player by id for this login, if null then this login does not have such a player
         PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
         if (player == null)
@@ -44,5 +43,19 @@ public class AdventureRoutes extends AbstractRoutes {
 
 
         return Response.ok(JsonHelper.getSuccessObject(adventures)).build();
+    }
+
+    /**
+     * Get available adventures for a given player
+     */
+    @GET
+    @Path("available")
+    @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
+    public Response getAvailableAdventures(@QueryParam("playerId") long playerId) {
+        // TODO: Generate encounters
+
+
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 }

@@ -14,14 +14,14 @@ public class LoginAttrDboTest extends BaseInitializedTest {
         LoginAttrDboFactory factoryAttr = Global.getInstance().getDatabaseManager().getFactory(LoginAttrDbo.class);
 
         // Single attribute by id
-        LoginAttrDbo dbo = factoryAttr.byId(1);
+        LoginAttrDbo dbo = factoryAttr.getById(1);
         Assert.assertNotNull(dbo);
         Assert.assertEquals(1, dbo.getId());
         Assert.assertEquals("color", dbo.getName());
         Assert.assertEquals("red", dbo.getValue());
 
         // Attributes by playerId
-        LoginUserDbo login = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).byId(TestDataConstants.JUNIT_LOGINID);
+        LoginUserDbo login = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).getById(TestDataConstants.JUNIT_LOGINID);
         Assert.assertNotNull(login);
         Collection<LoginAttrDbo> attrs = factoryAttr.findByLoginId(login.getId());
         Assert.assertEquals(3, attrs.size());
@@ -45,7 +45,7 @@ public class LoginAttrDboTest extends BaseInitializedTest {
         Assert.assertNotEquals(0, dbo.getId());
 
         // Verify exists
-        dbo = factoryAttr.byId(dbo.getId());
+        dbo = factoryAttr.getById(dbo.getId());
         Assert.assertNotNull(dbo);
         Assert.assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
         Assert.assertEquals("test.create", dbo.getName());
@@ -54,7 +54,7 @@ public class LoginAttrDboTest extends BaseInitializedTest {
         // Update and reload to verify update worked
         dbo.setValue("updated");
         dbo.save();
-        dbo = factoryAttr.byId(dbo.getId());
+        dbo = factoryAttr.getById(dbo.getId());
         Assert.assertNotNull(dbo);
         Assert.assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
         Assert.assertEquals("test.create", dbo.getName());
@@ -62,6 +62,6 @@ public class LoginAttrDboTest extends BaseInitializedTest {
 
         // Delete and verify it is gone
         factoryAttr.deleteById(dbo.getId());
-        Assert.assertNull(factoryAttr.byId(dbo.getId()));
+        Assert.assertNull(factoryAttr.getById(dbo.getId()));
     }
 }

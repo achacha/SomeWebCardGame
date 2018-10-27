@@ -1,7 +1,10 @@
 package org.achacha.webcardgame.game.dbo;
 
+import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.base.global.Global;
+import org.achacha.webcardgame.game.logic.EnemyType;
+import org.achacha.webcardgame.game.logic.NameHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,10 +20,16 @@ import java.util.List;
 public class EnemyCardDbo extends BaseIndexedDbo {
     private static final Logger LOGGER = LogManager.getLogger(EnemyCardDbo.class);
 
-    /** Card id */
+    /**
+     * Card id
+     * If 0 not yet saved
+     */
     protected long id;
 
-    /** Encounter that owns this inventory */
+    /**
+     * Encounter that owns this inventory
+     * If 0 then not assigned to encounter yet
+     */
     protected long encounterId;
 
     /** Card name */
@@ -32,8 +41,7 @@ public class EnemyCardDbo extends BaseIndexedDbo {
     protected int level;
 
     /**
-     * Experience into the level
-     * when xp > 100,000 then level is increased
+     * Xp granted when defeated
      */
     protected int xp;
 
@@ -52,8 +60,29 @@ public class EnemyCardDbo extends BaseIndexedDbo {
      */
     protected int stamina;
 
+    // TODO: Add DB enemy type
+
     /** Card stickers */
     protected List<EnemyCardStickerDbo> stickers;
+
+    public static Builder builder(EnemyType enemyType, int level) {
+        return new Builder(enemyType, level);
+    }
+
+    public static class Builder {
+        private EnemyCardDbo dbo = new EnemyCardDbo();
+
+        Builder(EnemyType enemyType, int level) {
+            dbo.name = NameHelper.generateName(enemyType.getNameType());
+            dbo.level = level;
+        }
+
+        public EnemyCardDbo build() {
+            Preconditions.checkNotNull(dbo.name);
+            Preconditions.checkState(dbo.level > 0);
+            return dbo;
+        }
+    }
 
     public EnemyCardDbo() {
     }

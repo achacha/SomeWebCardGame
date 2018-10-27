@@ -66,7 +66,7 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
      * @return LoginUserDbo or null if not found
      */
     @Nullable
-    public T byId(long id) {
+    public T getById(long id) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         final String sql = dbm.getSqlProvider()
                 .builder("/sql/base/SelectById.sql")

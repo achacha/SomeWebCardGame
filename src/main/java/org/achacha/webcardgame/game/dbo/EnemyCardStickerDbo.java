@@ -25,6 +25,8 @@ public class EnemyCardStickerDbo extends BaseIndexedDbo {
     /** Sticker name */
     protected String name;
 
+    //TODO: implement functionality (should this be a DBO or enum?)
+
     public EnemyCardStickerDbo() {
     }
 

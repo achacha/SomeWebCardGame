@@ -212,9 +212,9 @@ public abstract class Global {
     public void init(ServletContextEvent servletContextEvent) {
         LOGGER.info("+++[2]+++ Global starting init");
 
+        initGson();
         initDatabaseManager();
         initConstants(servletContextEvent);
-        initGson();
 
         LOGGER.info("+++[3]+++ Global initialized");
 

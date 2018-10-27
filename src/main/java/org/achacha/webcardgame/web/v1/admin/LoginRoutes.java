@@ -39,7 +39,7 @@ public class LoginRoutes extends AbstractRoutes {
         Preconditions.checkState(id > 0);
 
         BaseDboFactory<LoginUserDbo> factory = Global.getInstance().getDatabaseManager().getFactory(LoginUserDbo.class);
-        LoginUserDbo login = factory.byId(id);
+        LoginUserDbo login = factory.getById(id);
 
         return Response.ok(login).build();
     }
@@ -57,7 +57,7 @@ public class LoginRoutes extends AbstractRoutes {
         Preconditions.checkState(StringUtils.isNotBlank(newPwd));
 
         BaseDboFactory<LoginUserDbo> factory = Global.getInstance().getDatabaseManager().getFactory(LoginUserDbo.class);
-        LoginUserDbo login = factory.byId(loginId);
+        LoginUserDbo login = factory.getById(loginId);
         if (login != null) {
             SecurityHelper.savePassword(login, newPwd);
             jobj = JsonHelper.getSuccessObject();

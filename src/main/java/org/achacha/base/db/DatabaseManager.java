@@ -363,6 +363,6 @@ public class DatabaseManager {
      */
     @Nullable
     public BaseIndexedDbo byId(Class<? extends BaseIndexedDbo> clz, long id) {
-        return this.getFactory(clz).byId(id);
+        return this.getFactory(clz).getById(id);
     }
 }

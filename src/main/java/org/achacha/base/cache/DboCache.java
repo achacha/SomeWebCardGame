@@ -13,7 +13,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -199,5 +202,30 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
         JsonObject obj = new JsonObject();
         obj.addProperty("size", data.estimatedSize());
         return obj;
+    }
+
+    /**
+     * Get a random set of unique items
+     * Only applies to items loaded in cache, lazy load cache may have a limited set
+     * @param i size if greater than cache will truncate
+     * @return List of dbos
+     */
+    public List<E> getRandomUnique(int i) {
+        Map<Long, E> em = data.asMap();
+        List<Long> ids = new ArrayList<>(em.keySet());
+        Collections.shuffle(ids);
+
+
+        if (i > this.data.estimatedSize())
+            i = (int)this.data.estimatedSize() - 1;
+
+        List<E> dbos = new ArrayList<>(i);
+        if (i > 0) {
+            for (int x = 0; x < i; ++x) {
+                long id = ids.get(x);
+                dbos.add(data.getIfPresent(id));
+            }
+        }
+        return dbos;
     }
 }

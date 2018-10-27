@@ -1,17 +1,22 @@
 package org.achacha.webcardgame.game.dbo;
 
+import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.base.global.Global;
+import org.achacha.webcardgame.game.logic.EnemyType;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Adventure
+ * Adventure is an instance in progress
+ * Contains 1+ encounters and a reward
  */
 @Table(schema="public", name="adventure")
 public class AdventureDbo extends BaseIndexedDbo {
@@ -25,6 +30,35 @@ public class AdventureDbo extends BaseIndexedDbo {
 
     /** Encounters in this Adventure */
     protected List<EncounterDbo> encounters;
+
+    // TODO: Reward
+
+    public static Builder builder(int encounters, int level) {
+        return new Builder(encounters, level);
+    }
+
+    public static class Builder {
+        private final int encounters;
+        private final int level;
+
+        Builder(int encounters, int level) {
+            this.encounters = encounters;
+            this.level = level;
+        }
+
+        public AdventureDbo build() {
+            Preconditions.checkState(encounters > 0);
+
+            AdventureDbo adventure = new AdventureDbo();
+            adventure.encounters = new ArrayList<>(encounters);
+            for (int i = 0; i < encounters; ++i) {
+                int enemies = RandomUtils.nextInt(1,3);
+                // TODO: Randomize enemies?
+                adventure.encounters.add(EncounterDbo.builder(EnemyType.Goblin, level, enemies).build());
+            }
+            return adventure;
+        }
+    }
 
     public AdventureDbo() {
     }
