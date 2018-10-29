@@ -10,13 +10,12 @@ public class NameHelperTest {
         for (int i=0; i<10; ++i)
             Assert.assertFalse(NameHelper.generateName(NameType.Human).isBlank());
 
-//        for (int i=0; i<10; ++i)
-//            System.out.println(NameHelper.generateName(NameType.Human));
+//        for (NameType type : NameType.values()) {
+//            System.out.println(type.name()+"\n-----");
+//            for (int i=0; i<10; ++i)
+//                System.out.println(NameHelper.generateName(type));
+//            System.out.println("\n\n");
 //
-//        for (int i=0; i<10; ++i)
-//            System.out.println(NameHelper.generateName(NameType.Elf));
-//
-//        for (int i=0; i<10; ++i)
-//            System.out.println(NameHelper.generateName(NameType.Goblin));
+//        }
     }
 }

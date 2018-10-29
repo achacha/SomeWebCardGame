@@ -54,7 +54,7 @@ public class AdventureDbo extends BaseIndexedDbo {
             for (int i = 0; i < encounters; ++i) {
                 int enemies = RandomUtils.nextInt(1,3);
                 // TODO: Randomize enemies?
-                adventure.encounters.add(EncounterDbo.builder(EnemyType.Goblin, level, enemies).build());
+                adventure.encounters.add(EncounterDbo.builder(EnemyType.Goblin, enemies, level).build());
             }
             return adventure;
         }

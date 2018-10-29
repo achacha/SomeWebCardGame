@@ -51,11 +51,9 @@ public class AdventureRoutes extends AbstractRoutes {
     @GET
     @Path("available")
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
-    public Response getAvailableAdventures(@QueryParam("playerId") long playerId) {
-        // TODO: Generate encounters
-
-
-
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    public Response getAvailableAdventures(@QueryParam("level") int level) {
+        AdventureDbo dbo = AdventureDbo.builder(3, level).build();
+        //TODO: What else do we need?
+        return Response.status(Response.Status.NOT_IMPLEMENTED).entity(dbo).build();
     }
 }
