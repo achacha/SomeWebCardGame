@@ -1,4 +1,4 @@
-package org.achacha.oddity.web.filter;
+package org.achacha.webcardgame.web.filter;
 
 import com.google.common.net.HttpHeaders;
 import org.achacha.base.context.CallContextTls;
@@ -7,7 +7,6 @@ import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.helper.LoginHelper;
-import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +71,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     }
     private void redirectToLoginPage(ContainerRequestContext requestContext) {
         // GET referer and save URL that requested this
-        LoginHelper.processOriginatingUri((HttpServletRequest) requestContext.getRequest());
+        HttpServletRequest httpRequest = CallContextTls.get().getRequest();
+        LoginHelper.processOriginatingUri(httpRequest);
         requestContext.abortWith(
                 Response.status(Response.Status.FOUND)
                         .header(HttpHeaders.LOCATION, Global.getInstance().getProperties().getUriHomeLogin())

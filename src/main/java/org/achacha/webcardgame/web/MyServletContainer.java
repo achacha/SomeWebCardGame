@@ -19,6 +19,10 @@ import java.io.IOException;
         loadOnStartup = 1,
         initParams = {
                 @WebInitParam(
+                        name="com.sun.jersey.spi.container.ContainerRequestFilters",
+                        value="org.achacha.webcardgame.web.filter.AuthenticationFilter"
+                ),
+                @WebInitParam(
                         name = "jersey.config.server.provider.packages",
                         value = "org.achacha.webcardgame.web"
                 ),
@@ -26,7 +30,6 @@ import java.io.IOException;
                         name = "javax.ws.rs.Application",
                         value = "org.achacha.webcardgame.web.MyApplication"
                 )
-
         }
 )
 public class MyServletContainer extends ServletContainer {
