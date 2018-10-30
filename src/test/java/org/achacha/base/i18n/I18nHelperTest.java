@@ -1,14 +1,15 @@
 package org.achacha.base.i18n;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
-public class I18nHelperTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class I18nHelperTest {
     @Test
-    public void testGetLocale() {
+    void testGetLocale() {
         Locale locale = I18nHelper.getLocale("en-us");
-        Assert.assertEquals("en-us", locale.getLanguage());
+        assertEquals("en-us", locale.getLanguage());
     }
 }

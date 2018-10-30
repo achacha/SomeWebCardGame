@@ -2,14 +2,15 @@ package org.achacha.base.db;
 
 import org.achacha.base.global.Global;
 import org.achacha.test.BaseInitializedTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DatabaseManagerTest extends BaseInitializedTest {
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class DatabaseManagerTest extends BaseInitializedTest {
     @Test
-    public void testInitialization() {
-        Assert.assertNotNull(Global.getInstance());
+    void testInitialization() {
+        assertNotNull(Global.getInstance());
         DatabaseManager dm = Global.getInstance().getDatabaseManager();
-        Assert.assertNotNull(dm);
+        assertNotNull(dm);
     }
 }

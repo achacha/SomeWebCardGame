@@ -3,33 +3,38 @@ package org.achacha.base.dbo;
 import org.achacha.base.global.Global;
 import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-public class LoginAttrDboTest extends BaseInitializedTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class LoginAttrDboTest extends BaseInitializedTest {
     @Test
-    public void testDboRead() {
+    void testDboRead() {
         LoginAttrDboFactory factoryAttr = Global.getInstance().getDatabaseManager().getFactory(LoginAttrDbo.class);
 
         // Single attribute by id
         LoginAttrDbo dbo = factoryAttr.getById(1);
-        Assert.assertNotNull(dbo);
-        Assert.assertEquals(1, dbo.getId());
-        Assert.assertEquals("color", dbo.getName());
-        Assert.assertEquals("red", dbo.getValue());
+        assertNotNull(dbo);
+        assertEquals(1, dbo.getId());
+        assertEquals("color", dbo.getName());
+        assertEquals("red", dbo.getValue());
 
         // Attributes by playerId
         LoginUserDbo login = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).getById(TestDataConstants.JUNIT_LOGINID);
-        Assert.assertNotNull(login);
+        assertNotNull(login);
         Collection<LoginAttrDbo> attrs = factoryAttr.findByLoginId(login.getId());
-        Assert.assertEquals(3, attrs.size());
-        Assert.assertTrue(attrs.contains(dbo));
+        assertEquals(3, attrs.size());
+        assertTrue(attrs.contains(dbo));
     }
 
     @Test
-    public void testCreateDelete() throws Exception {
+    void testCreateDelete() throws Exception {
         LoginAttrDboFactory factoryAttr = Global.getInstance().getDatabaseManager().getFactory(LoginAttrDbo.class);
 
         // Pre-delete
@@ -40,28 +45,28 @@ public class LoginAttrDboTest extends BaseInitializedTest {
         dbo.setName("test.create");
         dbo.setValue("inserted");
         dbo.setLoginId(TestDataConstants.JUNIT_LOGINID);
-        Assert.assertEquals(0, dbo.getId());
+        assertEquals(0, dbo.getId());
         dbo.save();
-        Assert.assertNotEquals(0, dbo.getId());
+        assertNotEquals(0, dbo.getId());
 
         // Verify exists
         dbo = factoryAttr.getById(dbo.getId());
-        Assert.assertNotNull(dbo);
-        Assert.assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
-        Assert.assertEquals("test.create", dbo.getName());
-        Assert.assertEquals("inserted", dbo.getValue());
+        assertNotNull(dbo);
+        assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
+        assertEquals("test.create", dbo.getName());
+        assertEquals("inserted", dbo.getValue());
 
         // Update and reload to verify update worked
         dbo.setValue("updated");
         dbo.save();
         dbo = factoryAttr.getById(dbo.getId());
-        Assert.assertNotNull(dbo);
-        Assert.assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
-        Assert.assertEquals("test.create", dbo.getName());
-        Assert.assertEquals("updated", dbo.getValue());
+        assertNotNull(dbo);
+        assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
+        assertEquals("test.create", dbo.getName());
+        assertEquals("updated", dbo.getValue());
 
         // Delete and verify it is gone
         factoryAttr.deleteById(dbo.getId());
-        Assert.assertNull(factoryAttr.getById(dbo.getId()));
+        assertNull(factoryAttr.getById(dbo.getId()));
     }
 }

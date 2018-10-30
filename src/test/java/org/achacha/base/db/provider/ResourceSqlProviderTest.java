@@ -1,19 +1,21 @@
 package org.achacha.base.db.provider;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ResourceSqlProviderTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+class ResourceSqlProviderTest {
 
     private ResourceSqlProvider resourceSqlProvider = new ResourceSqlProvider();
 
     @Test
-    public void testResourceLoading() {
-        Assert.assertEquals("select * from public.GLOBAL_PROPERTIES", resourceSqlProvider.get("/sql/Test/TestText.sql"));
+    void testResourceLoading() {
+        assertEquals("select * from public.GLOBAL_PROPERTIES", resourceSqlProvider.get("/sql/Test/TestText.sql"));
     }
 
     @Test
-    public void resourceNotFound() {
+    void resourceNotFound() {
         try {
             resourceSqlProvider.get("/does/not/Exist.sql");
         }
@@ -23,6 +25,6 @@ public class ResourceSqlProviderTest {
         }
 
         // Not expected
-        Assert.fail("Exception should have been thrown when resource not found");
+        fail("Exception should have been thrown when resource not found");
     }
 }

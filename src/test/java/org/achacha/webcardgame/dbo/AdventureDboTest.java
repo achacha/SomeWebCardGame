@@ -7,59 +7,62 @@ import org.achacha.webcardgame.game.dbo.AdventureDbo;
 import org.achacha.webcardgame.game.dbo.AdventureDboFactory;
 import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.EncounterDbo;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class AdventureDboTest extends BaseInitializedTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class AdventureDboTest extends BaseInitializedTest {
     private AdventureDboFactory factory = Global.getInstance().getDatabaseManager().getFactory(AdventureDbo.class);
 
     @Test
-    public void testGetItemsForInventory() {
+    void testGetItemsForInventory() {
         List<AdventureDbo> adventures = factory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
-        Assert.assertNotNull(adventures);
-        Assert.assertEquals(1, adventures.size());
+        assertNotNull(adventures);
+        assertEquals(1, adventures.size());
 
         AdventureDbo adventure = adventures.get(0);
-        Assert.assertNotNull(adventure);
-        Assert.assertEquals(TestDataConstants.JUNIT_ADVENTURE_ID, adventure.getId());
+        assertNotNull(adventure);
+        assertEquals(TestDataConstants.JUNIT_ADVENTURE_ID, adventure.getId());
 
-        Assert.assertNotNull(adventure.getEncounters());
-        Assert.assertEquals(1, adventure.getEncounters().size());
-        Assert.assertFalse(adventure.getEncounters().isEmpty());
+        assertNotNull(adventure.getEncounters());
+        assertEquals(1, adventure.getEncounters().size());
+        assertFalse(adventure.getEncounters().isEmpty());
 
         EncounterDbo encounter = adventure.getEncounters().get(0);
-        Assert.assertNotNull(encounter);
-        Assert.assertEquals(adventure.getId(), encounter.getAdventureId());
-        Assert.assertFalse(encounter.getEnemies().isEmpty());
+        assertNotNull(encounter);
+        assertEquals(adventure.getId(), encounter.getAdventureId());
+        assertFalse(encounter.getEnemies().isEmpty());
 
         CardDbo enemyCardDbo = encounter.getEnemies().get(0);
-        Assert.assertNotNull(enemyCardDbo);
-        Assert.assertEquals(encounter.getId(), enemyCardDbo.getEncounterId());
-        Assert.assertEquals(8, enemyCardDbo.getLevel());
-        Assert.assertEquals(100, enemyCardDbo.getXp());
-        Assert.assertEquals(30, enemyCardDbo.getStrength());
-        Assert.assertEquals(70, enemyCardDbo.getAgility());
-        Assert.assertEquals("Enemy 1", enemyCardDbo.getName());
-        Assert.assertNotNull(enemyCardDbo.getStickers());
-        Assert.assertEquals(3, enemyCardDbo.getStickers().size());
+        assertNotNull(enemyCardDbo);
+        assertEquals(encounter.getId(), enemyCardDbo.getEncounterId());
+        assertEquals(8, enemyCardDbo.getLevel());
+        assertEquals(100, enemyCardDbo.getXp());
+        assertEquals(30, enemyCardDbo.getStrength());
+        assertEquals(70, enemyCardDbo.getAgility());
+        assertEquals("Enemy 1", enemyCardDbo.getName());
+        assertNotNull(enemyCardDbo.getStickers());
+        assertEquals(3, enemyCardDbo.getStickers().size());
 
         enemyCardDbo = encounter.getEnemies().get(1);
-        Assert.assertNotNull(enemyCardDbo);
-        Assert.assertEquals(encounter.getId(), enemyCardDbo.getEncounterId());
-        Assert.assertEquals(6, enemyCardDbo.getLevel());
-        Assert.assertEquals(80, enemyCardDbo.getXp());
-        Assert.assertEquals(65, enemyCardDbo.getStrength());
-        Assert.assertEquals(65, enemyCardDbo.getAgility());
-        Assert.assertEquals("Enemy 2", enemyCardDbo.getName());
-        Assert.assertNotNull(enemyCardDbo.getStickers());
-        Assert.assertEquals(2, enemyCardDbo.getStickers().size());
+        assertNotNull(enemyCardDbo);
+        assertEquals(encounter.getId(), enemyCardDbo.getEncounterId());
+        assertEquals(6, enemyCardDbo.getLevel());
+        assertEquals(80, enemyCardDbo.getXp());
+        assertEquals(65, enemyCardDbo.getStrength());
+        assertEquals(65, enemyCardDbo.getAgility());
+        assertEquals("Enemy 2", enemyCardDbo.getName());
+        assertNotNull(enemyCardDbo.getStickers());
+        assertEquals(2, enemyCardDbo.getStickers().size());
     }
 
     @Test
-    public void builder() {
+    void builder() {
         AdventureDbo adventure = AdventureDbo.builder(2, 100).build();
-        Assert.assertEquals(2, adventure.getEncounters().size());
+        assertEquals(2, adventure.getEncounters().size());
     }
 }

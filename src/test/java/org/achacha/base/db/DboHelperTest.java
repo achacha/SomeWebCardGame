@@ -6,32 +6,34 @@ import org.achacha.base.dbo.LoginPersonaDbo;
 import org.achacha.base.dbo.LoginUserDbo;
 import org.achacha.test.TestSimpleDbo;
 import org.achacha.webcardgame.game.dbo.AdventureDbo;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-public class DboHelperTest {
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class DboHelperTest {
     @Test
-    public void testGetAllDboClassNames() {
+    void testGetAllDboClassNames() {
         Set<Class<? extends BaseDbo>> classes = DboHelper.getAllDboClasses();
-        Assert.assertTrue(classes.contains(LoginUserDbo.class));
-        Assert.assertTrue(classes.contains(LoginPersonaDbo.class));
-        Assert.assertTrue(classes.contains(LoginAttrDbo.class));
-        Assert.assertTrue(classes.contains(EventLogDbo.class));
+        assertTrue(classes.contains(LoginUserDbo.class));
+        assertTrue(classes.contains(LoginPersonaDbo.class));
+        assertTrue(classes.contains(LoginAttrDbo.class));
+        assertTrue(classes.contains(EventLogDbo.class));
     }
 
     @Test
-    public void testGetAllCachedDboClassNames() {
+    void testGetAllCachedDboClassNames() {
         Set<Class<? extends BaseIndexedDbo>> classes = DboHelper.getAllCachedDboClasses();
-        Assert.assertFalse(classes.contains(LoginUserDbo.class));
+        assertFalse(classes.contains(LoginUserDbo.class));
     }
 
     @Test
-    public void testGetIndexedDboClasses() {
+    void testGetIndexedDboClasses() {
         Set<Class<? extends BaseIndexedDbo>> classes = DboHelper.getIndexedDboClasses();
-        Assert.assertFalse(classes.contains(TestSimpleDbo.class));   // Test classes should not be included
-        Assert.assertTrue(classes.contains(LoginUserDbo.class));
-        Assert.assertTrue(classes.contains(AdventureDbo.class));
+        assertFalse(classes.contains(TestSimpleDbo.class));   // Test classes should not be included
+        assertTrue(classes.contains(LoginUserDbo.class));
+        assertTrue(classes.contains(AdventureDbo.class));
     }
 }

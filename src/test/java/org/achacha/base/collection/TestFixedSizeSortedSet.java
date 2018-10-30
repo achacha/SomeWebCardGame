@@ -1,14 +1,15 @@
 package org.achacha.base.collection;
 
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
 
-public class TestFixedSizeSortedSet {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class TestFixedSizeSortedSet {
     @Test
-    public void testFixedSizeNoComparator() {
+    void testFixedSizeNoComparator() {
         FixedSizeSortedSet<String> set = new FixedSizeSortedSet<>(3);
         set.add("Red");
         set.add("Green");
@@ -16,11 +17,11 @@ public class TestFixedSizeSortedSet {
         set.add("Orange");
         set.add("Yellow");
 
-        Assert.assertEquals("[Blue, Green, Orange]", set.toString());
+        assertEquals("[Blue, Green, Orange]", set.toString());
     }
 
     @Test
-    public void testFixedSizeComparator() {
+    void testFixedSizeComparator() {
         FixedSizeSortedSet<String> set = new FixedSizeSortedSet<>(Comparator.reverseOrder(), 3);  // Reverse order
         set.add("Red");
         set.add("Green");
@@ -28,6 +29,6 @@ public class TestFixedSizeSortedSet {
         set.add("Orange");
         set.add("Yellow");
 
-        Assert.assertEquals("[Yellow, Red, Orange]", set.toString());
+        assertEquals("[Yellow, Red, Orange]", set.toString());
     }
 }

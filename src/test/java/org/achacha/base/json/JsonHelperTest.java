@@ -1,39 +1,40 @@
 package org.achacha.base.json;
 
 import com.google.gson.JsonObject;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JsonHelperTest {
+class JsonHelperTest {
     @Test
-    public void testGetSuccessObject() {
+    void testGetSuccessObject() {
         JsonObject obj = JsonHelper.getSuccessObject();
-        Assert.assertThat(obj.toString(), is("{\"success\":true}"));
+        assertThat(obj.toString(), is("{\"success\":true}"));
     }
 
     @Test
-    public void testGetSuccessObjectWithMessage() {
+    void testGetSuccessObjectWithMessage() {
         JsonObject obj = JsonHelper.getSuccessObject("Engage!");
-        Assert.assertThat(
+        assertThat(
                 obj.toString(),
                 is("{\"success\":true,\"data\":\"Engage!\"}"));
     }
 
     @Test
-    public void testGetFailObject() {
+    void testGetFailObject() {
         JsonObject obj = JsonHelper.getFailObject(null, "Cantdoit...");
-        Assert.assertThat(
+        assertThat(
                 obj.toString(),
                 is("{\"success\":false,\"data\":\"Cantdoit...\"}"));
     }
 
     @Test
-    public void testFromParameterMap() {
+    void testFromParameterMap() {
         /*
         {
           "a":"1",
@@ -52,21 +53,21 @@ public class JsonHelperTest {
         jb.addProperty("c", "2");
         ja.add("b", jb);
 
-        Assert.assertEquals(ja.toString(), "{\"a\":\"1\",\"b\":{\"c\":\"2\"}}");
+        assertEquals(ja.toString(), "{\"a\":\"1\",\"b\":{\"c\":\"2\"}}");
 
         JsonObject jobj = JsonHelper.fromParameterMap(pmap);
-        Assert.assertEquals(jobj.toString(), "{\"a\":\"1\",\"b\":{\"c\":\"2\"}}");
-        Assert.assertEquals(jobj.toString(), ja.toString());
+        assertEquals(jobj.toString(), "{\"a\":\"1\",\"b\":{\"c\":\"2\"}}");
+        assertEquals(jobj.toString(), ja.toString());
 
         // Empty parameter map results in {}
-        Assert.assertEquals(JsonHelper.fromParameterMap(new HashMap<>()).toString(), "{}");
+        assertEquals(JsonHelper.fromParameterMap(new HashMap<>()).toString(), "{}");
     }
 
     @Test
-    public void testFromParameterMapInvalid() {
+    void testFromParameterMapInvalid() {
         Map<String, String[]> pmap = new HashMap<>();
         pmap.put("..a..", new String[]{""});
         pmap.put("..b...c..", new String[]{"0"});
-        Assert.assertEquals(JsonHelper.fromParameterMap(pmap).toString(), "{\"b\":{\"c\":\"0\"},\"a\":\"\"}");
+        assertEquals(JsonHelper.fromParameterMap(pmap).toString(), "{\"b\":{\"c\":\"0\"},\"a\":\"\"}");
     }
 }

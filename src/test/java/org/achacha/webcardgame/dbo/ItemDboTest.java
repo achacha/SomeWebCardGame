@@ -5,20 +5,22 @@ import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
 import org.achacha.webcardgame.game.dbo.ItemDbo;
 import org.achacha.webcardgame.game.dbo.ItemDboFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class ItemDboTest extends BaseInitializedTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class ItemDboTest extends BaseInitializedTest {
     private ItemDboFactory factory = Global.getInstance().getDatabaseManager().getFactory(ItemDbo.class);
 
     @Test
-    public void testGetItemsForInventory() {
+    void testGetItemsForInventory() {
         List<ItemDbo> items = factory.getItemsForInventory(TestDataConstants.JUNIT_INVENTORY_ID);
 
-        Assert.assertNotNull(items);
-        Assert.assertEquals(6, items.size());
-        Assert.assertEquals(31L, items.get(0).getQuantity());
+        assertNotNull(items);
+        assertEquals(6, items.size());
+        assertEquals(31L, items.get(0).getQuantity());
     }
 }
