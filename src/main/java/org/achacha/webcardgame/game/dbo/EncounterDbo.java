@@ -3,7 +3,8 @@ package org.achacha.webcardgame.game.dbo;
 import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.base.global.Global;
-import org.achacha.webcardgame.game.logic.EnemyType;
+import org.achacha.webcardgame.game.logic.CardType;
+import org.achacha.webcardgame.game.logic.NameHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,18 +28,18 @@ public class EncounterDbo extends BaseIndexedDbo {
     protected long adventureId;
 
     /** Enemies in this encounter */
-    protected List<EnemyCardDbo> enemies;
+    protected List<CardDbo> enemies;
 
-    public static Builder builder(EnemyType enemyType, int enemies, int level) {
+    public static Builder builder(CardType enemyType, int enemies, int level) {
         return new Builder(enemyType, enemies, level);
     }
 
     public static class Builder {
         private final int enemies;
         private final int level;
-        private final EnemyType enemyType;
+        private final CardType enemyType;
 
-        Builder(EnemyType enemyType, int enemies, int level) {
+        Builder(CardType enemyType, int enemies, int level) {
             this.enemyType = enemyType;
             this.enemies = enemies;
             this.level = level;
@@ -50,7 +51,10 @@ public class EncounterDbo extends BaseIndexedDbo {
             EncounterDbo encounter = new EncounterDbo();
             encounter.enemies = new ArrayList<>(enemies);
             for (int i = 0; i < enemies; ++i) {
-                encounter.enemies.add(EnemyCardDbo.builder(enemyType, level).build());
+                CardDbo enemyCard = new CardDbo();
+                enemyCard.setLevel(level);
+                enemyCard.setName(NameHelper.generateName(enemyType.getNameType()));
+                encounter.enemies.add(enemyCard);
             }
             return encounter;
         }
@@ -69,7 +73,7 @@ public class EncounterDbo extends BaseIndexedDbo {
         this.id = rs.getLong("id");
         this.adventureId = rs.getLong("adventure__id");
 
-        enemies = Global.getInstance().getDatabaseManager().<EnemyCardDboFactory>getFactory(EnemyCardDbo.class).getByEncounterId(id);
+        enemies = Global.getInstance().getDatabaseManager().<CardDboFactory>getFactory(CardDbo.class).getByEncounterId(id);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
@@ -80,7 +84,7 @@ public class EncounterDbo extends BaseIndexedDbo {
         return adventureId;
     }
 
-    public List<EnemyCardDbo> getEnemies() {
+    public List<CardDbo> getEnemies() {
         return enemies;
     }
 }

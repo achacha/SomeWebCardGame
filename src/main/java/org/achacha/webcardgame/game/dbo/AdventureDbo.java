@@ -3,7 +3,7 @@ package org.achacha.webcardgame.game.dbo;
 import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.base.global.Global;
-import org.achacha.webcardgame.game.logic.EnemyType;
+import org.achacha.webcardgame.game.logic.CardType;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +54,7 @@ public class AdventureDbo extends BaseIndexedDbo {
             for (int i = 0; i < encounters; ++i) {
                 int enemies = RandomUtils.nextInt(1,3);
                 // TODO: Randomize enemies?
-                adventure.encounters.add(EncounterDbo.builder(EnemyType.Goblin, enemies, level).build());
+                adventure.encounters.add(EncounterDbo.builder(CardType.Goblin, enemies, level).build());
             }
             return adventure;
         }

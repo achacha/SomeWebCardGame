@@ -4,8 +4,10 @@
 CREATE TABLE card
 (
   id serial NOT NULL PRIMARY KEY,
-  player__id integer,
+  player__id integer DEFAULT 0,
+  encounter__id integer DEFAULT 0,
   name character varying(256) NOT NULL,
+  type character varying(64) DEFAULT 'Grue',
   level integer,
   xp integer,
   strength integer,
@@ -21,3 +23,4 @@ OIDS=FALSE
 ALTER TABLE card OWNER TO sawcog;
 GRANT ALL ON card TO sawcog;
 COMMENT ON COLUMN card.player__id IS 'Player id owner of this card';
+COMMENT ON COLUMN card.encounter__id IS 'If enemy card this will be non zero for encounter that owns it'

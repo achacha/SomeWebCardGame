@@ -21,8 +21,8 @@ INSERT INTO item(inventory__id,type,quantity) VALUES
 ;
 
 -- Card data
-INSERT INTO card(id,player__id,name,level,xp,strength,agility,stickers) VALUES
-   (4,2,'Patient Zero',6,18000,45,60,'HOT_MAJOR')
-  ,(5,2,'Ol One Eye',3,48000,30,75,'HOT_MINOR')
-  ,(6,2,'Card Two',4,99900,80,30,'NOP')
+INSERT INTO card(player__id,name,type,level,xp,strength,agility,stickers) VALUES
+   (2,'Patient Zero','Human',6,18000,45,60,'HOT_MAJOR')
+  ,(2,'Ol One Eye','Goblin',3,48000,30,75,'HOT_MINOR')
+  ,(2,'Sylvae','Elf',4,99900,80,30,'NOP')
 ;

@@ -1,1 +1,0 @@
-select * from public.card_sticker where card__id=?;

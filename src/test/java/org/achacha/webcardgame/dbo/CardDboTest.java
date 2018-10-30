@@ -5,6 +5,7 @@ import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
 import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.CardDboFactory;
+import org.achacha.webcardgame.game.logic.CardType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ public class CardDboTest extends BaseInitializedTest {
     public void testGetCardsForPlayer() {
         Collection<CardDbo> cards = factory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
         Assert.assertNotNull(cards);
-        Assert.assertEquals(3, cards.size());
+        Assert.assertEquals(5, cards.size());
 
         CardDbo one = cards.iterator().next();
         Assert.assertEquals(1, one.getId());
@@ -27,6 +28,7 @@ public class CardDboTest extends BaseInitializedTest {
         Assert.assertEquals(99990, one.getXp());
         Assert.assertEquals(30, one.getStrength());
         Assert.assertEquals(70, one.getAgility());
+        Assert.assertEquals(CardType.Human, one.getType());
         Assert.assertNotNull(one.getStickers());
     }
 }

@@ -5,8 +5,8 @@ import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
 import org.achacha.webcardgame.game.dbo.AdventureDbo;
 import org.achacha.webcardgame.game.dbo.AdventureDboFactory;
+import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.EncounterDbo;
-import org.achacha.webcardgame.game.dbo.EnemyCardDbo;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class AdventureDboTest extends BaseInitializedTest {
         Assert.assertEquals(adventure.getId(), encounter.getAdventureId());
         Assert.assertFalse(encounter.getEnemies().isEmpty());
 
-        EnemyCardDbo enemyCardDbo = encounter.getEnemies().get(0);
+        CardDbo enemyCardDbo = encounter.getEnemies().get(0);
         Assert.assertNotNull(enemyCardDbo);
         Assert.assertEquals(encounter.getId(), enemyCardDbo.getEncounterId());
         Assert.assertEquals(8, enemyCardDbo.getLevel());

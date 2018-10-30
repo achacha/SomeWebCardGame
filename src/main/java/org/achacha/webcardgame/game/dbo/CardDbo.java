@@ -1,6 +1,8 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.webcardgame.game.logic.CardType;
+import org.achacha.webcardgame.game.logic.NameHelper;
 import org.achacha.webcardgame.sticker.CardSticker;
 import org.achacha.webcardgame.sticker.CardStickerFactory;
 import org.apache.logging.log4j.LogManager;
@@ -12,21 +14,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Card
- */
 @Table(schema="public", name="card")
 public class CardDbo extends BaseIndexedDbo {
-    private static final Logger LOGGER = LogManager.getLogger(CardDbo.class);
+    protected static final Logger LOGGER = LogManager.getLogger(CardDbo.class);
 
     /** Card id */
     protected long id;
 
-    /** Player that owns this inventory */
-    protected long playerId;
-
     /** Card name */
     protected String name;
+
+    /** Enemy type */
+    protected CardType type;
 
     /**
      * Level
@@ -55,11 +54,17 @@ public class CardDbo extends BaseIndexedDbo {
      */
     protected int agility;
 
+    /** Player that owns this inventory */
+    protected long playerId;
+
+    /**
+     * Encounter that owns this inventory
+     * If 0 then not assigned to encounter yet
+     */
+    protected long encounterId;
+
     /** Card stickers */
     protected List<CardSticker> stickers;
-
-    public CardDbo() {
-    }
 
     @Override
     public long getId() {
@@ -70,7 +75,10 @@ public class CardDbo extends BaseIndexedDbo {
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.playerId = rs.getLong("player__id");
+        this.encounterId = rs.getLong("encounter__id");
+
         this.name = rs.getString("name");
+        this.type = CardType.valueOf(rs.getString("type"));
 
         this.level = rs.getInt("level");
         this.xp = rs.getInt("xp");
@@ -85,14 +93,6 @@ public class CardDbo extends BaseIndexedDbo {
             if (sticker != null)
                 this.stickers.add(sticker);
         }
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("fromResultSet: this="+this);
-        }
-    }
-
-    public long getPlayerId() {
-        return playerId;
     }
 
     public String getName() {
@@ -119,6 +119,56 @@ public class CardDbo extends BaseIndexedDbo {
         return stickers;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public void setAgility(int agility) {
+        this.agility = agility;
+    }
+
+    public CardType getType() {
+        return type;
+    }
+
+    public void setType(CardType type) {
+        this.type = type;
+    }
+
+    public long getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(long playerId) {
+        this.playerId = playerId;
+    }
+
+    public long getEncounterId() {
+        return encounterId;
+    }
+
+    public void setEncounterId(long encounterId) {
+        this.encounterId = encounterId;
+    }
+
+    /**
+     * Generate a new name based on CardType.NameType
+     */
+    public void generateName() {
+        this.name = NameHelper.generateName(this.type.getNameType());
+    }
 
     /**
      * @return player health as a pecent, always [0,100]

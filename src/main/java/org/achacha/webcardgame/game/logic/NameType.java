@@ -1,6 +1,7 @@
 package org.achacha.webcardgame.game.logic;
 
 public enum NameType {
+    Grue(4,4,0,100,0,100),   // There is no such thing as a Grue
     Human(2,4,0,5,0,50),
     Elf(2,4,30,75,0,0),
     Goblin(1,2,0,0,10,65),

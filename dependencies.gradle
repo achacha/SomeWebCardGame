@@ -72,8 +72,17 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
 
     //
-    // Test tools for compile time
+    // Test
     //
+    testImplementation group: 'org.apache.tomcat', name: 'tomcat-catalina', version: "${tomcatVersion}"
+    // https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core
+    testImplementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: "${tomcatVersion}"
+    // https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper
+    testImplementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: "${tomcatVersion}"
+    // https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-websocket
+    testImplementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: "${tomcatVersion}"
+    // https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit
+    testImplementation group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: "${htmlunitVersion}"
     // https://mvnrepository.com/artifact/com.google.code.findbugs/annotations
     compile group: 'com.google.code.findbugs', name: 'annotations', version: "${findbugsVersion}"
     // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
@@ -81,9 +90,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     compile group: 'org.mockito', name: 'mockito-core', version: "${mockitoVersion}"
 
-    //
-    // Test
-    //
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.apache.tomcat', name: 'tomcat-catalina', version: "${tomcatVersion}"
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junit5Version}"
+    testRuntimeOnly(
+            "org.junit.jupiter:junit-jupiter-engine:${junit5Version}",
+            "org.junit.vintage:junit-vintage-engine:${junit5Version}"
+    )
 }
