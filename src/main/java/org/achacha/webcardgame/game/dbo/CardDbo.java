@@ -1,13 +1,15 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseIndexedDbo;
-import org.achacha.base.global.Global;
+import org.achacha.webcardgame.sticker.CardSticker;
+import org.achacha.webcardgame.sticker.CardStickerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +40,12 @@ public class CardDbo extends BaseIndexedDbo {
     protected int xp;
 
     /**
+     * Percent health [0,100]
+     * Not saved to database, health is reset to 100 before each adventure
+     */
+    transient protected int health = 100;
+
+    /**
      * strength - combat damage, damage absorption
      */
     protected int strength;
@@ -47,13 +55,8 @@ public class CardDbo extends BaseIndexedDbo {
      */
     protected int agility;
 
-    /**
-     * health - total hit-points
-     */
-    protected int stamina;
-
     /** Card stickers */
-    protected List<CardStickerDbo> stickers;
+    protected List<CardSticker> stickers;
 
     public CardDbo() {
     }
@@ -73,9 +76,15 @@ public class CardDbo extends BaseIndexedDbo {
         this.xp = rs.getInt("xp");
         this.strength = rs.getInt("strength");
         this.agility = rs.getInt("agility");
-        this.stamina = rs.getInt("stamina");
 
-        this.stickers = Global.getInstance().getDatabaseManager().<CardStickerDboFactory>getFactory(CardStickerDbo.class).getByCardId(id);
+        String stickerString = rs.getString("stickers");
+        String[] stickerArray = stickerString.split(",");
+        this.stickers = new ArrayList<>(stickerArray.length);
+        for (String name : stickerArray) {
+            CardSticker sticker = CardStickerFactory.getSticker(name);
+            if (sticker != null)
+                this.stickers.add(sticker);
+        }
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
@@ -106,11 +115,58 @@ public class CardDbo extends BaseIndexedDbo {
         return agility;
     }
 
-    public int getStamina() {
-        return stamina;
+    public List<CardSticker> getStickers() {
+        return stickers;
     }
 
-    public List<CardStickerDbo> getStickers() {
-        return stickers;
+
+    /**
+     * @return player health as a pecent, always [0,100]
+     */
+    public int getHealth() {
+        return health;
+    }
+
+    /**
+     * @param health player health percent, must be [0,100]
+     */
+    public void setHealth(int health) {
+        this.health = health;
+        if (this.health < 0) {
+            LOGGER.error("Health fell below 0, setting to 0");
+            this.health = 0;
+        }
+        if (this.health > 100) {
+            LOGGER.error("Health over 100, setting to 100");
+            this.health = 100;
+        }
+    }
+
+    /**
+     * Decrease health
+     * Cannot decrease below 0
+     *
+     * @param healthDelta health percent lost
+     * @return health after decrease
+     */
+    public int decHealth(int healthDelta) {
+        this.health -= healthDelta;
+        if (this.health < 0)
+            this.health = 0;
+        return this.health;
+    }
+
+    /**
+     * Increase health
+     * Cannot increase above 100
+     *
+     * @param healthDelta health percent gained
+     * @return health after increase
+     */
+    public int incHealth(int healthDelta) {
+        this.health += healthDelta;
+        if (this.health > 100)
+            this.health = 100;
+        return this.health;
     }
 }

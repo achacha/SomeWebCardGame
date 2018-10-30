@@ -21,16 +21,8 @@ INSERT INTO item(inventory__id,type,quantity) VALUES
 ;
 
 -- Card data
-INSERT INTO card(id,player__id,name,level,xp,strength,agility,stamina) VALUES
-   (4,2,'Patient Zero',6,18000,45,60,35)
-  ,(5,2,'Ol One Eye',3,48000,30,75,60)
-  ,(6,2,'Card Two',4,99900,80,30,90)
-;
-
-INSERT INTO card_sticker(id,card__id,name) VALUES
-   (6,4,'Infection')
-  ,(7,4,'Contagious')
-  ,(8,4,'Festering Laceration')
-  ,(9,5,'Patch')
-  ,(10,5,'Infrared Enhancement')
+INSERT INTO card(id,player__id,name,level,xp,strength,agility,stickers) VALUES
+   (4,2,'Patient Zero',6,18000,45,60,'HOT_MAJOR')
+  ,(5,2,'Ol One Eye',3,48000,30,75,'HOT_MINOR')
+  ,(6,2,'Card Two',4,99900,80,30,'NOP')
 ;

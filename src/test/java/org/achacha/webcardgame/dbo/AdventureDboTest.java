@@ -41,7 +41,6 @@ public class AdventureDboTest extends BaseInitializedTest {
         Assert.assertEquals(100, enemyCardDbo.getXp());
         Assert.assertEquals(30, enemyCardDbo.getStrength());
         Assert.assertEquals(70, enemyCardDbo.getAgility());
-        Assert.assertEquals(45, enemyCardDbo.getStamina());
         Assert.assertEquals("Enemy 1", enemyCardDbo.getName());
         Assert.assertNotNull(enemyCardDbo.getStickers());
         Assert.assertEquals(3, enemyCardDbo.getStickers().size());
@@ -53,7 +52,6 @@ public class AdventureDboTest extends BaseInitializedTest {
         Assert.assertEquals(80, enemyCardDbo.getXp());
         Assert.assertEquals(65, enemyCardDbo.getStrength());
         Assert.assertEquals(65, enemyCardDbo.getAgility());
-        Assert.assertEquals(40, enemyCardDbo.getStamina());
         Assert.assertEquals("Enemy 2", enemyCardDbo.getName());
         Assert.assertNotNull(enemyCardDbo.getStickers());
         Assert.assertEquals(2, enemyCardDbo.getStickers().size());

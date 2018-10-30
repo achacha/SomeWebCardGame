@@ -27,7 +27,6 @@ public class CardDboTest extends BaseInitializedTest {
         Assert.assertEquals(99990, one.getXp());
         Assert.assertEquals(30, one.getStrength());
         Assert.assertEquals(70, one.getAgility());
-        Assert.assertEquals(45, one.getStamina());
         Assert.assertNotNull(one.getStickers());
     }
 }

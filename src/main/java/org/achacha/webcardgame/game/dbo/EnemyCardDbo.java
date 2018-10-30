@@ -2,15 +2,17 @@ package org.achacha.webcardgame.game.dbo;
 
 import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseIndexedDbo;
-import org.achacha.base.global.Global;
 import org.achacha.webcardgame.game.logic.EnemyType;
 import org.achacha.webcardgame.game.logic.NameHelper;
+import org.achacha.webcardgame.sticker.CardSticker;
+import org.achacha.webcardgame.sticker.CardStickerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,15 +57,10 @@ public class EnemyCardDbo extends BaseIndexedDbo {
      */
     protected int agility;
 
-    /**
-     * health - total hit-points
-     */
-    protected int stamina;
-
     // TODO: Add DB enemy type
 
     /** Card stickers */
-    protected List<EnemyCardStickerDbo> stickers;
+    protected List<CardSticker> stickers;
 
     public static Builder builder(EnemyType enemyType, int level) {
         return new Builder(enemyType, level);
@@ -102,13 +99,29 @@ public class EnemyCardDbo extends BaseIndexedDbo {
         this.xp = rs.getInt("xp");
         this.strength = rs.getInt("strength");
         this.agility = rs.getInt("agility");
-        this.stamina = rs.getInt("stamina");
 
-        this.stickers = Global.getInstance().getDatabaseManager().<EnemyCardStickerDboFactory>getFactory(EnemyCardStickerDbo.class).getByEnemyCardId(id);
+        String stickerString = rs.getString("stickers");
+        String[] stickerArray = stickerString.split(",");
+        this.stickers = new ArrayList<>(stickerArray.length);
+        for (String name : stickerArray) {
+            CardSticker sticker = CardStickerFactory.getSticker(name);
+            if (sticker != null)
+                this.stickers.add(sticker);
+        }
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
         }
+    }
+
+    @Override
+    protected void insert() throws Exception {
+        //TODO
+    }
+
+    @Override
+    protected void update() throws Exception {
+        //TODO
     }
 
     public long getEncounterId() {
@@ -135,11 +148,7 @@ public class EnemyCardDbo extends BaseIndexedDbo {
         return agility;
     }
 
-    public int getStamina() {
-        return stamina;
-    }
-
-    public List<EnemyCardStickerDbo> getStickers() {
+    public List<CardSticker> getStickers() {
         return stickers;
     }
 }
