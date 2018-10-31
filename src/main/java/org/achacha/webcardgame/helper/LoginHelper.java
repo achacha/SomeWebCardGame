@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 public class LoginHelper {
-    protected static final Logger LOGGER = LogManager.getLogger(LoginHelper.class);
+    private static final Logger LOGGER = LogManager.getLogger(LoginHelper.class);
 
     /**
      * @param uri URI

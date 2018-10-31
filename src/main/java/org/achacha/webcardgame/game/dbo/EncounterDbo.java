@@ -3,7 +3,7 @@ package org.achacha.webcardgame.game.dbo;
 import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.base.global.Global;
-import org.achacha.webcardgame.game.logic.CardType;
+import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.logic.NameHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

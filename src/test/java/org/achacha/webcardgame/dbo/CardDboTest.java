@@ -3,9 +3,9 @@ package org.achacha.webcardgame.dbo;
 import org.achacha.base.global.Global;
 import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
+import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.CardDboFactory;
-import org.achacha.webcardgame.game.logic.CardType;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;

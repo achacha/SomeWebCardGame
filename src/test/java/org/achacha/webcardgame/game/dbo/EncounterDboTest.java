@@ -1,7 +1,7 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.test.BaseInitializedTest;
-import org.achacha.webcardgame.game.logic.CardType;
+import org.achacha.webcardgame.game.data.CardType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

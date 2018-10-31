@@ -163,6 +163,8 @@ public abstract class Global {
             System.setProperty("catalina.base", System.getProperty("user.home"));
         }
 
+        initGson();
+
         LOGGER.info("+++[1]+++ Global object created");
     }
 
@@ -188,7 +190,6 @@ public abstract class Global {
     public void init(ServletContextEvent servletContextEvent) {
         LOGGER.info("+++[2]+++ Global starting init");
 
-        initGson();
         initDatabaseManager();
         initConstants(servletContextEvent);
 

@@ -9,7 +9,7 @@ class NameHelperTest {
     @Test
     void generateName() {
         for (int i=0; i<10; ++i)
-            assertFalse(NameHelper.generateName(NameType.Human).isBlank());
+            assertFalse(NameHelper.generateName(NameHelper.NameType.Human).isBlank());
 
 //        for (NameType type : NameType.values()) {
 //            System.out.println(type.name()+"\n-----");

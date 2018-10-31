@@ -57,4 +57,24 @@ public class PlayerDbo extends BaseIndexedDbo {
     public long getEnergy() {
         return energy;
     }
+
+    public void setEnergy(long energy) {
+        this.energy = energy;
+    }
+
+    public List<CardDbo> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<CardDbo> cards) {
+        this.cards = cards;
+    }
+
+    public InventoryDbo getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(InventoryDbo inventory) {
+        this.inventory = inventory;
+    }
 }

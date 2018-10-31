@@ -49,4 +49,16 @@ public class InventoryDbo extends BaseIndexedDbo {
     public List<ItemDbo> getItems() {
         return items;
     }
+
+    public void setItems(List<ItemDbo> items) {
+        this.items = items;
+    }
+
+    public long getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(long playerId) {
+        this.playerId = playerId;
+    }
 }

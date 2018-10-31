@@ -17,7 +17,7 @@ public class GlobalForTest extends Global {
     private static final String DEFAULT_PROPERTIES_FILE = ".sawcog.properties";
 
     // Keep track of database migration
-    private static boolean isDatabaseMigrated = false;
+    private static boolean isDatabaseMigrated = true;
 
     public GlobalForTest() {
         super("TEST", DEFAULT_PROPERTIES_FILE);

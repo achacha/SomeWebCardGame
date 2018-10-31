@@ -1,7 +1,7 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseIndexedDbo;
-import org.achacha.webcardgame.game.logic.CardType;
+import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.logic.NameHelper;
 import org.achacha.webcardgame.sticker.CardSticker;
 import org.achacha.webcardgame.sticker.CardStickerFactory;
@@ -42,7 +42,7 @@ public class CardDbo extends BaseIndexedDbo {
      * Percent health [0,100]
      * Not saved to database, health is reset to 100 before each adventure
      */
-    transient protected int health = 100;
+    protected int health = 100;
 
     /**
      * strength - combat damage, damage absorption
@@ -218,5 +218,12 @@ public class CardDbo extends BaseIndexedDbo {
         if (this.health > 100)
             this.health = 100;
         return this.health;
+    }
+
+    /**
+     * @return true if alive
+     */
+    public boolean isAlive() {
+        return health > 0;
     }
 }
