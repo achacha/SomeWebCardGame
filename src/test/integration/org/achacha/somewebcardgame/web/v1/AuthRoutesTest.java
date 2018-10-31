@@ -1,4 +1,4 @@
-package org.achacha.oddity.web.v1;
+package org.achacha.somewebcardgame.web.v1;
 
 import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -61,7 +61,8 @@ class AuthRoutesTest extends BaseIntegrationTest {
             JsonObject jUser = json.get("user").getAsJsonObject();
             assertEquals(TestDataConstants.JUNIT_USER_LOGINID, jUser.get("id").getAsLong());
             assertEquals(TestDataConstants.JUNIT_USER_EMAIL, jUser.get("email").getAsString());
-            assertEquals("******", jUser.get("pwd").getAsString());
+            assertFalse(jUser.has("pwd"));
+            assertFalse(jUser.has("salt"));
             assertFalse(jUser.get("superuser").getAsBoolean());
 
             //
@@ -82,7 +83,8 @@ class AuthRoutesTest extends BaseIntegrationTest {
             JsonObject jAdmin = json.get("user").getAsJsonObject();
             assertEquals(TestDataConstants.JUNIT_ADMIN_LOGINID, jAdmin.get("id").getAsLong());
             assertEquals(TestDataConstants.JUNIT_ADMIN_EMAIL, jAdmin.get("email").getAsString());
-            assertEquals("******", jAdmin.get("pwd").getAsString());
+            assertFalse(jAdmin.has("pwd"));
+            assertFalse(jAdmin.has("salt"));
             assertFalse(jAdmin.get("superuser").getAsBoolean());
         }
     }
@@ -99,7 +101,8 @@ class AuthRoutesTest extends BaseIntegrationTest {
             JsonObject jSu = jsonSu.get("user").getAsJsonObject();
             assertEquals(TestDataConstants.JUNIT_SU_LOGINID, jSu.get("id").getAsLong());
             assertEquals(TestDataConstants.JUNIT_SU_EMAIL, jSu.get("email").getAsString());
-            assertEquals("******", jSu.get("pwd").getAsString());
+            assertFalse(jSu.has("pwd"));
+            assertFalse(jSu.has("salt"));
             assertTrue(jSu.get("superuser").getAsBoolean());
 
             //

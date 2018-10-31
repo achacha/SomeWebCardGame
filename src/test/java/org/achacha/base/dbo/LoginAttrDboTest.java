@@ -26,7 +26,7 @@ class LoginAttrDboTest extends BaseInitializedTest {
         assertEquals("red", dbo.getValue());
 
         // Attributes by playerId
-        LoginUserDbo login = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).getById(TestDataConstants.JUNIT_LOGINID);
+        LoginUserDbo login = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).getById(TestDataConstants.JUNIT_USER_LOGINID);
         assertNotNull(login);
         Collection<LoginAttrDbo> attrs = factoryAttr.findByLoginId(login.getId());
         assertEquals(3, attrs.size());
@@ -38,13 +38,13 @@ class LoginAttrDboTest extends BaseInitializedTest {
         LoginAttrDboFactory factoryAttr = Global.getInstance().getDatabaseManager().getFactory(LoginAttrDbo.class);
 
         // Pre-delete
-        factoryAttr.deleteByLoginIdAndName(TestDataConstants.JUNIT_LOGINID, "test.create");
+        factoryAttr.deleteByLoginIdAndName(TestDataConstants.JUNIT_USER_LOGINID, "test.create");
 
         // Create new object and save to DB
         LoginAttrDbo dbo = new LoginAttrDbo();
         dbo.setName("test.create");
         dbo.setValue("inserted");
-        dbo.setLoginId(TestDataConstants.JUNIT_LOGINID);
+        dbo.setLoginId(TestDataConstants.JUNIT_USER_LOGINID);
         assertEquals(0, dbo.getId());
         dbo.save();
         assertNotEquals(0, dbo.getId());
@@ -52,7 +52,7 @@ class LoginAttrDboTest extends BaseInitializedTest {
         // Verify exists
         dbo = factoryAttr.getById(dbo.getId());
         assertNotNull(dbo);
-        assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
+        assertEquals(TestDataConstants.JUNIT_USER_LOGINID, dbo.getLoginId());
         assertEquals("test.create", dbo.getName());
         assertEquals("inserted", dbo.getValue());
 
@@ -61,7 +61,7 @@ class LoginAttrDboTest extends BaseInitializedTest {
         dbo.save();
         dbo = factoryAttr.getById(dbo.getId());
         assertNotNull(dbo);
-        assertEquals(TestDataConstants.JUNIT_LOGINID, dbo.getLoginId());
+        assertEquals(TestDataConstants.JUNIT_USER_LOGINID, dbo.getLoginId());
         assertEquals("test.create", dbo.getName());
         assertEquals("updated", dbo.getValue());
 

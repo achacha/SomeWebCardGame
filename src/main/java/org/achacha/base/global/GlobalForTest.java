@@ -1,15 +1,16 @@
-package org.achacha.test;
+package org.achacha.base.global;
 
 import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.db.UnitTestDatabaseMigrator;
 import org.achacha.base.db.provider.ResourceSqlProvider;
 import org.achacha.base.db.provider.UnitTestDbPoolConnectionProvider;
-import org.achacha.base.global.Global;
 
 import java.util.Properties;
 
 /**
  * Testing specific global instance
+ * This is also used in the embedded tomcat for integration testing
+ * @see org.achacha.base.web.ServerGlobalInit
  */
 public class GlobalForTest extends Global {
     // To be found in user's home directory
@@ -30,9 +31,10 @@ public class GlobalForTest extends Global {
 
     @Override
     public void initDatabaseManager() {
+        LOGGER.info("ROOT: Creating database manager");
         synchronized(this) {
             if (databaseManager == null) {
-                final Properties dbProperties = getDbProperties("test.");
+                final Properties dbProperties = getDbProperties();
 
                 databaseManager = new DatabaseManager(
                         new UnitTestDbPoolConnectionProvider(dbProperties),
@@ -47,4 +49,25 @@ public class GlobalForTest extends Global {
             }
         }
     }
+
+    @Override
+    public Properties getDbProperties() {
+        final Properties dbProperties = new Properties();
+        final String dbPrefix = "flyway.test.db.";
+
+
+        // Properties are found in the $HOME of user and prefixed with 'db.'
+        // Copy all properties that start with 'db.' into separate properties file to be used in DB init
+        properties.keySet().stream()
+                .map(Object::toString)
+                .filter(key -> key.startsWith(dbPrefix))
+                .forEach(key -> dbProperties.setProperty(
+                        key.substring(dbPrefix.length()),
+                        Global.getInstance().getProperties().getProperty(key)
+                        )
+                );
+        LOGGER.debug("Migrator dbProperties={}", dbProperties);
+        return dbProperties;
+    }
+
 }

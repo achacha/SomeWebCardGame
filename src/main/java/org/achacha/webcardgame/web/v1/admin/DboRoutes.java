@@ -31,6 +31,7 @@ public class DboRoutes {
      */
     @Path("all")
     @GET
+    @SecurityLevelRequired(SecurityLevel.ADMIN)
     public Response allDbos() {
         JsonObject obj = JsonHelper.getSuccessObject();
 

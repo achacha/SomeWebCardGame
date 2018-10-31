@@ -1,4 +1,4 @@
-package org.achacha.oddity.web.v1.admin;
+package org.achacha.somewebcardgame.web.v1.admin;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;

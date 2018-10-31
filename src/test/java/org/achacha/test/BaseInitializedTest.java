@@ -1,6 +1,7 @@
 package org.achacha.test;
 
 import org.achacha.base.global.Global;
+import org.achacha.base.global.GlobalForTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;

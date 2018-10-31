@@ -10,6 +10,7 @@ import org.reflections.util.ConfigurationBuilder;
 import javax.annotation.Nonnull;
 import javax.persistence.Table;
 import java.lang.reflect.Modifier;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,13 +23,20 @@ public class DboHelper {
             "org.achacha.webcardgame.game.dbo"
     };
 
+    private static final Reflections reflections = new Reflections(getConfiguration());
+
     /**
      * @return Reflections configuration for scanning Dbo classes
      */
     private static Configuration getConfiguration() {
+        HashSet<URL> urls = new HashSet<>();
+        for (String location : DBO_LOCATIONS) {
+            urls.addAll(ClasspathHelper.forPackage(location));
+        }
+
         return ConfigurationBuilder.build()
                 .forPackages(DBO_LOCATIONS)
-                .addUrls(ClasspathHelper.forJavaClassPath())
+                .addUrls(urls)
                 .addScanners()
                 .filterInputsBy(
                         input -> input != null && input.endsWith(".class") && input.startsWith("org/achacha") && !input.contains("/test/")
@@ -39,8 +47,6 @@ public class DboHelper {
      * @return Set of Class of type BaseDbo
      */
     public static Set<Class<? extends BaseDbo>> getAllDboClasses() {
-        Reflections reflections = new Reflections(getConfiguration());
-
         Set<Class<? extends BaseDbo>> classes = new HashSet<>(reflections.getSubTypesOf(BaseDbo.class));
         classes.removeIf(clz -> Modifier.isAbstract(clz.getModifiers()));  // Remove abstract classes
         return classes;
@@ -50,8 +56,6 @@ public class DboHelper {
      * @return Set of Class of type BaseIndexedDbo
      */
     public static Set<Class<? extends BaseIndexedDbo>> getIndexedDboClasses() {
-        Reflections reflections = new Reflections(getConfiguration());
-
         Set<Class<? extends BaseIndexedDbo>> classes = new HashSet<>(reflections.getSubTypesOf(BaseIndexedDbo.class));
         classes.removeIf(clz -> Modifier.isAbstract(clz.getModifiers()));  // Remove abstract classes
         return classes;
@@ -61,8 +65,6 @@ public class DboHelper {
      * @return Set of Class of type BaseDbo with CachedDbo annotation
      */
     public static Set<Class<? extends BaseIndexedDbo>> getAllCachedDboClasses() {
-        Reflections reflections = new Reflections(getConfiguration());
-
         final HashSet<Class<? extends BaseIndexedDbo>> set = new HashSet<>();
         reflections.getTypesAnnotatedWith(CachedDbo.class).forEach(c -> set.add((Class<? extends BaseIndexedDbo>) c));
         return set;
@@ -72,8 +74,6 @@ public class DboHelper {
      * @return Set of Class of type BaseDboFactory
      */
     public static Set<Class<? extends BaseDboFactory>> getAllDboFactories() {
-        Reflections reflections = new Reflections(getConfiguration());
-
         Set<Class<? extends BaseDboFactory>> classes = new HashSet<>(reflections.getSubTypesOf(BaseDboFactory.class));
         classes.removeIf(clz -> Modifier.isAbstract(clz.getModifiers()));  // Remove abstract classes
         return classes;

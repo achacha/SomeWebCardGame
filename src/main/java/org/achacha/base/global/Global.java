@@ -167,30 +167,6 @@ public abstract class Global {
     }
 
     /**
-     * Extract all properties that start with 'db.' into a separate Properties object
-     * This is used for initialized database drivers
-     * @param prefix String to prepend when looking up database properties, by default use empty string
-     * @return Properties
-     */
-    protected Properties getDbProperties(String prefix) {
-        final Properties dbProperties = new Properties();
-        final String dbPrefix = prefix + "db.";
-
-        // Properties are found in the $HOME of user and prefixed with 'db.'
-        // Copy all properties that start with 'db.' into separate properties file to be used in DB init
-        properties.keySet().stream()
-                .map(Object::toString)
-                .filter(key -> key.startsWith(dbPrefix))
-                .forEach(key -> dbProperties.setProperty(
-                        key.substring(dbPrefix.length()),
-                        properties.getProperty(key)
-                )
-            );
-        LOGGER.debug("dbProperties={}", dbProperties);
-        return dbProperties;
-    }
-
-    /**
      * @return true if in development mode
      */
     public boolean isDevelopment() {
@@ -288,6 +264,11 @@ public abstract class Global {
         LOGGER.info("---[ 1 ]--- Global shutdown started");
         LOGGER.info("---[ 0 ]--- Global shutdown finished");
     }
+
+    /**
+     * @return Properties specific to this Global instance to be used in migration and admin connections
+     */
+    public abstract Properties getDbProperties();
 
     /**
      * @return DatabaseManager

@@ -5,11 +5,15 @@ package org.achacha.test;
  */
 public class TestDataConstants {
     // login
-    public static final long JUNIT_LOGINID = 2;
-    public static final String JUNIT_EMAIL = "junit";
-    public static final String JUNIT_PASSWORD = "test";
-    public static final long JUNITADMIN_LOGINID = 3;
-    public static final String JUNITADMIN_EMAIL = "junitadmin";
+    public static final long JUNIT_USER_LOGINID = 2;
+    public static final String JUNIT_USER_EMAIL = "junit";
+    public static final String JUNIT_USER_PASSWORD = "test";
+    public static final long JUNIT_ADMIN_LOGINID = 3;
+    public static final String JUNIT_ADMIN_EMAIL = "junitadmin";
+    public static final String JUNIT_ADMIN_PASSWORD = "test";
+    public static final long JUNIT_SU_LOGINID = 4;
+    public static final String JUNIT_SU_EMAIL = "junitsu";
+    public static final String JUNIT_SU_PASSWORD = "test";
 
     // inventory
     public static final long JUNIT_INVENTORY_ID = 1;

@@ -29,31 +29,46 @@ public class RootFilter implements Filter {
 
         boolean contextSet = false;
         long startTime = System.nanoTime();
+        String logMessage = "NONE";
         try {
             // Check if this is a request for login, if not make sure security is enforced
             String uri = CallContext.getUriRelativeToWebContext(request);
-            LOGGER.debug("Processing relative URI={}", uri);
+            if (LOGGER.isDebugEnabled()) {
+                logMessage = ((HttpServletRequest) req).getMethod() + "(" + uri + ")";
+                LOGGER.debug("Processing: {}", logMessage);
+            }
+            else
+                logMessage = uri;
 
             // Create CallContext for non-static calls
             if (!LoginHelper.isStaticUri(uri)) {
-                LOGGER.debug("Creating CallContext for URI={}", uri);
+                if (LOGGER.isDebugEnabled())
+                    LOGGER.debug("Creating CallContext for "+logMessage);
+
                 // Put CallContext into TLS
                 CallContext context = new CallContext(request, (HttpServletResponse) resp, request.getMethod());
                 CallContextTls.set(context);
                 contextSet = true;
 
-                // First check if admin is being accessed
+                // Anything starting with /api/ must have a user
                 LoginUserDbo user = CallContextTls.get().getLogin();
-                if (request.getRequestURI().startsWith(GlobalProperties.URI_ADMIN)) {
+                if (user == null && !LoginHelper.isLoginTargetUri(uri)) {
+                    LOGGER.debug("Must have a user to access, user={} {}", user, logMessage);
+                    LoginHelper.processOriginatingUri(request);
+                    ResponseHelper.redirectToLogin(context);
+                }
+
+                // First check if admin is being accessed
+                if (uri.startsWith(GlobalProperties.URI_ADMIN)) {
                     if (user == null || !user.isSuperuser()) {
-                        LOGGER.debug("/admin requires a logged in superuser, for user={} URI={}", user, request.getRequestURI());
+                            LOGGER.debug("/admin requires a logged in superuser, for user={} {}", user, logMessage);
                         LoginHelper.processOriginatingUri(request);
                         ResponseHelper.redirectToLogin(context);
                     }
                 }
             }
             else {
-                LOGGER.debug("Skipping CallContext for URI={}", uri);
+                LOGGER.debug("Skipping CallContext for {}", logMessage);
             }
 
             // Continue on to other filter chains, authetication will be done by the auth filter further down
@@ -62,7 +77,7 @@ public class RootFilter implements Filter {
         finally {
             HttpServletResponse response = (HttpServletResponse)resp;
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Finished processing URI={}  status={}  t={}us", request.getRequestURI(), response.getStatus(), (System.nanoTime() - startTime)/1000);
+                LOGGER.debug("Finished processing {}  status={}  t={}us", logMessage, response.getStatus(), (System.nanoTime() - startTime)/1000);
             }
 
             // Context was set on Tls in this scope, clean it up for consistency

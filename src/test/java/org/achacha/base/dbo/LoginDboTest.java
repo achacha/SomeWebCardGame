@@ -12,14 +12,14 @@ class LoginDboTest extends BaseInitializedTest {
     private LoginUserDboFactory factory = Global.getInstance().getDatabaseManager().getFactory(LoginUserDbo.class);
     @Test
     void testDboRead() {
-        LoginUserDbo loginById = factory.getById(TestDataConstants.JUNIT_LOGINID);
+        LoginUserDbo loginById = factory.getById(TestDataConstants.JUNIT_USER_LOGINID);
         assertNotNull(loginById);
-        assertEquals(TestDataConstants.JUNIT_LOGINID, loginById.getId());
-        assertEquals(TestDataConstants.JUNIT_EMAIL, loginById.getEmail());
+        assertEquals(TestDataConstants.JUNIT_USER_LOGINID, loginById.getId());
+        assertEquals(TestDataConstants.JUNIT_USER_EMAIL, loginById.getEmail());
 
-        LoginUserDbo loginByEmail = factory.findByEmail(TestDataConstants.JUNIT_EMAIL);
+        LoginUserDbo loginByEmail = factory.findByEmail(TestDataConstants.JUNIT_USER_EMAIL);
         assertNotNull(loginByEmail);
-        assertEquals(TestDataConstants.JUNIT_EMAIL, loginByEmail.getEmail());
-        assertEquals(TestDataConstants.JUNIT_LOGINID, loginByEmail.getId());
+        assertEquals(TestDataConstants.JUNIT_USER_EMAIL, loginByEmail.getEmail());
+        assertEquals(TestDataConstants.JUNIT_USER_LOGINID, loginByEmail.getId());
     }
 }

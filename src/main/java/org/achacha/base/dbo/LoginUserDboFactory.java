@@ -1,5 +1,6 @@
 package org.achacha.base.dbo;
 
+import com.google.common.base.Preconditions;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
 import org.achacha.base.db.BaseDboFactory;
@@ -106,7 +107,8 @@ public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
     public LoginUserDbo impersonate(String email) {
         CallContext context = CallContextTls.get();
 
-        if (!context.getLogin().superuser) {
+        LoginUserDbo currentLogin = Preconditions.checkNotNull(context.getLogin());
+        if (!currentLogin.superuser) {
             LoginUserDbo.LOGGER.error("Only superuser can impersonate another user, this functionality should never be allowed for anyone else");
             return null;
         }
@@ -120,6 +122,11 @@ public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
             if (triple.getResultSet().next()) {
                 LoginUserDbo dbo = new LoginUserDbo();
                 dbo.fromResultSet(triple.getResultSet());
+
+                // Set current login as imperesonator and set dbo as current login
+                dbo.setImpersonator(currentLogin);
+                context.setLogin(dbo);
+                LOGGER.debug("Impersonate {} by superuser {}", email, currentLogin.getEmail());
                 return dbo;
             } else {
                 LoginUserDbo.LOGGER.warn("Login to impersonate email={} by playerId={}", email, context.getLogin().getId());

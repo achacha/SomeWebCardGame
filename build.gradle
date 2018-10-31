@@ -47,7 +47,9 @@ idea {
         inheritOutputDirs = true
 
         sourceDirs += file("src/main/generated")
+
         testSourceDirs += file("src/test/generated_tests")
+        testSourceDirs += file("src/test/integration")
 
         generatedSourceDirs += file("src/main/generated")
         generatedSourceDirs += file("src/test/generated_tests")

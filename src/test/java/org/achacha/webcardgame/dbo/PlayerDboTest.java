@@ -17,7 +17,7 @@ class PlayerDboTest extends BaseInitializedTest {
 
     @Test
     void testGetPlayerForLogin() {
-        List<PlayerDbo> players = factory.getByLoginId(TestDataConstants.JUNIT_LOGINID);
+        List<PlayerDbo> players = factory.getByLoginId(TestDataConstants.JUNIT_USER_LOGINID);
         assertNotNull(players);
         assertEquals(1, players.size());
 
@@ -28,7 +28,7 @@ class PlayerDboTest extends BaseInitializedTest {
 
     @Test
     void testGetPlayerForId() {
-        PlayerDbo player = factory.getByLoginIdAndPlayerId(TestDataConstants.JUNIT_LOGINID, TestDataConstants.JUNIT_PLAYER__ID);
+        PlayerDbo player = factory.getByLoginIdAndPlayerId(TestDataConstants.JUNIT_USER_LOGINID, TestDataConstants.JUNIT_PLAYER__ID);
         assertNotNull(player);
         assertEquals(1200, player.getEnergy());
         assertEquals(TestDataConstants.JUNIT_PLAYER__ID, player.getId());
