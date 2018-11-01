@@ -1,14 +1,6 @@
-avatar slots
-
-recipes
-
-raw materials
-
-inventory deck of gatherers
-
-
+card
 ---
-
-player
-  inventory
-    [item]
+health - [0,100]
+damage - base inflicted damage
+strength - extra damage, chance to absorb half the damage
+agility - avoidance, change to double damage

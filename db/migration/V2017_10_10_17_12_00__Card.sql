@@ -10,8 +10,9 @@ CREATE TABLE card
   type character varying(64) DEFAULT 'Grue',
   level integer,
   xp integer,
-  strength integer,
-  agility integer,
+  strength integer default 10,
+  agility integer default 10,
+  damage integer default 10,
   stickers character varying(4096),
   --
   CONSTRAINT card_player__id_fkey FOREIGN KEY (player__id)

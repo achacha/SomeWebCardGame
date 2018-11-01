@@ -17,8 +17,9 @@ class EncounterTest extends BaseInitializedTest {
         ArrayList<CardDbo> cards = new ArrayList<>();
         CardDbo card = new CardDbo();
         card.setLevel(1);
-        card.setStrength(10);
+        card.setStrength(12);
         card.setAgility(10);
+        card.setDamage(12);
         cards.add(card);
         PlayerDbo player = new PlayerDbo();
         player.setEnergy(100);
@@ -31,11 +32,13 @@ class EncounterTest extends BaseInitializedTest {
         // Encounter
         EncounterDbo encounter = EncounterDbo.builder(CardType.Goblin, 1, 1).build();
         CardDbo enemy = encounter.getEnemies().get(0);
-        enemy.setStrength(5);
+        enemy.setStrength(8);
         enemy.setAgility(15);
+        enemy.setDamage(9);
         enemy.setXp(1000);
 
-        if (EncounterProcessor.process(player, encounter))
+        EncounterProcessor processor = new EncounterProcessor();
+        if (processor.process(player, encounter))
             System.out.println("Player wins!");
         else
             System.out.println("Player fails!");

@@ -45,14 +45,19 @@ public class CardDbo extends BaseIndexedDbo {
     protected int health = 100;
 
     /**
-     * strength - combat damage, damage absorption
+     * strength - combat damage, change to absorb damage
      */
-    protected int strength;
+    protected int strength = 10;
 
     /**
      * agility - critical chance, damage avoidance
      */
-    protected int agility;
+    protected int agility = 10;
+
+    /**
+     * Amount of base damage per turn
+     */
+    protected int damage = 10;
 
     /** Player that owns this inventory */
     protected long playerId;
@@ -161,6 +166,14 @@ public class CardDbo extends BaseIndexedDbo {
 
     public void setEncounterId(long encounterId) {
         this.encounterId = encounterId;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
     /**
