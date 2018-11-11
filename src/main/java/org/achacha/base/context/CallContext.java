@@ -225,7 +225,7 @@ public class CallContext {
     /**
      * Impersonate a login
      * @param email String
-     * @return Event of impersonation
+     * @return EncounterEvent of impersonation
      */
     public Event impersonate(String email) {
         if (login.isSuperuser()) {

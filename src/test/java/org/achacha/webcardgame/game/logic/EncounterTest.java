@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class EncounterTest extends BaseInitializedTest {
     @Test
     void testEncounterCombat() {
@@ -27,7 +30,6 @@ class EncounterTest extends BaseInitializedTest {
         InventoryDbo inventory = new InventoryDbo();
         inventory.setItems(new ArrayList<>());
         player.setInventory(inventory);
-        System.out.println("player="+player);
 
         // Encounter
         EncounterDbo encounter = EncounterDbo.builder(CardType.Goblin, 1, 1).build();
@@ -37,13 +39,9 @@ class EncounterTest extends BaseInitializedTest {
         enemy.setDamage(9);
         enemy.setXp(1000);
 
-        EncounterProcessor processor = new EncounterProcessor();
-        if (processor.process(player, encounter))
-            System.out.println("Player wins!");
-        else
-            System.out.println("Player fails!");
-
-        System.out.println("\nplayer="+player);
-        System.out.println("encounter="+encounter);
+        EncounterProcessor processor = new EncounterProcessor(player, encounter);
+        EncounterProcessor.Result result = processor.doEncounter();
+        assertNotSame(result, EncounterProcessor.Result.None);  // None means the encounter started and has not finished
+        assertTrue(processor.getEventLog().getEvents().size() > 0);
     }
 }

@@ -15,19 +15,50 @@ import static java.lang.Math.max;
 public class EncounterProcessor {
     private static final Logger LOGGER = LogManager.getLogger(EncounterProcessor.class);
 
+    private final PlayerDbo player;
+    private final EncounterDbo encounter;
+
+    private EncounterEventLog eventLog;
+
+    public enum Result {
+        None,
+        Win,
+        Draw,
+        Lose
+    }
+
+    private Result result = Result.None;
+
+    public EncounterProcessor(PlayerDbo player, EncounterDbo encounter) {
+        this.player = player;
+        this.encounter = encounter;
+        eventLog = new EncounterEventLog(player, encounter);
+    }
+
+    public EncounterEventLog getEventLog() {
+        return eventLog;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
     /**
      * Process encounter
-     * @param player PlayerDbo
-     * @param encounter EncounterDbo
-     * @return true if player wins
+     * @return Encounter result
      */
-    public boolean process(PlayerDbo player, EncounterDbo encounter) {
-        Optional<CardDbo> playerCard1 = getNextPlayerCard(player);
-        Optional<CardDbo> enemyCard1 = getNextEnemyCard(encounter);
+    public Result doEncounter() {
+        eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.Start, false).withId(encounter.getId()).build());
+        eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.Start).withId(player.getId()).build());
+        Optional<CardDbo> playerCard1 = getNextPlayerCard();
+        Optional<CardDbo> enemyCard1 = getNextEnemyCard();
 
         while (playerCard1.isPresent() && enemyCard1.isPresent() && playerCard1.get().getHealth() > 0 && enemyCard1.get().getHealth() > 0){
             CardDbo playerCard = playerCard1.get();
+            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardStart).withCard(playerCard).build());
+
             CardDbo enemyCard = enemyCard1.get();
+            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardStart, false).withCard(enemyCard).build());
 
             // Battle until one is dead
             int i = 0;
@@ -39,8 +70,14 @@ public class EncounterProcessor {
                 LOGGER.debug("Combat[{},0]: playerDamage={} playerHealth={} enemyDamage={} enemyHealth={} initiative={}", i, playerDamage, playerCard.getHealth(), enemyDamage, enemyCard.getHealth(), playerHasInitiative);
 
                 playerCard.decHealth(enemyDamage.damage);
+                eventLog.add(playerDamage);
                 enemyCard.decHealth(playerDamage.damage);
+                eventLog.add(enemyDamage);
                 LOGGER.debug("Combat[{},1]: playerDamage={} playerHealth={} enemyDamage={} enemyHealth={} initiative={}", i, playerDamage, playerCard.getHealth(), enemyDamage, enemyCard.getHealth(), playerHasInitiative);
+
+                // Current health update
+                eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardHealth).withValue(playerCard.getHealth()).build());
+                eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardHealth, false).withValue(enemyCard.getHealth()).build());
 
                 // Switch initiative
                 playerHasInitiative = !playerHasInitiative;
@@ -51,41 +88,46 @@ public class EncounterProcessor {
                 enemyCard.setHealth(0);
             }
 
-            playerCard1 = getNextPlayerCard(player);
-            enemyCard1 = getNextEnemyCard(encounter);
+            if (!playerCard.isAlive()) {
+                eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardDeath).withId(playerCard.getId()).build());
+            }
+
+            if (!enemyCard.isAlive()) {
+                eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardDeath, false).withId(enemyCard.getId()).build());
+            }
+
+            playerCard1 = getNextPlayerCard();
+            enemyCard1 = getNextEnemyCard();
         }
 
-        return playerCard1.isPresent() && playerCard1.get().getHealth() > 0;
+        int resultValue = ((playerCard1.isPresent() && playerCard1.get().getHealth() > 0) ? 1 : 0) - ((enemyCard1.isPresent() && enemyCard1.get().getHealth() > 0) ? 1 : 0);
+        if (resultValue > 0) {
+            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.PlayerWin).build());
+            result = Result.Win;
+        }
+        else if (resultValue < 0) {
+            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.PlayerLose).build());
+            result = Result.Lose;
+        }
+        else {
+            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.PlayerDraw).build());
+            result = Result.Draw;
+        }
+        return result;
     }
 
-    private class DamagePerTurn {
-        int damage;
-        boolean isCritical;
-        boolean isAbsorbed;
-
-        DamagePerTurn(int damage) {
-            this.damage = damage;
-        }
-
-        @Override
-        public String toString() {
-            return "{damage="+damage
-                    +(isCritical ? ",CRIT" : "")
-                    +(isAbsorbed ? ",ABS" : "")
-                    +"}";
-        }
-    }
-
-    private DamagePerTurn calculateDamage(CardDbo attacker, CardDbo defender, boolean attackerHasInitiative) {
+    private DamagePerTurn calculateDamage(CardDbo attacker, CardDbo defender, boolean isPlayerAttacking) {
         // if strength is higher than agility it will add bonus damage
         DamagePerTurn dpt = new DamagePerTurn(attacker.getDamage());
+        dpt.setBit(DamagePerTurn.BitOffset.PLAYER_ATTACKING);
+
         LOGGER.debug("-calc[0]: dpt={}", dpt);
         dpt.damage += (1 + max(0, attacker.getStrength() - defender.getAgility())) * calculateLevelDiff(attacker.getLevel(), defender.getLevel());
 
         LOGGER.debug("-calc[1]: dpt={}", dpt);
 
         // Extra initiative damage
-        if (attackerHasInitiative) {
+        if (isPlayerAttacking) {
             int levelDiff = attacker.getLevel() - defender.getLevel();
             dpt.damage += levelDiff <= 0 ? 1 : RandomUtils.nextInt(1, levelDiff * 2);
         }
@@ -94,14 +136,14 @@ public class EncounterProcessor {
         // Check for critical
         if (RandomUtils.nextInt(0,100) < attacker.getAgility()) {
             dpt.damage *= 2;
-            dpt.isCritical = true;
+            dpt.setBit(DamagePerTurn.BitOffset.CRITICAL);
         }
         LOGGER.debug("-calc[3]: dpt={}", dpt);
 
         // Check for absorption
         if (RandomUtils.nextInt(0,100) < attacker.getStrength()) {
             dpt.damage /= 2;
-            dpt.isAbsorbed = true;
+            dpt.setBit(DamagePerTurn.BitOffset.ABSORB);
         }
         LOGGER.debug("-calc[4]: dpt={}", dpt);
 
@@ -114,13 +156,11 @@ public class EncounterProcessor {
         return diff * diff;
     }
 
-    private static Optional<CardDbo> getNextEnemyCard(EncounterDbo encounter) {
+    private Optional<CardDbo> getNextEnemyCard() {
         return encounter.getEnemies().stream().filter(CardDbo::isAlive).findFirst();
     }
 
-    private static Optional<CardDbo> getNextPlayerCard(PlayerDbo player) {
+    private Optional<CardDbo> getNextPlayerCard() {
         return player.getCards().stream().filter(CardDbo::isAlive).findFirst();
     }
-
-
 }

@@ -3,7 +3,7 @@ package org.achacha.base.logging;
 import javax.annotation.Nullable;
 
 /**
- * Event object used in EventLogDbo logging
+ * EncounterEvent object used in EventLogDbo logging
  *
  * NOTE:
  * DO NOT CHANGE IDs if `event_log` table has data without updating it also
@@ -37,9 +37,9 @@ public enum Event {
     public String getResourceKey() { return resourceKey; }
 
     /**
-     * Lookup Event enum by id
+     * Lookup EncounterEvent enum by id
      * @param id id
-     * @return Event enum or null if not valid id
+     * @return EncounterEvent enum or null if not valid id
      */
     @Nullable
     public static Event valueOf(int id) {

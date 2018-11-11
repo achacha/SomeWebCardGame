@@ -42,7 +42,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         Method method = resourceInfo.getResourceMethod();
         SecurityLevelRequired[] levelsRequired = method.getAnnotationsByType(SecurityLevelRequired.class);
         if (levelsRequired.length > 0) {
-            // Has annotation to process
+            // Has annotation to doEncounter
             SecurityLevel minimumRequiredLevel = levelsRequired[0].value();
             boolean requiresSuperuser = levelsRequired[0].requiresSuperuser();
             if (!minimumRequiredLevel.isPublic()) {
