@@ -33,11 +33,13 @@ public class LoginHelper {
     }
 
     /**
+     * Used to determine if we need to bypass security if user is requesting to login
      * @param uri URI
-     * @return true if this is a call to login target
+     * @return true if this is a call to login target or login landing page
      */
     public static boolean isLoginTargetUri(String uri) {
-        return uri.startsWith(Global.getInstance().getProperties().getUriLoginTarget());
+        return uri.startsWith(Global.getInstance().getProperties().getUriLoginTarget())
+                || uri.startsWith(Global.getInstance().getProperties().getUriHomeLogin());
     }
 
     /**
