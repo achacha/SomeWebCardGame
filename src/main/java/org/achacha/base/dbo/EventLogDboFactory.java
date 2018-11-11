@@ -18,7 +18,7 @@ public class EventLogDboFactory {
     /**
      * Insert event for the currently logged in user
      *
-     * @param event EventLogDbo.EncounterEvent
+     * @param event EventLogDbo.Event
      */
     public static void insertFromContex(Event event) {
         CallContext context = CallContextTls.get();
@@ -48,7 +48,7 @@ public class EventLogDboFactory {
     /**
      * Insert event for the currently logged in user with JSON data
      *
-     * @param event EventLogDbo.EncounterEvent
+     * @param event EventLogDbo.Event
      * @param data  JSON data
      */
     public static void insertFromContex(Event event, JsonObject data) {
@@ -80,7 +80,7 @@ public class EventLogDboFactory {
     /**
      * Insert internal event as server user with JSON data
      *
-     * @param event EventLogDbo.EncounterEvent
+     * @param event EventLogDbo.Event
      * @param data  JSON data
      */
     public static void insertInternal(Event event, JsonObject data) {

@@ -9,7 +9,7 @@
 </head>
 <body>
 <jsp:include page="_admin_navbar.jsp"/>
-<script>setNavbarHeader('EncounterEvent Log: Last 250 Today')</script>
+<script>setNavbarHeader('Event Log: Last 250 Today')</script>
 
 <table class="table table-sm table-bordered table-hover table-striped" style="line-height:1.0;width:100%">
     <tr>

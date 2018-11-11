@@ -3,7 +3,7 @@ package org.achacha.base.logging;
 import javax.annotation.Nullable;
 
 /**
- * EncounterEvent object used in EventLogDbo logging
+ * Event object used in EventLogDbo logging
  *
  * NOTE:
  * DO NOT CHANGE IDs if `event_log` table has data without updating it also
