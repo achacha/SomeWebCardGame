@@ -1,5 +1,6 @@
 package org.achacha.webcardgame.sticker;
 
+import com.google.gson.JsonObject;
 import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.EncounterDbo;
 
@@ -47,5 +48,15 @@ public class CardStickerHealing extends CardSticker {
     @Override
     public void afterEncounter(CardDbo activeCard, EncounterDbo encounter) {
         activeCard.incHealth(afterEncounterHeal);
+    }
+
+    @Override
+    public JsonObject toJsonObject() {
+        JsonObject jobj = super.toJsonObject();
+        jobj.addProperty("beforeEncounterHeal", beforeEncounterHeal);
+        jobj.addProperty("beforeTurnHeal", beforeTurnHeal);
+        jobj.addProperty("afterEncounterHeal", afterEncounterHeal);
+        jobj.addProperty("afterTurnHeal", afterTurnHeal);
+        return jobj;
     }
 }

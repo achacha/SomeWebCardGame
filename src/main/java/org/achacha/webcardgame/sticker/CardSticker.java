@@ -1,9 +1,7 @@
 package org.achacha.webcardgame.sticker;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.achacha.base.global.Global;
-import org.achacha.base.i18n.UIMessageHelper;
+import org.achacha.base.i18n.LocalizedKey;
 import org.achacha.base.json.JsonEmittable;
 import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.EncounterDbo;
@@ -24,9 +22,9 @@ public abstract class CardSticker implements JsonEmittable {
     }
 
     /** I18n key for title */
-    protected final String titleKey;
+    protected final LocalizedKey title;
     /** I18n key for description */
-    protected final String descriptionKey;
+    protected final LocalizedKey description;
 
     /**
      * There are 2 resource keys
@@ -36,22 +34,8 @@ public abstract class CardSticker implements JsonEmittable {
      * @param messageKeyBase resource key base for the description
      */
     public CardSticker(String messageKeyBase) {
-        this.titleKey = messageKeyBase + ".title";
-        this.descriptionKey = messageKeyBase + ".desc";
-    }
-
-    /**
-     * @return Resource key for description
-     */
-    public String getDescriptionKey() {
-        return this.descriptionKey;
-    }
-
-    /**
-     * @return Resource key for title
-     */
-    public String getTitleKey() {
-        return titleKey;
+        this.title = LocalizedKey.of(messageKeyBase + ".title");
+        this.description = LocalizedKey.of(messageKeyBase + ".desc");
     }
 
     /**
@@ -91,18 +75,16 @@ public abstract class CardSticker implements JsonEmittable {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("titleKey", titleKey)
-                .append("descriptionKey", descriptionKey)
+                .append("title", title)
+                .append("description", description)
                 .toString();
     }
 
     @Override
     public JsonObject toJsonObject() {
-        Class clazz = getClass();
-        JsonElement rootElement = Global.getInstance().getGson().toJsonTree(this, clazz);
-        JsonObject jobj = rootElement.getAsJsonObject();
-        jobj.addProperty("title", UIMessageHelper.getInstance().getLocalizedMsg(titleKey));
-        jobj.addProperty("description", UIMessageHelper.getInstance().getLocalizedMsg(descriptionKey));
+        JsonObject jobj = new JsonObject();
+        jobj.addProperty("title", title.toString());
+        jobj.addProperty("description", description.toString());
         return jobj;
     }
 }

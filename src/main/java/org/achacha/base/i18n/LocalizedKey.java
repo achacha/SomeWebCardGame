@@ -7,14 +7,26 @@ package org.achacha.base.i18n;
 public class LocalizedKey implements LocalizedKeyResource {
     private final String key;
 
-    public String getKey() {
-        return key;
-    }
-
     public LocalizedKey(String key) {
         this.key = key;
     }
 
+    /**
+     * Factory method
+     * @param key String resource key
+     * @return LocalizedKey
+     */
+    public static LocalizedKey of(String key) {
+        return new LocalizedKey(key);
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * @return Localized resource value
+     */
     @Override
     public String toString() {
         return UIMessageHelper.getInstance().getLocalizedMsg(key);
