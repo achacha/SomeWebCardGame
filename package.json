@@ -18,8 +18,8 @@
     "font-awesome": "^4.7.0",
     "jquery": "~3",
     "phaser-ce": "~2.10",
-    "requirejs": "~2",
     "popper.js": "^1.12.9",
+    "requirejs": "~2",
     "tether": "~>1.4",
     "vue": "~2.5"
   },
