@@ -48,22 +48,30 @@ public class EncounterProcessor {
      * @return Encounter result
      */
     public Result doEncounter() {
-        eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.Start, false).withId(encounter.getId()).build());
-        eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.Start).withId(player.getId()).build());
+        eventLog.add(EncounterEvent.builder(EventType.Start, false).withId(encounter.getId()).build());
+        eventLog.add(EncounterEvent.builder(EventType.Start).withId(player.getId()).build());
         Optional<CardDbo> playerCard1 = getNextPlayerCard();
         Optional<CardDbo> enemyCard1 = getNextEnemyCard();
 
         while (playerCard1.isPresent() && enemyCard1.isPresent() && playerCard1.get().getHealth() > 0 && enemyCard1.get().getHealth() > 0){
             CardDbo playerCard = playerCard1.get();
-            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardStart).withCard(playerCard).build());
+            eventLog.add(EncounterEvent.builder(EventType.CardStart).withCard(playerCard).build());
 
             CardDbo enemyCard = enemyCard1.get();
-            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardStart, false).withCard(enemyCard).build());
+            eventLog.add(EncounterEvent.builder(EventType.CardStart, false).withCard(enemyCard).build());
+
+            // Process before encounter sticker actions
+            playerCard.processStickersBeforeEncounter(eventLog, enemyCard);
+            enemyCard.processStickersBeforeEncounter(eventLog, playerCard);
 
             // Battle until one is dead
             int i = 0;
             boolean playerHasInitiative = true;
             while (playerCard.getHealth() > 0 && enemyCard.getHealth() > 0 && i++ < 100) {
+                // Process before turn sticker actions
+                playerCard.processStickersBeforeTurn(eventLog, enemyCard);
+                enemyCard.processStickersBeforeTurn(eventLog, playerCard);
+
                 // Combat
                 DamagePerTurn playerDamage = calculateDamage(playerCard, enemyCard, playerHasInitiative);
                 DamagePerTurn enemyDamage = calculateDamage(enemyCard, playerCard, !playerHasInitiative);
@@ -75,13 +83,19 @@ public class EncounterProcessor {
                 eventLog.add(enemyDamage);
                 LOGGER.debug("Combat[{},1]: playerDamage={} playerHealth={} enemyDamage={} enemyHealth={} initiative={}", i, playerDamage, playerCard.getHealth(), enemyDamage, enemyCard.getHealth(), playerHasInitiative);
 
+                // Process after turn sticker actions
+                playerCard.processStickersAfterTurn(eventLog, enemyCard);
+                enemyCard.processStickersAfterTurn(eventLog, playerCard);
+
                 // Current health update
-                eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardHealth).withValue(playerCard.getHealth()).build());
-                eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardHealth, false).withValue(enemyCard.getHealth()).build());
+                eventLog.add(EncounterEvent.builder(EventType.CardHealth).withValue(playerCard.getHealth()).build());
+                eventLog.add(EncounterEvent.builder(EventType.CardHealth, false).withValue(enemyCard.getHealth()).build());
 
                 // Switch initiative
                 playerHasInitiative = !playerHasInitiative;
             }
+
+            // Process after encounter sticker actions
             if (i >= 100) {
                 LOGGER.error("Failed to finish encounter after 100 moves, both die");
                 playerCard.setHealth(0);
@@ -89,11 +103,15 @@ public class EncounterProcessor {
             }
 
             if (!playerCard.isAlive()) {
-                eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardDeath).withId(playerCard.getId()).build());
+                eventLog.add(EncounterEvent.builder(EventType.CardDeath).withValue(playerCard.getHealth()).withId(playerCard.getId()).build());
+                if (enemyCard.isAlive())
+                    enemyCard.processStickersAfterEncounter(eventLog, playerCard);
             }
 
             if (!enemyCard.isAlive()) {
-                eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.CardDeath, false).withId(enemyCard.getId()).build());
+                eventLog.add(EncounterEvent.builder(EventType.CardDeath, false).withValue(enemyCard.getHealth()).withId(enemyCard.getId()).build());
+                if (playerCard.isAlive())
+                    playerCard.processStickersAfterEncounter(eventLog, enemyCard);
             }
 
             playerCard1 = getNextPlayerCard();
@@ -102,15 +120,15 @@ public class EncounterProcessor {
 
         int resultValue = ((playerCard1.isPresent() && playerCard1.get().getHealth() > 0) ? 1 : 0) - ((enemyCard1.isPresent() && enemyCard1.get().getHealth() > 0) ? 1 : 0);
         if (resultValue > 0) {
-            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.PlayerWin).build());
+            eventLog.add(EncounterEvent.builder(EventType.PlayerWin).build());
             result = Result.Win;
         }
         else if (resultValue < 0) {
-            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.PlayerLose).build());
+            eventLog.add(EncounterEvent.builder(EventType.PlayerLose).build());
             result = Result.Lose;
         }
         else {
-            eventLog.add(EncounterEvent.builder(EncounterEvent.EventType.PlayerDraw).build());
+            eventLog.add(EncounterEvent.builder(EventType.PlayerDraw).build());
             result = Result.Draw;
         }
         return result;

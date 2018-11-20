@@ -78,6 +78,8 @@ public class DatabaseManager {
 
     /**
      * Create a session and preform a select
+     *
+     * @param connection Connection to reuse or null to create a new one
      * @param key that contains SQL
      * @param setter if null with use a Statement to perform query otherwise will use a PreparedStatement and apply setter
      * @return JdbcSession with query executed and ResultSet ready to use
@@ -104,10 +106,10 @@ public class DatabaseManager {
      * }
      *
      */
-    public JdbcSession select(String key, @Nullable PreparedStatementSetter setter) throws SQLException {
+    public JdbcSession select(Connection connection, String key, @Nullable PreparedStatementSetter setter) throws SQLException {
         String sql = sqlProvider.get(key);
         JdbcSession session = new JdbcSession();
-        session.connection = getConnection();
+        session.connection = connection != null ? connection : databaseConnectionProvider.getConnection();
         if (setter != null) {
             // Prepared statement with parameters
             PreparedStatement ps = session.connection.prepareStatement(sql);
@@ -124,16 +126,18 @@ public class DatabaseManager {
     }
 
     /**
-     * Insert into database
+     * Update or insert
      * For transactional queries, session.connection.commit() must be called
+     *
+     * @param connection Connection to reuse or null to create a new one
      * @param key that contains SQL
      * @param setter sets parameters on PreparedStatement, if null SQL does not expect params
      * @return JdbcSession
      */
-    public JdbcSession update(String key, PreparedStatementSetter setter) throws SQLException {
+    public JdbcSession update(Connection connection, String key, PreparedStatementSetter setter) throws SQLException {
         String sql = sqlProvider.get(key);
         JdbcSession session = new JdbcSession();
-        session.connection = getConnection();
+        session.connection = connection != null ? connection : databaseConnectionProvider.getConnection();
 
         PreparedStatement ps = session.connection.prepareStatement(sql);
         if (setter != null)
@@ -198,17 +202,19 @@ public class DatabaseManager {
      * }
      * }
      *
-     * @param conn Connection
+     * @param connection Connection to reuse or null to create a new one
      * @param resourcePath String SQL resource path, looked up via SQLProvider
      * @param setter Setter that will set the parameters in the PreparedStatement
      * @return PreparedStatement with parameters set
      * @throws SQLException if fails to prepare statement
      * @see SqlProvider
      */
-    public PreparedStatement prepareStatement(Connection conn, String resourcePath, PreparedStatementSetter setter) throws SQLException {
+    public PreparedStatement prepareStatement(Connection connection, String resourcePath, PreparedStatementSetter setter) throws SQLException {
         String sql = sqlProvider.get(resourcePath);
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        setter.prepare(pstmt);
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        if (setter != null)
+            setter.prepare(pstmt);
+
         LOGGER.debug("SQL: " + DatabaseHelper.toString(pstmt));
         return pstmt;
     }
@@ -233,15 +239,17 @@ public class DatabaseManager {
      * }
      * }
      *
-     * @param conn Connection
+     * @param connection Connection to reuse or null to create a new one
      * @param sql String Actual SQL with parameters to set
      * @param setter Setter that will set the parameters in the PreparedStatement
      * @return PreparedStatement with parameters set
      * @throws SQLException is fails to prepare statement
      */
-    public PreparedStatement prepareStatementDirect(Connection conn, String sql, PreparedStatementSetter setter) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        setter.prepare(pstmt);
+    public PreparedStatement prepareStatementDirect(Connection connection, String sql, PreparedStatementSetter setter) throws SQLException {
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        if (setter != null)
+            setter.prepare(pstmt);
+
         LOGGER.debug("SQL: " + DatabaseHelper.toString(pstmt));
         return pstmt;
     }
@@ -256,8 +264,6 @@ public class DatabaseManager {
      */
     public static void close(Connection connection, Statement statement, ResultSet resultSet) {
         try {
-            if (connection != null)
-                connection.setAutoCommit(true);
             if (resultSet != null)
                 resultSet.close();
             if (statement != null)
@@ -272,52 +278,39 @@ public class DatabaseManager {
     }
 
     /**
-     * Safe rollback of Connection
-     * If connection is null, does nothing
-     *
-     * @param connection Connection
-     */
-    public static void rollback(Connection connection) {
-        try {
-            if (connection != null)
-                connection.rollback();
-        } catch (SQLException sqle) {
-            LOGGER.error("Failed to rollback transaction", sqle);
-        }
-    }
-
-    /**
-     * Create Connection/PreparedStatement/ResultSet
+     * Create PreparedStatement/ResultSet
      * Uses setter to set parameters on PreparedStatement
      * SQL provided is used directly without any lookup
      *
+     * @param connection Connection to reuse or null to create a new one
      * @param sql String Actual SQL
      * @param setter Setter for PreparedStatement
      * @return JdbcSession
      * @throws SQLException if fails to execute SQL
      */
-    public JdbcSession executeSqlDirect(String sql, PreparedStatementSetter setter) throws SQLException {
+    public JdbcSession executeSqlDirect(Connection connection, String sql, PreparedStatementSetter setter) throws SQLException {
         JdbcSession triple = new JdbcSession();
-        triple.connection = databaseConnectionProvider.getConnection();
+        triple.connection = connection != null ? connection : databaseConnectionProvider.getConnection();
         triple.statement = prepareStatementDirect(triple.connection, sql, setter);
         triple.resultSet = ((PreparedStatement)triple.statement).executeQuery();
         return triple;
     }
 
     /**
-     * Create Connection/PreparedStatement/ResultSet
+     * Create PreparedStatement/ResultSet
      * Uses setter to set parameters on PreparedStatement
      *
+     * @param connection Connection to reuse or null to create a new one
      * @param resourcePath String SQL resource via SqlProvider
      * @param setter Setter for PreparedStatement
      * @return JdbcSession
      * @throws SQLException if execute fails
      * @see SqlProvider
      */
-    public JdbcSession executeSql(String resourcePath, PreparedStatementSetter setter) throws SQLException {
+    public JdbcSession executeSql(Connection connection, String resourcePath, PreparedStatementSetter setter) throws SQLException {
         JdbcSession triple = new JdbcSession();
         String sql = sqlProvider.get(resourcePath);
-        triple.connection = databaseConnectionProvider.getConnection();
+        triple.connection = connection != null ? connection : databaseConnectionProvider.getConnection();
         triple.statement = prepareStatementDirect(triple.connection, sql, setter);
         triple.resultSet = ((PreparedStatement)triple.statement).executeQuery();
         return triple;
@@ -327,13 +320,14 @@ public class DatabaseManager {
      * Create JdbcSession with Connection/Statement/ResultSet
      * Use with static SQL
      *
+     * @param connection Connection to reuse or null to create a new one
      * @param sql String SQL
      * @return JdbcSession
      * @throws SQLException if fails to execit SQL
      */
-    public JdbcSession executeSqlDirect(String sql) throws SQLException {
+    public JdbcSession executeSqlDirect(Connection connection, String sql) throws SQLException {
         JdbcSession triple = new JdbcSession();
-        triple.connection = databaseConnectionProvider.getConnection();
+        triple.connection = connection != null ? connection : databaseConnectionProvider.getConnection();
         triple.statement = triple.connection.createStatement();
         LOGGER.debug("SQL={}", sql);
         triple.resultSet = triple.statement.executeQuery(sql);
@@ -341,17 +335,18 @@ public class DatabaseManager {
     }
 
     /**
-     * Create JdbcSession with Connection/Statement/ResultSet
+     * Create JdbcSession with Statement/ResultSet
      * Use with static SQL
      *
+     * @param connection Connection to reuse or null to create a new one
      * @param resourcePath String SQL resource classpath
      * @return JdbcSession
      * @throws SQLException if fails to execute SQL
      */
-    public JdbcSession executeSql(String resourcePath) throws SQLException {
+    public JdbcSession executeSql(Connection connection, String resourcePath) throws SQLException {
         JdbcSession triple = new JdbcSession();
         String sql = sqlProvider.get(resourcePath);
-        triple.connection = databaseConnectionProvider.getConnection();
+        triple.connection = connection != null ? connection : databaseConnectionProvider.getConnection();
         triple.statement = triple.connection.createStatement();
         LOGGER.debug("SQL={}", sql);
         triple.resultSet = triple.statement.executeQuery(sql);

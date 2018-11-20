@@ -79,8 +79,9 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
             // Load all data
             try (
                     JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSql(
+                            null,
                             sqlSelectAll,
-                            p -> {}
+                            null
                     )
             ) {
                 while (tuple.getResultSet().next()) {
@@ -116,6 +117,7 @@ public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
         return data.get(id, (key) -> {
             try (
                     JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSql(
+                            null,
                             sqlSelectById,
                             p -> p.setLong(1, id)
                     )

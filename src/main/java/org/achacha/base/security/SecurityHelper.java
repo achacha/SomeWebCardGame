@@ -1,12 +1,14 @@
 package org.achacha.base.security;
 
 import org.achacha.base.dbo.LoginUserDbo;
+import org.achacha.base.global.Global;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.sql.Connection;
 
 public class SecurityHelper {
     private static final Logger LOGGER = LogManager.getLogger(SecurityHelper.class);
@@ -40,8 +42,9 @@ public class SecurityHelper {
         String saltedPwd = SecurityHelper.encodeSaltPassword(newPwd, salt);
         login.setPwd(saltedPwd);
         login.setSalt(salt);
-        try {
-            login.save();
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection(false)) {
+            login.update(connection);
+            connection.commit();
         }
         catch(Exception e) {
             LOGGER.error("Failed update password for login="+login, e);

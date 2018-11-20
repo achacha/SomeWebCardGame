@@ -2,6 +2,7 @@ package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseIndexedDbo;
 import org.achacha.webcardgame.game.data.CardType;
+import org.achacha.webcardgame.game.logic.EncounterEventLog;
 import org.achacha.webcardgame.game.logic.NameHelper;
 import org.achacha.webcardgame.sticker.CardSticker;
 import org.achacha.webcardgame.sticker.CardStickerFactory;
@@ -97,6 +98,8 @@ public class CardDbo extends BaseIndexedDbo {
             CardSticker sticker = CardStickerFactory.getSticker(name);
             if (sticker != null)
                 this.stickers.add(sticker);
+            else
+                LOGGER.warn("Unknown sticker on cardId={} stickerName={}", id, name);
         }
     }
 
@@ -122,6 +125,10 @@ public class CardDbo extends BaseIndexedDbo {
 
     public List<CardSticker> getStickers() {
         return stickers;
+    }
+
+    public void setStickers(List<CardSticker> stickers) {
+        this.stickers = stickers;
     }
 
     public void setName(String name) {
@@ -214,8 +221,6 @@ public class CardDbo extends BaseIndexedDbo {
      */
     public int decHealth(int healthDelta) {
         this.health -= healthDelta;
-        if (this.health < 0)
-            this.health = 0;
         return this.health;
     }
 
@@ -228,8 +233,8 @@ public class CardDbo extends BaseIndexedDbo {
      */
     public int incHealth(int healthDelta) {
         this.health += healthDelta;
-        if (this.health > 100)
-            this.health = 100;
+        if (this.health > 200)
+            this.health = 200;
         return this.health;
     }
 
@@ -239,4 +244,41 @@ public class CardDbo extends BaseIndexedDbo {
     public boolean isAlive() {
         return health > 0;
     }
+
+    /**
+     * Apply stickers before encounter
+     * @param eventLog EncounterEventLog
+     * @param targetCard CardDbo target
+     */
+    public void processStickersBeforeEncounter(EncounterEventLog eventLog, CardDbo targetCard) {
+        stickers.forEach(sticker-> sticker.beforeEncounter(eventLog, this, targetCard));
+    }
+
+    /**
+     * Apply stickers after encounter
+     * @param eventLog EncounterEventLog
+     * @param targetCard CardDbo target
+     */
+    public void processStickersAfterEncounter(EncounterEventLog eventLog, CardDbo targetCard) {
+        stickers.forEach(sticker-> sticker.afterEncounter(eventLog, this, targetCard));
+    }
+
+    /**
+     * Apply stickers before turn
+     * @param eventLog EncounterEventLog
+     * @param targetCard CardDbo target
+     */
+    public void processStickersBeforeTurn(EncounterEventLog eventLog, CardDbo targetCard) {
+        stickers.forEach(sticker-> sticker.beforeTurn(eventLog, this, targetCard));
+    }
+
+    /**
+     * Apply stickers after turn
+     * @param eventLog EncounterEventLog
+     * @param targetCard CardDbo target
+     */
+    public void processStickersAfterTurn(EncounterEventLog eventLog, CardDbo targetCard) {
+        stickers.forEach(sticker-> sticker.afterTurn(eventLog, this, targetCard));
+    }
+
 }

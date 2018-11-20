@@ -2,6 +2,7 @@ package org.achacha.base.db;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -27,6 +28,26 @@ public class JdbcSession implements AutoCloseable {
 
     public ResultSet getResultSet() {
         return resultSet;
+    }
+
+    /**
+     * Commit current connection
+     *
+     * @throws SQLException
+     */
+    public void commit() throws SQLException {
+        if (connection != null)
+            connection.commit();
+    }
+
+    /**
+     * Rollback current connection
+     *
+     * @throws SQLException
+     */
+    public void rollback() throws SQLException {
+        if (connection != null)
+            connection.rollback();
     }
 
     /**

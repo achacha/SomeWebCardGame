@@ -47,7 +47,7 @@ public class DatabaseHelper {
      * @throws Exception if fails to select data
      */
     public static JsonArray selectToJsonArrayOfObjects(String sql, Map<String,Map<String,String>> lookupMaps) throws Exception {
-        try (JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSqlDirect(sql)) {
+        try (JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSqlDirect(null, sql)) {
             // Convert ResultSet into JSON
             return JsonHelper.toArrayOfObjects(tuple.getResultSet(), -1, lookupMaps);
         }
@@ -62,7 +62,7 @@ public class DatabaseHelper {
      * @throws Exception if fails to select data
      */
     public static ArrayList<Map<String,String>> selectToArrayOfMaps(String sql, Map<String,Map<String,String>> lookupMaps) throws Exception {
-        try (JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSqlDirect(sql)) {
+        try (JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSqlDirect(null, sql)) {
             // Convert ResultSet into JSON
             return toArrayOfMaps(tuple.getResultSet(), -1, lookupMaps);
         }
@@ -137,7 +137,7 @@ public class DatabaseHelper {
     public static long rowCount(String table) {
         final String sql = "SELECT COUNT(*) FROM "+ table;
         long count = 0;
-        try (JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(sql)){
+        try (JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(null, sql)) {
             if (triple.getResultSet().next()) {
                 count = triple.getResultSet().getLong(1);
             }
@@ -236,7 +236,7 @@ public class DatabaseHelper {
     }
 
     public static void toHtmlTable(String sql, StringBuilder output) {
-        try (JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSqlDirect(sql)){
+        try (JdbcSession tuple = Global.getInstance().getDatabaseManager().executeSqlDirect(null, sql)) {
             ResultSetMetaData rsMetaData = tuple.getResultSet().getMetaData();
             int numberOfColumns = rsMetaData.getColumnCount();
             ArrayList<String> columnNames = new ArrayList<>();

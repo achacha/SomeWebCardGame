@@ -5,7 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CardStickerFactory {
@@ -21,8 +23,31 @@ public class CardStickerFactory {
      */
     static {
         STICKERS.put(CardSticker.Type.NOP.name(), new CardStickerHealing("ecs.nop", 0, 0, 0, 0));
-        STICKERS.put(CardSticker.Type.HOT_MINOR.name(), new CardStickerHealing("ecs.hot.minor", 0, 0, 10, 0));
-        STICKERS.put(CardSticker.Type.HOT_MAJOR.name(), new CardStickerHealing("ecs.hot.major", 0, 0, 25, 0));
+        STICKERS.put(CardSticker.Type.HOT_AT1.name(), new CardStickerHealing("ecs.hot.at1", 0, 0, 1, 0));
+        STICKERS.put(CardSticker.Type.HOT_AT3.name(), new CardStickerHealing("ecs.hot.at3", 0, 0, 3, 0));
+        STICKERS.put(CardSticker.Type.HOT_AT5.name(), new CardStickerHealing("ecs.hot.at5", 0, 0, 5, 0));
+        STICKERS.put(CardSticker.Type.HOT_AT10.name(), new CardStickerHealing("ecs.hot.at10", 0, 0, 10, 0));
+        STICKERS.put(CardSticker.Type.DOT_AT1.name(), new CardStickerDamage("ecs.dot.at1", 0, 0, 1, 0));
+        STICKERS.put(CardSticker.Type.DOT_AT3.name(), new CardStickerDamage("ecs.dot.at3", 0, 0, 3, 0));
+        STICKERS.put(CardSticker.Type.DOT_AT5.name(), new CardStickerDamage("ecs.dot.at5", 0, 0, 5, 0));
+        STICKERS.put(CardSticker.Type.DOT_AT10.name(), new CardStickerDamage("ecs.dot.at10", 0, 0, 10, 0));
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private List<CardSticker> stickers = new ArrayList<>();
+
+        public List<CardSticker> build() {
+            return stickers;
+        }
+
+        public Builder add(CardSticker.Type type) {
+            stickers.add(getSticker(type));
+            return this;
+        }
     }
 
 

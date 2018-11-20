@@ -74,6 +74,7 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
                 .build();
         try (
                 JdbcSession triple = Global.getInstance().getDatabaseManager().executeSqlDirect(
+                        null,
                         sql,
                         p -> p.setLong(1, id)
                 )
@@ -110,6 +111,7 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
             if (pstmt.executeUpdate() != 1) {
                 LOGGER.warn("Unable to delete, id={}", id);
             }
+            connection.commit();
         } catch (Exception e) {
             LOGGER.error("Failed to delete, id="+id, e);
         }

@@ -28,6 +28,7 @@ public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
     public LoginUserDbo findByEmail(String emailToFind) {
         try (
                 JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
+                        null,
                         "/sql/Login/SelectByEmail.sql",
                         p -> p.setString(1, emailToFind)
                 )
@@ -77,6 +78,7 @@ public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
     public LoginUserDbo login(String email, String pwd) {
         try (
                 JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
+                        null,
                         "/sql/Login/Login.sql",
                         p -> {
                             p.setString(1, email);
@@ -115,6 +117,7 @@ public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
 
         try (
                 JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
+                        null,
                         "/sql/Login/Impersonate.sql",
                         p -> p.setString(1, email)
                 )

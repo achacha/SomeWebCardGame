@@ -29,29 +29,13 @@ public class EncounterEvent implements JsonEmittable {
         return new Builder(type, isPlayer);
     }
 
-    enum EventType {
-        Start,
-
-        CardStart,
-        CardHealth,
-        CardAttack,
-        CardAttackCrit,
-        CardAttackAbsorb,
-        CardAttackCritAbsorb,
-        CardDeath,
-
-        PlayerWin,
-        PlayerDraw,
-        PlayerLose
-    }
-
     public static class Builder {
         final EncounterEvent event;
         Builder(EventType type, boolean isPlayer) {
             event = new EncounterEvent(type, isPlayer);
         }
 
-        EncounterEvent build() {
+        public EncounterEvent build() {
             return event;
         }
 
@@ -95,9 +79,9 @@ public class EncounterEvent implements JsonEmittable {
     @Override
     public String toString() {
         return type.name()
-                + (isPlayer ? "\tplayer " : "enemy ")
-                + (value > 0 ? "\tvalue="+value : "")
-                + (id > 0 ? "\tid="+id : "")
+                + (isPlayer ? "  player " : "  enemy ")
+                + (value != null ? "  value="+value : "")
+                + (id != null ? "  id="+id : "")
                 + (card != null ? card : "");
     }
 }

@@ -48,36 +48,36 @@ public class EncounterEventLog implements JsonEmittable {
         switch(flags) {
             case 0x0:
                 // 000 Enemy attacking
-                events.add(EncounterEvent.builder(EncounterEvent.EventType.CardAttack, false).withValue(dpt.getDamage()).build());
+                events.add(EncounterEvent.builder(EventType.CardAttack, false).withValue(dpt.getDamage()).build());
                 break;
             case 0x2:
                 // 010 Critical, Enemy attacking
-                events.add(EncounterEvent.builder(EncounterEvent.EventType.CardAttackCrit, false).withValue(dpt.getDamage()).build());
+                events.add(EncounterEvent.builder(EventType.CardAttackCrit, false).withValue(dpt.getDamage()).build());
                 break;
             case 0x4:
                 // 100 Absorb, Enemy attacking
-                events.add(EncounterEvent.builder(EncounterEvent.EventType.CardAttackAbsorb, false).withValue(dpt.getDamage()).build());
+                events.add(EncounterEvent.builder(EventType.CardAttackAbsorb, false).withValue(dpt.getDamage()).build());
                 break;
             case 0x6:
                 // 110 Absorb, Critical, Enemy attacking
-                events.add(EncounterEvent.builder(EncounterEvent.EventType.CardAttackCritAbsorb, false).withValue(dpt.getDamage()).build());
+                events.add(EncounterEvent.builder(EventType.CardAttackCritAbsorb, false).withValue(dpt.getDamage()).build());
                 break;
 
             case 0x1:
                 // 001 Player attacking
-                events.add(EncounterEvent.builder(EncounterEvent.EventType.CardAttack).withValue(dpt.getDamage()).build());
+                events.add(EncounterEvent.builder(EventType.CardAttack).withValue(dpt.getDamage()).build());
                 break;
             case 0x3:
                 // 011 Critical, Player attacking
-                events.add(EncounterEvent.builder(EncounterEvent.EventType.CardAttackCrit).withValue(dpt.getDamage()).build());
+                events.add(EncounterEvent.builder(EventType.CardAttackCrit).withValue(dpt.getDamage()).build());
                 break;
             case 0x5:
                 // 101 Absorb, Player attacking
-                events.add(EncounterEvent.builder(EncounterEvent.EventType.CardAttackAbsorb).withValue(dpt.getDamage()).build());
+                events.add(EncounterEvent.builder(EventType.CardAttackAbsorb).withValue(dpt.getDamage()).build());
                 break;
             case 0x7:
                 // 111 Absorb, Critical, Player attacking
-                events.add(EncounterEvent.builder(EncounterEvent.EventType.CardAttackCritAbsorb).withValue(dpt.getDamage()).build());
+                events.add(EncounterEvent.builder(EventType.CardAttackCritAbsorb).withValue(dpt.getDamage()).build());
                 break;
             default:
                 throw new RuntimeException("Unmapped event: flags="+flags+" from dpt="+dpt);

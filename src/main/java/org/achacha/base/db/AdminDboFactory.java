@@ -28,7 +28,7 @@ public class AdminDboFactory {
                 .build();
 
         Set<Long> ids = new TreeSet<>();
-        try (JdbcSession session = Global.getInstance().getDatabaseManager().executeSqlDirect(SQL)) {
+        try (JdbcSession session = Global.getInstance().getDatabaseManager().executeSqlDirect(null, SQL)) {
             while (session.getResultSet().next()) {
                 ids.add(session.getResultSet().getLong("id"));
             }

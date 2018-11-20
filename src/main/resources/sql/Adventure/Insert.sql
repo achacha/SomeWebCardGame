@@ -1,0 +1,1 @@
+insert into public.adventure(player__id,active) values(?,?);

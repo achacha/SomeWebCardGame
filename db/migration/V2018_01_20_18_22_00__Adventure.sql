@@ -7,6 +7,7 @@ CREATE TABLE adventure
 (
   id serial NOT NULL PRIMARY KEY,
   player__id integer, -- Player id of the owner of this item
+  active boolean default false,  -- If active then 1
   --
   CONSTRAINT adventure_player__id_fkey FOREIGN KEY (player__id)
   REFERENCES player (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -17,7 +18,7 @@ OIDS=FALSE
 ALTER TABLE adventure OWNER TO sawcog;
 GRANT ALL ON adventure TO sawcog;
 COMMENT ON COLUMN adventure.player__id IS 'Player id of the owner of this adventure';
-
+COMMENT ON COLUMN adventure.active IS 'If true then this is the active adventure for the player';
 
 --
 -- Encounter

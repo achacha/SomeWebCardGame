@@ -26,7 +26,7 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
     @NotNull
     @Override
     public Connection getConnection() throws SQLException {
-        return getConnection(true);
+        return getConnection(false);
     }
 
     @NotNull
@@ -37,6 +37,7 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
             try {
                 Connection connection = dataSource.getConnection();
                 if (!connection.isClosed()) {
+                    connection.setAutoCommit(autoCommit);
                     return connection;
                 } else {
                     LOGGER.info("Detected database closed connection, retry #{}", retries);

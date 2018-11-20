@@ -28,8 +28,8 @@ class CardDboTest extends BaseInitializedTest {
         assertEquals("Card 1", one.getName());
         assertEquals(8, one.getLevel());
         assertEquals(99990, one.getXp());
-        assertEquals(30, one.getStrength());
-        assertEquals(70, one.getAgility());
+        assertEquals(12, one.getStrength());   // Default
+        assertEquals(10, one.getAgility());
         assertEquals(CardType.Human, one.getType());
         assertNotNull(one.getStickers());
     }

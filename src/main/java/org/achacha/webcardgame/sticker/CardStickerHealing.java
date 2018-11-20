@@ -2,7 +2,9 @@ package org.achacha.webcardgame.sticker;
 
 import com.google.gson.JsonObject;
 import org.achacha.webcardgame.game.dbo.CardDbo;
-import org.achacha.webcardgame.game.dbo.EncounterDbo;
+import org.achacha.webcardgame.game.logic.EncounterEvent;
+import org.achacha.webcardgame.game.logic.EncounterEventLog;
+import org.achacha.webcardgame.game.logic.EventType;
 
 public class CardStickerHealing extends CardSticker {
     private final int beforeEncounterHeal;
@@ -31,23 +33,35 @@ public class CardStickerHealing extends CardSticker {
     }
 
     @Override
-    public void beforeEncounter(CardDbo activeCard, EncounterDbo encounter) {
-        activeCard.incHealth(beforeEncounterHeal);
+    public void beforeEncounter(EncounterEventLog eventLog, CardDbo activeCard, CardDbo targetCard) {
+        if (beforeEncounterHeal > 0) {
+            activeCard.incHealth(beforeEncounterHeal);
+            eventLog.add(EncounterEvent.builder(EventType.StickerHeal).withValue(beforeEncounterHeal).build());
+        }
     }
 
     @Override
-    public void beforeTurn(CardDbo activeCard, EncounterDbo encounter) {
-        activeCard.incHealth(beforeTurnHeal);
+    public void beforeTurn(EncounterEventLog eventLog, CardDbo activeCard, CardDbo targetCard) {
+        if (beforeTurnHeal > 0) {
+            activeCard.incHealth(beforeTurnHeal);
+            eventLog.add(EncounterEvent.builder(EventType.StickerHeal).withValue(beforeTurnHeal).build());
+        }
     }
 
     @Override
-    public void afterTurn(CardDbo activeCard, EncounterDbo encounter) {
-        activeCard.incHealth(afterTurnHeal);
+    public void afterTurn(EncounterEventLog eventLog, CardDbo activeCard, CardDbo targetCard) {
+        if (afterTurnHeal > 0) {
+            activeCard.incHealth(afterTurnHeal);
+            eventLog.add(EncounterEvent.builder(EventType.StickerHeal).withValue(afterTurnHeal).build());
+        }
     }
 
     @Override
-    public void afterEncounter(CardDbo activeCard, EncounterDbo encounter) {
-        activeCard.incHealth(afterEncounterHeal);
+    public void afterEncounter(EncounterEventLog eventLog, CardDbo activeCard, CardDbo targetCard) {
+        if (afterEncounterHeal > 0) {
+            activeCard.incHealth(afterEncounterHeal);
+            eventLog.add(EncounterEvent.builder(EventType.StickerHeal).withValue(afterEncounterHeal).build());
+        }
     }
 
     @Override

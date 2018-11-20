@@ -1,0 +1,1 @@
+select * from public.adventure where player__id=? and active is true;

@@ -9,8 +9,6 @@ import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.EncounterDbo;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,11 +18,7 @@ class AdventureDboTest extends BaseInitializedTest {
 
     @Test
     void testGetItemsForInventory() {
-        List<AdventureDbo> adventures = factory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
-        assertNotNull(adventures);
-        assertEquals(1, adventures.size());
-
-        AdventureDbo adventure = adventures.get(0);
+        AdventureDbo adventure = factory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
         assertNotNull(adventure);
         assertEquals(TestDataConstants.JUNIT_ADVENTURE_ID, adventure.getId());
 

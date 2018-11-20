@@ -111,7 +111,7 @@ public class EventLogDboFactory {
         List<EventLogDbo> events = new ArrayList<>();
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                JdbcSession triple = dbm.executeSql("/sql/EventLog/SelectTodayLast250.sql")
+                JdbcSession triple = dbm.executeSql(null, "/sql/EventLog/SelectTodayLast250.sql")
         ) {
             while (triple.getResultSet().next()) {
                 EventLogDbo dbo = new EventLogDbo();
@@ -133,7 +133,7 @@ public class EventLogDboFactory {
         List<EventLogDbo> events = new ArrayList<>();
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                JdbcSession triple = dbm.executeSql("/sql/EventLog/SelectAnyLast250.sql")
+                JdbcSession triple = dbm.executeSql(null, "/sql/EventLog/SelectAnyLast250.sql")
         ) {
             while (triple.getResultSet().next()) {
                 EventLogDbo dbo = new EventLogDbo();

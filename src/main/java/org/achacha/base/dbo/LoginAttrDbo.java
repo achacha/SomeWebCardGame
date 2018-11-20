@@ -82,7 +82,7 @@ public class LoginAttrDbo extends BaseIndexedDbo {
     }
 
     @Override
-    public void insert() throws Exception {
+    public void insert(Connection connection) throws Exception {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(value);
         Preconditions.checkArgument(id==0, "Object id must be 0 for insert");
@@ -90,7 +90,6 @@ public class LoginAttrDbo extends BaseIndexedDbo {
 
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/LoginAttr/Insert.sql",
@@ -123,7 +122,7 @@ public class LoginAttrDbo extends BaseIndexedDbo {
     }
 
     @Override
-    public void update() throws Exception {
+    public void update(Connection connection) throws Exception {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(value);
         Preconditions.checkArgument(id>0, "Object id must be >0 for update");
@@ -131,7 +130,6 @@ public class LoginAttrDbo extends BaseIndexedDbo {
 
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/LoginAttr/UpdateNameValueById.sql",

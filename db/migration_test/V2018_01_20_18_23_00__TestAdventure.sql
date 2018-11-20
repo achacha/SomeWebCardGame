@@ -1,5 +1,5 @@
-INSERT INTO adventure(id,player__id) VALUES
-  (1,1);
+INSERT INTO adventure(id,player__id,active) VALUES
+  (1,1,true);
 
 INSERT INTO encounter(id,adventure__id) VALUES
   (1,1)

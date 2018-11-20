@@ -9,7 +9,7 @@ import java.sql.SQLException;
  */
 public interface DatabaseConnectionProvider {
     /**
-     * Default auto-commit is true
+     * Default auto-commit is false
      * @return Connection
      * @throws SQLException if error occurs
      */
@@ -18,7 +18,7 @@ public interface DatabaseConnectionProvider {
 
     /**
      * Allow explicit control of auto-commit on the connection
-     * This is ususally used to turn off auto-commit and allow transactions
+     * This is usually used to turn off auto-commit and allow transactions
      * @param autoCommit if true will auto-commit
      * @return Connection
      * @throws SQLException if error occurs

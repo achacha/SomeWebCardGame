@@ -2,6 +2,7 @@ package org.achacha.webcardgame.game.dbo;
 
 import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.global.Global;
 import org.achacha.webcardgame.game.data.CardType;
 import org.apache.commons.lang3.RandomUtils;
@@ -9,6 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,6 +34,9 @@ public class AdventureDbo extends BaseIndexedDbo {
     /** Encounters in this Adventure */
     protected List<EncounterDbo> encounters;
 
+    /** If active adventure */
+    boolean active;
+
     // TODO: Reward
 
     public static Builder builder(int encounters, int level) {
@@ -46,6 +52,9 @@ public class AdventureDbo extends BaseIndexedDbo {
             this.level = level;
         }
 
+        /**
+         * @return Build random adventure
+         */
         public AdventureDbo build() {
             Preconditions.checkState(encounters > 0);
 
@@ -53,14 +62,14 @@ public class AdventureDbo extends BaseIndexedDbo {
             adventure.encounters = new ArrayList<>(encounters);
             for (int i = 0; i < encounters; ++i) {
                 int enemies = RandomUtils.nextInt(1,3);
-                // TODO: Randomize enemies?
-                adventure.encounters.add(EncounterDbo.builder(CardType.Goblin, enemies, level).build());
+                CardType enemyType = CardType.random();
+                adventure.encounters.add(EncounterDbo.builder(enemyType, enemies, level).build());
             }
             return adventure;
         }
     }
 
-    public AdventureDbo() {
+    AdventureDbo() {
     }
 
     @Override
@@ -68,15 +77,54 @@ public class AdventureDbo extends BaseIndexedDbo {
         return this.id;
     }
 
+    /**
+     * Used to set negative value to differentiate this adventure before the client selects an active
+     * @param id id for this adventure
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    /**
+     * Set this adventure active
+     * @param active boolean
+     */
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.playerId = rs.getLong("player__id");
         this.encounters = Global.getInstance().getDatabaseManager().<EncounterDboFactory>getFactory(EncounterDbo.class).getEncountersForAdventure(this.id);
+        this.active = rs.getBoolean("active");
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
         }
+    }
+
+    @Override
+    public void insert(Connection connection) throws Exception {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+
+        for (EncounterDbo encounter : encounters) {
+            encounter.insert(connection);
+        }
+
+        try (
+                PreparedStatement pstmt = dbm.prepareStatement(connection,
+                        "/sql/Adventure/Insert.sql",
+                        p -> {
+                            p.setLong(1, playerId);
+                            p.setBoolean(2, active);
+                        }
+                )
+        ) {
+            pstmt.executeUpdate();
+        }
+
     }
 
     public List<EncounterDbo> getEncounters() {

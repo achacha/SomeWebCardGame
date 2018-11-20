@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import org.achacha.base.i18n.LocalizedKey;
 import org.achacha.base.json.JsonEmittable;
 import org.achacha.webcardgame.game.dbo.CardDbo;
-import org.achacha.webcardgame.game.dbo.EncounterDbo;
+import org.achacha.webcardgame.game.logic.EncounterEventLog;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,8 +17,14 @@ public abstract class CardSticker implements JsonEmittable {
 
     public enum Type {
         NOP,
-        HOT_MINOR,
-        HOT_MAJOR
+        HOT_AT1,
+        HOT_AT3,
+        HOT_AT5,
+        HOT_AT10,
+        DOT_AT1,
+        DOT_AT3,
+        DOT_AT5,
+        DOT_AT10
     }
 
     /** I18n key for title */
@@ -41,35 +47,39 @@ public abstract class CardSticker implements JsonEmittable {
     /**
      * Perform before encounter
      *
-     * @param encounter EncounterDbo associated with this sticker
+     * @param eventLog Event Log
      * @param activeCard Active card
+     * @param targetCard Target card
      */
-    public void beforeEncounter(CardDbo activeCard, EncounterDbo encounter) {
+    public void beforeEncounter(EncounterEventLog eventLog, CardDbo activeCard, CardDbo targetCard) {
     }
 
     /**
      * Preform effects during encounter, before every turn
      *
+     * @param eventLog Event Log
      * @param activeCard Active card
-     * @param encounter EncounterDbo associated with this sticker
+     * @param targetCard Target card
      */
-    public abstract void beforeTurn(CardDbo activeCard, EncounterDbo encounter);
+    public abstract void beforeTurn(EncounterEventLog eventLog, CardDbo activeCard, CardDbo targetCard);
 
     /**
      * Preform effects during encounter, after every turn
      *
+     * @param eventLog Event Log
      * @param activeCard Active card
-     * @param encounter EncounterDbo associated with this sticker
+     * @param targetCard Target card
      */
-    public abstract void afterTurn(CardDbo activeCard, EncounterDbo encounter);
+    public abstract void afterTurn(EncounterEventLog eventLog, CardDbo activeCard, CardDbo targetCard);
 
     /**
      * Perform after end of encounter
      *
+     * @param eventLog Event Log
      * @param activeCard Active card
-     * @param encounter EncounterDbo associated with this sticker
+     * @param targetCard Target card
      */
-    public void afterEncounter(CardDbo activeCard, EncounterDbo encounter) {
+    public void afterEncounter(EncounterEventLog eventLog, CardDbo activeCard, CardDbo targetCard) {
     }
 
     @Override

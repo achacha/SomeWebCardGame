@@ -5,6 +5,7 @@ import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Connection;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,7 +47,10 @@ class LoginAttrDboTest extends BaseInitializedTest {
         dbo.setValue("inserted");
         dbo.setLoginId(TestDataConstants.JUNIT_USER_LOGINID);
         assertEquals(0, dbo.getId());
-        dbo.save();
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            dbo.insert(connection);
+            connection.commit();
+        }
         assertNotEquals(0, dbo.getId());
 
         // Verify exists
@@ -58,7 +62,10 @@ class LoginAttrDboTest extends BaseInitializedTest {
 
         // Update and reload to verify update worked
         dbo.setValue("updated");
-        dbo.save();
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            dbo.update(connection);
+            connection.commit();
+        }
         dbo = factoryAttr.getById(dbo.getId());
         assertNotNull(dbo);
         assertEquals(TestDataConstants.JUNIT_USER_LOGINID, dbo.getLoginId());

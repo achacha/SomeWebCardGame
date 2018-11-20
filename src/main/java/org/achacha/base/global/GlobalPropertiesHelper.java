@@ -22,7 +22,10 @@ public class GlobalPropertiesHelper {
     public static void load(GlobalProperties properties, String application) {
         if (null == application) {
             try (
-                    JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql("/sql/GlobalProperties/SelectAll.sql")
+                    JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
+                            null,
+                            "/sql/GlobalProperties/SelectAll.sql"
+                    )
             ) {
                 populate(properties, triple.getResultSet());
             } catch (Exception sqle) {
@@ -31,6 +34,7 @@ public class GlobalPropertiesHelper {
         } else {
             try (
                     JdbcSession triple = Global.getInstance().getDatabaseManager().executeSql(
+                            null,
                             "/sql/GlobalProperties/SelectAll.sql"
                     )
             ) {

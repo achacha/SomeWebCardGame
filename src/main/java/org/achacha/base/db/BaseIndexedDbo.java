@@ -2,6 +2,8 @@ package org.achacha.base.db;
 
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.sql.Connection;
+
 /**
  * DataBase Object based by database table
  * Expected to have an id and can be cached
@@ -15,31 +17,22 @@ public abstract class BaseIndexedDbo extends BaseDbo {
     public abstract long getId();
 
     /**
-     * Save the current object
-     * if (id &gt; 0) it calls update otherwise insert
-     *
-     * @throws Exception if unable to save
-     */
-    public void save() throws Exception {
-        if (getId() == 0)
-            insert();
-        else
-            update();
-    }
-
-    /**
      * Create a new instance and set id
+     *
+     * @param connection Connection to reuse
      * @throws Exception if unable to insert
      */
-    protected void insert() throws Exception {
+    public void insert(Connection connection) throws Exception {
         throw new NotImplementedException("Not implemented: "+getClass()+".insert()");
     }
 
     /**
      * Update current instance
+     *
+     * @param connection Connection to reuse
      * @throws Exception if unable to update
      */
-    protected void update() throws Exception {
+    public void update(Connection connection) throws Exception {
         throw new NotImplementedException("Not implemented: "+getClass()+".update()");
     }
 }
