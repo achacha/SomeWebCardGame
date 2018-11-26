@@ -6,6 +6,7 @@ import org.achacha.test.TestDataConstants;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,22 +17,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LoginAttrDboTest extends BaseInitializedTest {
     @Test
-    void testDboRead() {
+    void testDboRead() throws SQLException {
         LoginAttrDboFactory factoryAttr = Global.getInstance().getDatabaseManager().getFactory(LoginAttrDbo.class);
 
         // Single attribute by id
-        LoginAttrDbo dbo = factoryAttr.getById(1);
-        assertNotNull(dbo);
-        assertEquals(1, dbo.getId());
-        assertEquals("color", dbo.getName());
-        assertEquals("red", dbo.getValue());
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            LoginAttrDbo dbo = factoryAttr.getById(connection, 1);
+            assertNotNull(dbo);
+            assertEquals(1, dbo.getId());
+            assertEquals("color", dbo.getName());
+            assertEquals("red", dbo.getValue());
 
-        // Attributes by playerId
-        LoginUserDbo login = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).getById(TestDataConstants.JUNIT_USER_LOGINID);
-        assertNotNull(login);
-        Collection<LoginAttrDbo> attrs = factoryAttr.findByLoginId(login.getId());
-        assertEquals(3, attrs.size());
-        assertTrue(attrs.contains(dbo));
+            // Attributes by playerId
+            LoginUserDbo login = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).getById(connection, TestDataConstants.JUNIT_USER_LOGINID);
+            assertNotNull(login);
+            Collection<LoginAttrDbo> attrs = factoryAttr.findByLoginId(login.getId());
+            assertEquals(3, attrs.size());
+            assertTrue(attrs.contains(dbo));
+        }
     }
 
     @Test
@@ -50,30 +53,32 @@ class LoginAttrDboTest extends BaseInitializedTest {
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
             dbo.insert(connection);
             connection.commit();
-        }
-        assertNotEquals(0, dbo.getId());
+            assertNotEquals(0, dbo.getId());
 
-        // Verify exists
-        dbo = factoryAttr.getById(dbo.getId());
-        assertNotNull(dbo);
-        assertEquals(TestDataConstants.JUNIT_USER_LOGINID, dbo.getLoginId());
-        assertEquals("test.create", dbo.getName());
-        assertEquals("inserted", dbo.getValue());
+            // Verify exists
+            dbo = factoryAttr.getById(connection, dbo.getId());
+            assertNotNull(dbo);
+            assertEquals(TestDataConstants.JUNIT_USER_LOGINID, dbo.getLoginId());
+            assertEquals("test.create", dbo.getName());
+            assertEquals("inserted", dbo.getValue());
 
-        // Update and reload to verify update worked
-        dbo.setValue("updated");
-        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            // Update and reload to verify update worked
+            dbo.setValue("updated");
             dbo.update(connection);
             connection.commit();
-        }
-        dbo = factoryAttr.getById(dbo.getId());
-        assertNotNull(dbo);
-        assertEquals(TestDataConstants.JUNIT_USER_LOGINID, dbo.getLoginId());
-        assertEquals("test.create", dbo.getName());
-        assertEquals("updated", dbo.getValue());
 
-        // Delete and verify it is gone
-        factoryAttr.deleteById(dbo.getId());
-        assertNull(factoryAttr.getById(dbo.getId()));
+            dbo = factoryAttr.getById(connection, dbo.getId());
+            assertNotNull(dbo);
+            assertEquals(TestDataConstants.JUNIT_USER_LOGINID, dbo.getLoginId());
+            assertEquals("test.create", dbo.getName());
+            assertEquals("updated", dbo.getValue());
+
+            // Delete and verify it is gone
+            factoryAttr.deleteById(connection, dbo.getId());
+            connection.commit();
+
+            assertNull(factoryAttr.getById(connection, dbo.getId()));
+            connection.commit();
+        }
     }
 }

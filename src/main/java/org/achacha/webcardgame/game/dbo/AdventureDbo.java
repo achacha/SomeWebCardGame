@@ -1,11 +1,7 @@
 package org.achacha.webcardgame.game.dbo;
 
-import com.google.common.base.Preconditions;
-import org.achacha.base.db.BaseIndexedDbo;
-import org.achacha.base.db.DatabaseManager;
+import org.achacha.base.db.BaseDbo;
 import org.achacha.base.global.Global;
-import org.achacha.webcardgame.game.data.CardType;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +19,8 @@ import java.util.List;
  * Contains 1+ encounters and a reward
  */
 @Table(schema="public", name="adventure")
-public class AdventureDbo extends BaseIndexedDbo {
-    private static final Logger LOGGER = LogManager.getLogger(AdventureDbo.class);
+public class AdventureDbo extends BaseDbo {
+    transient private static final Logger LOGGER = LogManager.getLogger(AdventureDbo.class);
 
     /** Adventure id */
     protected long id;
@@ -34,47 +31,48 @@ public class AdventureDbo extends BaseIndexedDbo {
     /** Encounters in this Adventure */
     protected List<EncounterDbo> encounters;
 
-    /** If active adventure */
-    boolean active;
+    /** Timestamp for when this adventure was created/activated */
+    protected Timestamp created;
 
     // TODO: Reward
 
-    public static Builder builder(int encounters, int level) {
-        return new Builder(encounters, level);
+    /**
+     * Create a builder
+     * @param playerId player id that will own this adventure
+     * @return Builder
+     */
+    public static Builder builder(long playerId) {
+        return new Builder(playerId);
     }
 
     public static class Builder {
-        private final int encounters;
-        private final int level;
+        private final long playerId;
 
-        Builder(int encounters, int level) {
-            this.encounters = encounters;
-            this.level = level;
+        Builder(long playerId) {
+            this.playerId = playerId;
         }
 
         /**
-         * @return Build random adventure
+         * @return Build adventure
          */
         public AdventureDbo build() {
-            Preconditions.checkState(encounters > 0);
-
             AdventureDbo adventure = new AdventureDbo();
-            adventure.encounters = new ArrayList<>(encounters);
-            for (int i = 0; i < encounters; ++i) {
-                int enemies = RandomUtils.nextInt(1,3);
-                CardType enemyType = CardType.random();
-                adventure.encounters.add(EncounterDbo.builder(enemyType, enemies, level).build());
-            }
+            adventure.playerId = playerId;
+            adventure.encounters = new ArrayList<>();
             return adventure;
         }
     }
 
-    AdventureDbo() {
+    public AdventureDbo() {
     }
 
     @Override
     public long getId() {
         return this.id;
+    }
+
+    public List<EncounterDbo> getEncounters() {
+        return encounters;
     }
 
     /**
@@ -85,49 +83,50 @@ public class AdventureDbo extends BaseIndexedDbo {
         this.id = id;
     }
 
-    /**
-     * Set this adventure active
-     * @param active boolean
-     */
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
     @Override
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.playerId = rs.getLong("player__id");
         this.encounters = Global.getInstance().getDatabaseManager().<EncounterDboFactory>getFactory(EncounterDbo.class).getEncountersForAdventure(this.id);
-        this.active = rs.getBoolean("active");
+        this.created = rs.getTimestamp("created");
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
         }
     }
 
+    /**
+     * Insert new active adventure
+     * @param connection Connection to reuse
+     * @throws Exception if failed to insert
+     */
     @Override
     public void insert(Connection connection) throws Exception {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-
-        for (EncounterDbo encounter : encounters) {
-            encounter.insert(connection);
-        }
-
         try (
-                PreparedStatement pstmt = dbm.prepareStatement(connection,
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(connection,
                         "/sql/Adventure/Insert.sql",
                         p -> {
                             p.setLong(1, playerId);
-                            p.setBoolean(2, active);
                         }
-                )
+                );
+                ResultSet rs = pstmt.executeQuery()
         ) {
-            pstmt.executeUpdate();
+            if (rs.next()) {
+                this.id = rs.getLong(1);
+                this.created = rs.getTimestamp(2);
+            }
+            else {
+                LOGGER.error("Failed to insert active adventure={}", this);
+                throw new SQLException("Failed to insert active adventure="+this);
+            }
         }
 
-    }
-
-    public List<EncounterDbo> getEncounters() {
-        return encounters;
+        // id for this adventure is now available
+        if (encounters != null) {
+            for (EncounterDbo encounter : encounters) {
+                encounter.setAdventureId(this.id);
+                encounter.insert(connection);
+            }
+        }
     }
 }

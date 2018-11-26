@@ -1,7 +1,6 @@
 package org.achacha.base.dbo;
 
 import org.achacha.base.db.BaseDboFactory;
-import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.global.Global;
 
 import javax.annotation.Nonnull;
@@ -24,10 +23,9 @@ public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
      * @return true if deleted or false if it did not exist in the first place
      */
     public LoginAttrDbo findByLoginIdAndName(long loginId, String name) {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatement(
+                Connection connection = Global.getInstance().getDatabaseManager().getConnection();
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/LoginAttr/FindByLoginIdAndName.sql",
                         p -> {
@@ -59,10 +57,9 @@ public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
     @Nonnull
     public Collection<LoginAttrDbo> findByLoginId(long userId) {
         ArrayList<LoginAttrDbo> attrs = new ArrayList<>();
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatement(
+                Connection connection = Global.getInstance().getDatabaseManager().getConnection();
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/LoginAttr/SelectByLoginId.sql",
                         p -> p.setLong(1, userId));
@@ -87,10 +84,9 @@ public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
      * @return true if deleted or false if it did not exist in the first place
      */
     public boolean deleteByLoginIdAndName(long loginId, String name) {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatement(
+                Connection connection = Global.getInstance().getDatabaseManager().getConnection();
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/LoginAttr/DeleteByLoginIdAndName.sql",
                         p -> {

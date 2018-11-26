@@ -15,7 +15,7 @@ import java.util.TreeSet;
 public class AdminDboFactory {
     private static final Logger LOGGER = LogManager.getLogger(AdminDboFactory.class);
 
-    public static Set<Long> getAllIds(Class<? extends BaseIndexedDbo> clz) {
+    public static Set<Long> getAllIds(Class<? extends BaseDbo> clz) {
         Table[] table = clz.getDeclaredAnnotationsByType(Table.class);
         Preconditions.checkNotNull(table);
         Preconditions.checkState(table.length > 0);

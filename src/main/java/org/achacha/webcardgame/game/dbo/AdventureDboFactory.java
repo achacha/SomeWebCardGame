@@ -26,14 +26,12 @@ public class AdventureDboFactory extends BaseDboFactory<AdventureDbo> {
                 Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
-                        "/sql/Adventure/SelectActiveByPlayerId.sql",
+                        "/sql/Adventure/SelectByPlayerId.sql",
                         p -> p.setLong(1, playerId));
                 ResultSet rs = pstmt.executeQuery()
         ) {
             if (rs.next()) {
-                AdventureDbo dbo = new AdventureDbo();
-                dbo.fromResultSet(rs);
-                return dbo;
+                return createFromResultSet(rs);
             }
             if (rs.next()) {
                 LOGGER.error("Unexpected, playerId={} is on more than 1 adventure", playerId);
@@ -42,5 +40,24 @@ public class AdventureDboFactory extends BaseDboFactory<AdventureDbo> {
             LOGGER.error("Failed to find adventures for playerId={}", playerId, sqle);
         }
         return null;
+    }
+
+    /**
+     * Delete active for a player
+     * @param playerId long
+     */
+    public void deleteAllByPlayerId(long playerId) {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+        try (
+                Connection connection = dbm.getConnection();
+                PreparedStatement pstmt = dbm.prepareStatement(
+                        connection,
+                        "/sql/Adventure/DeleteAllByPlayerId.sql",
+                        p-> p.setLong(1, playerId));
+        ) {
+            pstmt.executeUpdate();
+        } catch (Exception sqle) {
+            LOGGER.error("Failed to delete all adventures for playerId={}", playerId, sqle);
+        }
     }
 }

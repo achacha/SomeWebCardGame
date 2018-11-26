@@ -1,6 +1,6 @@
 package org.achacha.test;
 
-import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.db.BaseDbo;
 import org.achacha.base.i18n.LocalizedKey;
 
 import java.sql.ResultSet;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 /**
  * Dbo for test_simple table
  */
-public class TestSimpleDbo extends BaseIndexedDbo {
+public class TestSimpleDbo extends BaseDbo {
 
     protected long id;
     protected String name;

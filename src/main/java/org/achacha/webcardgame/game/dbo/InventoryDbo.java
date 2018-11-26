@@ -1,6 +1,6 @@
 package org.achacha.webcardgame.game.dbo;
 
-import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.db.BaseDbo;
 import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,8 +14,8 @@ import java.util.List;
  * Inventory
  */
 @Table(schema="public", name="inventory")
-public class InventoryDbo extends BaseIndexedDbo {
-    private static final Logger LOGGER = LogManager.getLogger(InventoryDbo.class);
+public class InventoryDbo extends BaseDbo {
+    transient private static final Logger LOGGER = LogManager.getLogger(InventoryDbo.class);
 
     /** Inventory id */
     protected long id;

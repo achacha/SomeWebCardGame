@@ -1,0 +1,1 @@
+insert into public.adventure_archive(id,original_id,original_created,player__id,completed) values(DEFAULT,?,?,?,NOW()) returning id, completed;

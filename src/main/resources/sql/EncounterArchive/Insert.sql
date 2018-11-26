@@ -1,0 +1,1 @@
+insert into public.encounter_archive(id,adventure_archive__id,result,enemy_cards) values(DEFAULT,?,?,?) returning id;

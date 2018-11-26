@@ -1,0 +1,1 @@
+select * from public.encounter_archive where adventure_archive__id=?

@@ -1,6 +1,6 @@
 package org.achacha.webcardgame.game.dbo;
 
-import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.db.BaseDbo;
 import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,8 +14,8 @@ import java.util.List;
  * Player
  */
 @Table(schema="public", name="player")
-public class PlayerDbo extends BaseIndexedDbo {
-    private static final Logger LOGGER = LogManager.getLogger(PlayerDbo.class);
+public class PlayerDbo extends BaseDbo {
+    transient private static final Logger LOGGER = LogManager.getLogger(PlayerDbo.class);
 
     /** Player id */
     protected long id;

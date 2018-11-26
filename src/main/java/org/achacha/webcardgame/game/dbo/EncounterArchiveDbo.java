@@ -1,14 +1,12 @@
 package org.achacha.webcardgame.game.dbo;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.achacha.base.db.BaseDbo;
 import org.achacha.base.db.DboDataHelper;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
-import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.logic.EncounterProcessor;
-import org.achacha.webcardgame.game.logic.NameHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.postgresql.util.PGobject;
@@ -24,49 +22,33 @@ import java.util.List;
 /**
  * Encounter associated with adventure
  */
-@Table(schema="public", name="encounter")
-public class EncounterDbo extends BaseDbo {
-    transient private static final Logger LOGGER = LogManager.getLogger(EncounterDbo.class);
+@Table(schema="public", name="encounter_archive")
+public class EncounterArchiveDbo extends BaseDbo {
+    transient private static final Logger LOGGER = LogManager.getLogger(EncounterArchiveDbo.class);
 
     /** id */
     protected long id;
 
-    /** Associated adventure */
-    protected long adventureId;
+    /** Associated original adventure id */
+    protected long adventureArchiveId;
 
     /** Enemies in this encounter */
     protected List<CardDbo> enemies;
 
     /** Result from encounter */
-    protected EncounterProcessor.Result result = EncounterProcessor.Result.None;
+    private EncounterProcessor.Result result = EncounterProcessor.Result.None;
 
-    public static Builder builder() {
-        return new Builder();
+    public EncounterArchiveDbo() {
     }
 
-    public static class Builder {
-        private ArrayList<CardDbo> enemies = new ArrayList<>();
+    /**
+     * Archive from active
+     * @param encounter EncounterDbo
+     */
+    public EncounterArchiveDbo(EncounterDbo encounter) {
+        this.enemies = new ArrayList<>(encounter.enemies);
 
-        Builder() {
-        }
-
-        public Builder withEnemy(CardType enemyType, int level) {
-            CardDbo enemy = new CardDbo();
-            enemy.setType(enemyType);
-            enemy.setName(NameHelper.generateName(enemyType.getNameType()));
-            enemy.setLevel(level);
-            enemies.add(enemy);
-            return this;
-        }
-
-        public EncounterDbo build() {
-            EncounterDbo encounter = new EncounterDbo();
-            encounter.enemies = enemies;
-            return encounter;
-        }
-    }
-
-    public EncounterDbo() {
+        this.result = encounter.result;
     }
 
     @Override
@@ -74,10 +56,17 @@ public class EncounterDbo extends BaseDbo {
         return this.id;
     }
 
+    public void setAdventureArchiveId(long adventureArchiveId) {
+        this.adventureArchiveId = adventureArchiveId;
+    }
+
     @Override
     public void fromResultSet(ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
-        this.adventureId = rs.getLong("adventure__id");
+        this.adventureArchiveId = rs.getLong("adventure_archive__id");
+
+        int index = rs.getInt("result");
+        this.result = EncounterProcessor.Result.values()[index];
 
         // Enemies CardDbo objects stored as JSON array
         JsonArray ary = JsonHelper.fromString(rs.getString("enemy_cards")).getAsJsonArray();
@@ -88,14 +77,6 @@ public class EncounterDbo extends BaseDbo {
         }
     }
 
-    public long getAdventureId() {
-        return adventureId;
-    }
-
-    public void setAdventureId(long adventureId) {
-        this.adventureId = adventureId;
-    }
-
     public List<CardDbo> getEnemies() {
         return enemies;
     }
@@ -104,40 +85,33 @@ public class EncounterDbo extends BaseDbo {
         return result;
     }
 
-    public void setResult(EncounterProcessor.Result result) {
-        this.result = result;
-    }
-
     @Override
     public void insert(Connection connection) throws Exception {
+        Preconditions.checkState(adventureArchiveId > 0);   // Should have been inserted and set on this
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(connection,
-                        "/sql/Encounter/Insert.sql",
+                        "/sql/EncounterArchive/Insert.sql",
                         p-> {
-                            p.setLong(1, adventureId);
+                            p.setLong(1, adventureArchiveId);
+                            p.setInt(2, result.ordinal());
 
                             JsonArray ary = new JsonArray();
-                            for (CardDbo enemy : this.enemies) {
-                                JsonObject toJsonObject = enemy.toJsonObject();
-                                ary.add(toJsonObject);
-                            }
+                            enemies.stream().map(CardDbo::toJsonObject).forEach(ary::add);
                             PGobject pgo = new PGobject();
                             pgo.setType("json");
                             pgo.setValue(ary.toString());
-                            p.setObject(2, pgo);
-
-                            p.setInt(3, result.ordinal());
-                        }
+                            p.setObject(3, pgo);
+                         }
                 );
                 ResultSet rs = pstmt.executeQuery()
         ) {
             if (rs.next()) {
                 // Returns id of the newly inserted item
-                this.id = rs.getLong(1);
+                id = rs.getLong(1);
             }
             else {
-                LOGGER.error("Failed to insert new encounter={}", this);
-                throw new SQLException("Failed to insert encounter=" + this);
+                LOGGER.error("Failed to insert archive encounter={}", this);
+                throw new SQLException("Failed to insert archive encounter=" + this);
             }
         }
     }

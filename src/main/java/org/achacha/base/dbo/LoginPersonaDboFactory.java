@@ -1,7 +1,6 @@
 package org.achacha.base.dbo;
 
 import org.achacha.base.db.BaseDboFactory;
-import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.global.Global;
 
 import java.sql.Connection;
@@ -23,10 +22,9 @@ public class LoginPersonaDboFactory extends BaseDboFactory<LoginPersonaDbo> {
      * @return LoginPersonaDbo or null if not found
      */
     public LoginPersonaDbo findById(long idToFind) {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatement(
+                Connection connection = Global.getInstance().getDatabaseManager().getConnection();
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/Login/SelectPersonaById.sql",
                         p -> p.setLong(1, idToFind));
@@ -54,10 +52,9 @@ public class LoginPersonaDboFactory extends BaseDboFactory<LoginPersonaDbo> {
      */
     public Collection<LoginPersonaDbo> findSearch(String searchTerm, int limit) {
         List<LoginPersonaDbo> personas = new ArrayList<>();
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatement(
+                Connection connection = Global.getInstance().getDatabaseManager().getConnection();
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/Login/SearchPersona.sql",
                         p -> {

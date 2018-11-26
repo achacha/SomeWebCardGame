@@ -1,6 +1,6 @@
 package org.achacha.webcardgame.game.dbo;
 
-import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.db.BaseDbo;
 import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.logic.EncounterEventLog;
 import org.achacha.webcardgame.game.logic.NameHelper;
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(schema="public", name="card")
-public class CardDbo extends BaseIndexedDbo {
-    protected static final Logger LOGGER = LogManager.getLogger(CardDbo.class);
+public class CardDbo extends BaseDbo {
+    transient private static final Logger LOGGER = LogManager.getLogger(CardDbo.class);
 
     /** Card id */
     protected long id;
@@ -251,7 +251,8 @@ public class CardDbo extends BaseIndexedDbo {
      * @param targetCard CardDbo target
      */
     public void processStickersBeforeEncounter(EncounterEventLog eventLog, CardDbo targetCard) {
-        stickers.forEach(sticker-> sticker.beforeEncounter(eventLog, this, targetCard));
+        if (stickers != null)
+            stickers.forEach(sticker-> sticker.beforeEncounter(eventLog, this, targetCard));
     }
 
     /**
@@ -260,7 +261,8 @@ public class CardDbo extends BaseIndexedDbo {
      * @param targetCard CardDbo target
      */
     public void processStickersAfterEncounter(EncounterEventLog eventLog, CardDbo targetCard) {
-        stickers.forEach(sticker-> sticker.afterEncounter(eventLog, this, targetCard));
+        if (stickers != null)
+            stickers.forEach(sticker-> sticker.afterEncounter(eventLog, this, targetCard));
     }
 
     /**
@@ -269,7 +271,8 @@ public class CardDbo extends BaseIndexedDbo {
      * @param targetCard CardDbo target
      */
     public void processStickersBeforeTurn(EncounterEventLog eventLog, CardDbo targetCard) {
-        stickers.forEach(sticker-> sticker.beforeTurn(eventLog, this, targetCard));
+        if (stickers != null)
+            stickers.forEach(sticker-> sticker.beforeTurn(eventLog, this, targetCard));
     }
 
     /**
@@ -278,7 +281,8 @@ public class CardDbo extends BaseIndexedDbo {
      * @param targetCard CardDbo target
      */
     public void processStickersAfterTurn(EncounterEventLog eventLog, CardDbo targetCard) {
-        stickers.forEach(sticker-> sticker.afterTurn(eventLog, this, targetCard));
+        if (stickers != null)
+            stickers.forEach(sticker-> sticker.afterTurn(eventLog, this, targetCard));
     }
 
 }

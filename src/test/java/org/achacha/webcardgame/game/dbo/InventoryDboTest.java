@@ -1,10 +1,8 @@
-package org.achacha.webcardgame.dbo;
+package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.global.Global;
 import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
-import org.achacha.webcardgame.game.dbo.InventoryDbo;
-import org.achacha.webcardgame.game.dbo.InventoryDboFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

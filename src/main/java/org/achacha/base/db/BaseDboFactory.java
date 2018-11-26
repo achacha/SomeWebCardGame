@@ -15,7 +15,7 @@ import java.sql.ResultSet;
  * Base class for all DboFactory types
  * Contains an instance of the current DatabaseManager
  */
-public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
+public abstract class BaseDboFactory<T extends BaseDbo> {
     /**
      * Logger base on the backing object
      */
@@ -35,7 +35,7 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
         this.dboClass = dboClass;
         this.LOGGER = LogManager.getLogger(dboClass);
 
-        this.table = DboHelper.getTableAnnotation(dboClass);
+        this.table = DboClassHelper.getTableAnnotation(dboClass);
     }
 
     public Class<T> getDboClass() {
@@ -50,7 +50,7 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
     @Nullable
     protected T createFromResultSet(ResultSet rs) {
         try {
-            Constructor<? extends BaseIndexedDbo> ctor = dboClass.getDeclaredConstructor();
+            Constructor<? extends BaseDbo> ctor = dboClass.getDeclaredConstructor();
             T dbo = (T)ctor.newInstance();
             dbo.fromResultSet(rs);
             return dbo;
@@ -60,27 +60,28 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
     }
 
     /**
-     * Find Dbo by id
+     * Find Dbo by id reusing an existing connection
      *
+     * @param connection Connection
      * @param id long
      * @return LoginUserDbo or null if not found
      */
     @Nullable
-    public T getById(long id) {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-        final String sql = dbm.getSqlProvider()
+    public T getById(Connection connection, long id) {
+        final String sql = Global.getInstance().getDatabaseManager().getSqlProvider()
                 .builder("/sql/base/SelectById.sql")
                 .withToken("TABLE", table.schema()+"."+table.name())
                 .build();
         try (
-                JdbcSession triple = Global.getInstance().getDatabaseManager().executeSqlDirect(
-                        null,
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatementDirect(
+                        connection,
                         sql,
                         p -> p.setLong(1, id)
-                )
+                );
+                ResultSet rs = pstmt.executeQuery()
         ) {
-            if (triple.getResultSet().next()) {
-                return createFromResultSet(triple.getResultSet());
+            if (rs.next()) {
+                return createFromResultSet(rs);
             } else {
                 LOGGER.warn("Failed to find object id={}", id);
             }
@@ -93,17 +94,16 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
 
     /**
      * Delete by id
+     * @param connection Connection
      * @param id long
      */
-    public void deleteById(long id) {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-        final String sql = dbm.getSqlProvider()
+    public void deleteById(Connection connection, long id) {
+        final String sql = Global.getInstance().getDatabaseManager().getSqlProvider()
                 .builder("/sql/base/DeleteById.sql")
                 .withToken("TABLE", table.schema()+"."+table.name())
                 .build();
         try (
-                Connection connection = dbm.getConnection();
-                PreparedStatement pstmt = dbm.prepareStatementDirect(
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatementDirect(
                         connection,
                         sql,
                         p -> p.setLong(1, id))
@@ -111,12 +111,8 @@ public abstract class BaseDboFactory<T extends BaseIndexedDbo> {
             if (pstmt.executeUpdate() != 1) {
                 LOGGER.warn("Unable to delete, id={}", id);
             }
-            connection.commit();
         } catch (Exception e) {
             LOGGER.error("Failed to delete, id="+id, e);
         }
     }
-
-
-
 }

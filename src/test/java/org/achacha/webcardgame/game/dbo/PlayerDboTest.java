@@ -1,10 +1,8 @@
-package org.achacha.webcardgame.dbo;
+package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.global.Global;
 import org.achacha.test.BaseInitializedTest;
 import org.achacha.test.TestDataConstants;
-import org.achacha.webcardgame.game.dbo.PlayerDbo;
-import org.achacha.webcardgame.game.dbo.PlayerDboFactory;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

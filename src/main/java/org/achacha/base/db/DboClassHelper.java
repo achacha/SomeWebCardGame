@@ -2,6 +2,8 @@ package org.achacha.base.db;
 
 import com.google.common.base.Preconditions;
 import org.achacha.base.cache.CachedDbo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.reflections.Configuration;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
@@ -14,7 +16,9 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DboHelper {
+public class DboClassHelper {
+    private static final Logger LOGGER = LogManager.getLogger(DboClassHelper.class);
+
     /**
      * Packages where DBOs exist
      */
@@ -53,10 +57,10 @@ public class DboHelper {
     }
 
     /**
-     * @return Set of Class of type BaseIndexedDbo
+     * @return Set of Class of type BaseDbo
      */
-    public static Set<Class<? extends BaseIndexedDbo>> getIndexedDboClasses() {
-        Set<Class<? extends BaseIndexedDbo>> classes = new HashSet<>(reflections.getSubTypesOf(BaseIndexedDbo.class));
+    public static Set<Class<? extends BaseDbo>> getIndexedDboClasses() {
+        Set<Class<? extends BaseDbo>> classes = new HashSet<>(reflections.getSubTypesOf(BaseDbo.class));
         classes.removeIf(clz -> Modifier.isAbstract(clz.getModifiers()));  // Remove abstract classes
         return classes;
     }
@@ -64,9 +68,9 @@ public class DboHelper {
     /**
      * @return Set of Class of type BaseDbo with CachedDbo annotation
      */
-    public static Set<Class<? extends BaseIndexedDbo>> getAllCachedDboClasses() {
-        final HashSet<Class<? extends BaseIndexedDbo>> set = new HashSet<>();
-        reflections.getTypesAnnotatedWith(CachedDbo.class).forEach(c -> set.add((Class<? extends BaseIndexedDbo>) c));
+    public static Set<Class<? extends BaseDbo>> getAllCachedDboClasses() {
+        final HashSet<Class<? extends BaseDbo>> set = new HashSet<>();
+        reflections.getTypesAnnotatedWith(CachedDbo.class).forEach(c -> set.add((Class<? extends BaseDbo>) c));
         return set;
     }
 
@@ -75,7 +79,12 @@ public class DboHelper {
      */
     public static Set<Class<? extends BaseDboFactory>> getAllDboFactories() {
         Set<Class<? extends BaseDboFactory>> classes = new HashSet<>(reflections.getSubTypesOf(BaseDboFactory.class));
-        classes.removeIf(clz -> Modifier.isAbstract(clz.getModifiers()));  // Remove abstract classes
+        classes.removeIf(clz -> {
+            boolean isAbstract = Modifier.isAbstract(clz.getModifiers());
+            if (isAbstract)
+                LOGGER.info("Ignoring abstract factory: {}", clz.getName());
+            return isAbstract;
+        } );  // Remove abstract classes
         return classes;
     }
 
@@ -83,18 +92,18 @@ public class DboHelper {
      * Get table from @Table on Dbo
      * Will throw exception if annotation missing
      * @param dboClass Dbo class
-     * @param <T> extends BaseIndexedDbo
+     * @param <T> extends BaseDbo
      * @return Table
      */
     @Nonnull
-    public static <T extends BaseIndexedDbo> Table getTableAnnotation(Class<T> dboClass) {
+    public static <T extends BaseDbo> Table getTableAnnotation(Class<T> dboClass) {
         Table[] tables = dboClass.getDeclaredAnnotationsByType(Table.class);
         Preconditions.checkState(Preconditions.checkNotNull(tables).length > 0);
         return tables[0];
     }
 
     @Nonnull
-    public static <T extends BaseIndexedDbo> String getTable(Class<T> dboClass) {
+    public static <T extends BaseDbo> String getTable(Class<T> dboClass) {
         Table table = getTableAnnotation(dboClass);
         return table.schema()+"."+table.name();
     }

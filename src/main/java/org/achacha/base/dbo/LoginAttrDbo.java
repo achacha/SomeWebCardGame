@@ -1,8 +1,7 @@
 package org.achacha.base.dbo;
 
 import com.google.common.base.Preconditions;
-import org.achacha.base.db.BaseIndexedDbo;
-import org.achacha.base.db.DatabaseManager;
+import org.achacha.base.db.BaseDbo;
 import org.achacha.base.global.Global;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,8 +18,8 @@ import java.sql.SQLException;
  * Attribute associated with LoginPersona
  */
 @Table(schema="public", name="login_attr")
-public class LoginAttrDbo extends BaseIndexedDbo {
-    protected static final Logger LOGGER = LogManager.getLogger(LoginAttrDbo.class);
+public class LoginAttrDbo extends BaseDbo {
+    transient protected static final Logger LOGGER = LogManager.getLogger(LoginAttrDbo.class);
 
     private long id;
     private long loginId;
@@ -88,9 +87,8 @@ public class LoginAttrDbo extends BaseIndexedDbo {
         Preconditions.checkArgument(id==0, "Object id must be 0 for insert");
         Preconditions.checkArgument(loginId > 0, "Must have a valid Login to create new attribute");
 
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                PreparedStatement pstmt = dbm.prepareStatement(
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/LoginAttr/Insert.sql",
                         p -> {
@@ -128,9 +126,8 @@ public class LoginAttrDbo extends BaseIndexedDbo {
         Preconditions.checkArgument(id>0, "Object id must be >0 for update");
         Preconditions.checkArgument(loginId>0, "Must have a valid Login to create new attribute");
 
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                PreparedStatement pstmt = dbm.prepareStatement(
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/LoginAttr/UpdateNameValueById.sql",
                         p -> {

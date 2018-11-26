@@ -4,9 +4,11 @@ import org.achacha.base.context.CallContextTls;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
+import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.dbo.AdventureDbo;
 import org.achacha.webcardgame.game.dbo.AdventureDboFactory;
 import org.achacha.webcardgame.game.dbo.CardDbo;
+import org.achacha.webcardgame.game.dbo.EncounterDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDboFactory;
 import org.achacha.webcardgame.web.AbstractRoutes;
@@ -56,11 +58,13 @@ public class AdventureRoutes extends AbstractRoutes {
 
     /**
      * Get available adventures for a given player
+     * @param playerId player to use for generation
+     * @param regenerate if true will ignore the adventures in the session and create new ones
      */
     @GET
     @Path("available")
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
-    public Response getAvailableAdventures(@QueryParam("playerId") long playerId) {
+    public Response getAvailableAdventures(@QueryParam("playerId") long playerId, @QueryParam("regenerate") boolean regenerate) {
         // Get player by id for this login, if null then this login does not have such a player
         PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
         if (player == null)
@@ -72,17 +76,24 @@ public class AdventureRoutes extends AbstractRoutes {
             return Response.status(Response.Status.FOUND).entity(existingAdventure).build();
         }
 
-        final int LEVEL = player.getCards().stream().map(CardDbo::getLevel).max(Integer::compare).orElse(0);
-        final int COUNT = RandomUtils.nextInt(2,5);
-        List<AdventureDbo> adventures = new ArrayList<>(COUNT);
-        // Use negative id since it is not persisted
-        for (int tempId = 1; tempId <= COUNT; ++tempId){
-            AdventureDbo dbo = AdventureDbo.builder(3, LEVEL).build();
-            dbo.setId(-tempId);
-            adventures.add(dbo);
+        List<AdventureDbo> adventures = (List<AdventureDbo>) httpRequest.getSession().getAttribute("available_adventures");
+        if (adventures == null || regenerate) {
+            final int LEVEL = player.getCards().stream().map(CardDbo::getLevel).max(Integer::compare).orElse(0);
+            final int COUNT = RandomUtils.nextInt(2, 5);
+            adventures = new ArrayList<>(COUNT);
+            // Use negative id since it is not persisted
+            for (int tempId = 1; tempId <= COUNT; ++tempId) {
+                // TODO: need to randomize
+                AdventureDbo dbo = AdventureDbo.builder(player.getId()).build();
+                dbo.getEncounters().add(EncounterDbo.builder().withEnemy(CardType.Goblin, LEVEL).build());
+                dbo.getEncounters().add(EncounterDbo.builder().withEnemy(CardType.Goblin, LEVEL).build());
+                dbo.setId(-tempId);
+                adventures.add(dbo);
 
+            }
+            httpRequest.getSession().setAttribute("available_adventures", adventures);
+            LOGGER.debug("Generated new adventures={}", adventures);
         }
-        httpRequest.getSession().setAttribute("available_adventures", adventures);
 
         return Response.status(Response.Status.OK).entity(adventures).build();
     }
@@ -111,11 +122,11 @@ public class AdventureRoutes extends AbstractRoutes {
 
         //TODO:
         // 1. Create PUT to accept adventure
+        // 1. Adventure history table (only 1 active adventure per player rest into history
         // 1. Allow view of 'active' adventures
         // 1. Allow 'simulate'
 
         // TODO: Save
-        adventure.setActive(true);
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
             adventure.insert(connection);
             connection.commit();

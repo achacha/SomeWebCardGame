@@ -20,6 +20,7 @@ public class EncounterProcessor {
 
     private EncounterEventLog eventLog;
 
+    /** Encounter results (never change order, add to end, oridinal saved in DB) */
     public enum Result {
         None,
         Win,
@@ -131,6 +132,8 @@ public class EncounterProcessor {
             eventLog.add(EncounterEvent.builder(EventType.PlayerDraw).build());
             result = Result.Draw;
         }
+
+        encounter.setResult(result);
         return result;
     }
 

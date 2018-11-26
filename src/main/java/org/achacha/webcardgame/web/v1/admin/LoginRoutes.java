@@ -3,6 +3,7 @@ package org.achacha.webcardgame.web.v1.admin;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import org.achacha.base.db.BaseDboFactory;
+import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.dbo.LoginUserDbo;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
@@ -22,6 +23,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * /api/admin/login
@@ -38,10 +41,19 @@ public class LoginRoutes extends AbstractRoutes {
     public Response getFullUserById(@PathParam("id") long id) {
         Preconditions.checkState(id > 0);
 
-        BaseDboFactory<LoginUserDbo> factory = Global.getInstance().getDatabaseManager().getFactory(LoginUserDbo.class);
-        LoginUserDbo login = factory.getById(id);
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+        BaseDboFactory<LoginUserDbo> factory = dbm.getFactory(LoginUserDbo.class);
+        LoginUserDbo login = null;
+        try (Connection connection = dbm.getConnection()) {
+            login = factory.getById(connection, id);
+        } catch (SQLException e) {
+            LOGGER.error("Failed to get user, id="+id, e);
+        }
 
-        return Response.ok(login).build();
+        if (login != null)
+            return Response.ok(login).build();
+        else
+            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dao.notfound", null)).build();
     }
 
     @PUT
@@ -56,16 +68,24 @@ public class LoginRoutes extends AbstractRoutes {
         String newPwd = data.get("pwd").getAsString();
         Preconditions.checkState(StringUtils.isNotBlank(newPwd));
 
-        BaseDboFactory<LoginUserDbo> factory = Global.getInstance().getDatabaseManager().getFactory(LoginUserDbo.class);
-        LoginUserDbo login = factory.getById(loginId);
-        if (login != null) {
-            SecurityHelper.savePassword(login, newPwd);
-            jobj = JsonHelper.getSuccessObject();
-        }
-        else {
-            jobj = JsonHelper.getFailObject("dao.notfound", null);
-        }
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+        BaseDboFactory<LoginUserDbo> factory = dbm.getFactory(LoginUserDbo.class);
+        try (Connection connection = dbm.getConnection()) {
+            LoginUserDbo login = factory.getById(connection, loginId);
 
-        return Response.ok(jobj).build();
+            if (login != null) {
+                SecurityHelper.savePassword(connection, login, newPwd);
+                jobj = JsonHelper.getSuccessObject();
+            }
+            else {
+                jobj = JsonHelper.getFailObject("dao.notfound", null);
+            }
+            connection.commit();
+
+            return Response.ok(jobj).build();
+        } catch (Exception e) {
+            LOGGER.error("Failed to update password for user, id="+loginId, e);
+        }
+        return Response.serverError().build();
     }
 }

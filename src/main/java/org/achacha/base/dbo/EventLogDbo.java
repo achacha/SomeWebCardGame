@@ -5,12 +5,14 @@ import org.achacha.base.logging.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+@Table(schema="public", name="event_log")
 public class EventLogDbo extends BaseDbo {
-    protected static final Logger LOGGER = LogManager.getLogger(EventLogDbo.class);
+    transient protected static final Logger LOGGER = LogManager.getLogger(EventLogDbo.class);
 
     protected long id;
     protected Timestamp createdOn;

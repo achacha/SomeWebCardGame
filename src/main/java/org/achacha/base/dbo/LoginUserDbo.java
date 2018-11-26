@@ -2,7 +2,7 @@ package org.achacha.base.dbo;
 
 
 import com.google.gson.JsonObject;
-import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.db.BaseDbo;
 import org.achacha.base.i18n.I18nHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.apache.logging.log4j.LogManager;
@@ -16,8 +16,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 @Table(schema="public", name="login")
-public class LoginUserDbo extends BaseIndexedDbo {
-    protected static final Logger LOGGER = LogManager.getLogger(LoginUserDbo.class);
+public class LoginUserDbo extends BaseDbo {
+    transient protected static final Logger LOGGER = LogManager.getLogger(LoginUserDbo.class);
 
     /** Object database id */
     protected long id;

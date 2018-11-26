@@ -40,7 +40,7 @@ class EncounterTest extends BaseInitializedTest {
         player.setInventory(inventory);
 
         // Encounter
-        EncounterDbo encounter = EncounterDbo.builder(CardType.Goblin, 1, 1).build();
+        EncounterDbo encounter = EncounterDbo.builder().withEnemy(CardType.Goblin, 1).build();
         CardDbo enemyCard = encounter.getEnemies().get(0);
         enemyCard.setStrength(8);
         enemyCard.setAgility(15);

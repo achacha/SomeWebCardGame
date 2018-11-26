@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class DboHelperTest {
     @Test
     void testGetAllDboClassNames() {
-        Set<Class<? extends BaseDbo>> classes = DboHelper.getAllDboClasses();
+        Set<Class<? extends BaseDbo>> classes = DboClassHelper.getAllDboClasses();
         assertTrue(classes.contains(LoginUserDbo.class));
         assertTrue(classes.contains(LoginPersonaDbo.class));
         assertTrue(classes.contains(LoginAttrDbo.class));
@@ -25,13 +25,13 @@ class DboHelperTest {
 
     @Test
     void testGetAllCachedDboClassNames() {
-        Set<Class<? extends BaseIndexedDbo>> classes = DboHelper.getAllCachedDboClasses();
+        Set<Class<? extends BaseDbo>> classes = DboClassHelper.getAllCachedDboClasses();
         assertFalse(classes.contains(LoginUserDbo.class));
     }
 
     @Test
     void testGetIndexedDboClasses() {
-        Set<Class<? extends BaseIndexedDbo>> classes = DboHelper.getIndexedDboClasses();
+        Set<Class<? extends BaseDbo>> classes = DboClassHelper.getIndexedDboClasses();
         assertFalse(classes.contains(TestSimpleDbo.class));   // Test classes should not be included
         assertTrue(classes.contains(LoginUserDbo.class));
         assertTrue(classes.contains(AdventureDbo.class));

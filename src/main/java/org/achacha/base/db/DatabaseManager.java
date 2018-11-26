@@ -2,6 +2,7 @@ package org.achacha.base.db;
 
 import org.achacha.base.db.provider.JdbcDatabaseConnectionProvider;
 import org.achacha.base.db.provider.SqlProvider;
+import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +40,7 @@ public class DatabaseManager {
     /**
      * Dbo factories mapped by class
      */
-    private Map<Class<? extends BaseIndexedDbo>, BaseDboFactory<? extends BaseIndexedDbo>> factories = new HashMap<>();
+    private Map<Class<? extends BaseDbo>, BaseDboFactory<? extends BaseDbo>> factories = new HashMap<>();
 
     /**
      * Construct a database manager with a custom providers
@@ -54,13 +55,13 @@ public class DatabaseManager {
         this.sqlProvider = sqlProvider;
 
         // Get all Dbo factories and map by class they back
-        Set<Class<? extends BaseDboFactory>> factoryClasses = DboHelper.getAllDboFactories();
+        Set<Class<? extends BaseDboFactory>> factoryClasses = DboClassHelper.getAllDboFactories();
         factoryClasses.forEach(clz->{
-            BaseDboFactory<? extends BaseIndexedDbo> factory = null;
+            BaseDboFactory<? extends BaseDbo> factory = null;
             try {
                 factory = clz.getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                LOGGER.error("Failed to create Dbo factory, clz="+clz, e);
+                throw new RuntimeException("Failed to create Dbo factory, clz="+clz, e);
             }
             this.factories.put(factory.getDboClass(), factory);
         });
@@ -72,7 +73,7 @@ public class DatabaseManager {
      * @param <T> Factory class
      * @return Factory for Dbo
      */
-    public <T extends BaseDboFactory<? extends BaseIndexedDbo>> T getFactory(Class<? extends BaseIndexedDbo> clz) {
+    public <T extends BaseDboFactory<? extends BaseDbo>> T getFactory(Class<? extends BaseDbo> clz) {
         return (T)factories.get(clz);
     }
 
@@ -355,9 +356,15 @@ public class DatabaseManager {
 
     /**
      * Load Dbo based on object id
+     * TODO: not sure we should have DB code that does not provide connection
      */
     @Nullable
-    public BaseIndexedDbo byId(Class<? extends BaseIndexedDbo> clz, long id) {
-        return this.getFactory(clz).getById(id);
+    public BaseDbo byId(Class<? extends BaseDbo> clz, long id) {
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection(true)) {
+            return this.getFactory(clz).getById(connection, id);
+        } catch (Exception sqle) {
+            LOGGER.error("Failed to find object", sqle);
+        }
+        return null;
     }
 }

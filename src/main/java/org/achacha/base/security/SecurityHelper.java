@@ -1,7 +1,6 @@
 package org.achacha.base.security;
 
 import org.achacha.base.dbo.LoginUserDbo;
-import org.achacha.base.global.Global;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -34,21 +33,17 @@ public class SecurityHelper {
 
     /**
      * Set password on login
+     * @param connection Connection
      * @param login LoginUserDao
      * @param newPwd String new raw password
+     * @throws Exception if unable to update
      */
-    public static void savePassword(LoginUserDbo login, String newPwd) {
+    public static void savePassword(Connection connection, LoginUserDbo login, String newPwd) throws Exception {
         String salt = SecurityHelper.generateSalt();
         String saltedPwd = SecurityHelper.encodeSaltPassword(newPwd, salt);
         login.setPwd(saltedPwd);
         login.setSalt(salt);
-        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection(false)) {
-            login.update(connection);
-            connection.commit();
-        }
-        catch(Exception e) {
-            LOGGER.error("Failed update password for login="+login, e);
-        }
-        LOGGER.debug("Password updated for login={} salt={} saltedPwd=", login, salt, saltedPwd);
+        login.update(connection);
+        LOGGER.debug("Password updated for login={} salt={} saltedPwd={}", login, salt, saltedPwd);
     }
 }

@@ -1,7 +1,7 @@
 package org.achacha.base.cache;
 
-import org.achacha.base.db.BaseIndexedDbo;
-import org.achacha.base.db.DboHelper;
+import org.achacha.base.db.BaseDbo;
+import org.achacha.base.db.DboClassHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,17 +21,17 @@ public class DboCacheManager {
     }
 
     /** Data store by class */
-    private Map<Class<? extends BaseIndexedDbo>, DboCache> caches = new HashMap<>();
+    private Map<Class<? extends BaseDbo>, DboCache> caches = new HashMap<>();
 
     /** Map simple name to Class for cached clases */
-    private Map<String, Class<? extends BaseIndexedDbo>> simpleNameToClass = new HashMap<>();
+    private Map<String, Class<? extends BaseDbo>> simpleNameToClass = new HashMap<>();
 
     /**
      * Initialize caches
      */
     public void init() {
         // Get all classes annotated with @CachedDbo and create a cache for each
-        Set<Class<? extends BaseIndexedDbo>> classes = DboHelper.getAllCachedDboClasses();
+        Set<Class<? extends BaseDbo>> classes = DboClassHelper.getAllCachedDboClasses();
         classes.stream()
                 .sorted((a,b)->{
                     // Use annotation order() to sort lowest to highest
@@ -57,13 +57,13 @@ public class DboCacheManager {
      * Get Dbo type by id from an already loaded cache
      * Can be used directly when populating from database since id of 0 will always return null
      *
-     * @param clazz Class E of the BaseIndexedDbo
+     * @param clazz Class E of the BaseDbo
      * @param id long id of the object or pass &lt;=0 to guarantee null
-     * @param <E> type of BaseIndexedDbo
+     * @param <E> type of BaseDbo
      * @return E or null if not found
      * @see #init()
      */
-    public <E extends BaseIndexedDbo> E getById(Class<E> clazz, long id) {
+    public <E extends BaseDbo> E getById(Class<E> clazz, long id) {
         DboCache<E> cache = caches.get(clazz);
         if (cache == null)
             throw new IllegalArgumentException("Cache for class="+clazz.getName()+" does not exist");
@@ -78,10 +78,10 @@ public class DboCacheManager {
     /**
      * Get DboCache object associated with the Class
      * @param clazz Class of E
-     * @param <E> extends BaseIndexedDbo
+     * @param <E> extends BaseDbo
      * @return DboCache of E
      */
-    public <E extends BaseIndexedDbo> DboCache<E> getCache(Class<E> clazz) {
+    public <E extends BaseDbo> DboCache<E> getCache(Class<E> clazz) {
         DboCache<E> cache = caches.get(clazz);
         if (cache == null)
             throw new IllegalArgumentException("Cache for class="+clazz.getName()+" does not exist");
@@ -92,7 +92,7 @@ public class DboCacheManager {
     /**
      * @return Key set of caches
      */
-    public Set<Class<? extends BaseIndexedDbo>> keySet() {
+    public Set<Class<? extends BaseDbo>> keySet() {
         return caches.keySet();
     }
 
@@ -100,7 +100,7 @@ public class DboCacheManager {
      * @param simpleName String to lookup against a class name
      * @return Class from simple name
      */
-    public Class<? extends BaseIndexedDbo> forName(String simpleName) {
+    public Class<? extends BaseDbo> forName(String simpleName) {
         return simpleNameToClass.get(simpleName);
     }
 }

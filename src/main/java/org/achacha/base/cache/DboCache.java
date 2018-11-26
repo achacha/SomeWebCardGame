@@ -4,7 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.stats.CacheStats;
 import com.google.gson.JsonObject;
-import org.achacha.base.db.BaseIndexedDbo;
+import org.achacha.base.db.BaseDbo;
 import org.achacha.base.db.JdbcSession;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonEmittable;
@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Will attempt to load and then cache any item not found
  * Optionally reloads all table data with ability to load new data
  */
-public class DboCache<E extends BaseIndexedDbo> implements JsonEmittable {
+public class DboCache<E extends BaseDbo> implements JsonEmittable {
     protected static final Logger LOGGER = LogManager.getLogger(DboCache.class);
 
     /**

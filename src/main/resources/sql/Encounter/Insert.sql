@@ -1,0 +1,1 @@
+insert into public.encounter(id,adventure__id,enemy_cards,result) values(DEFAULT,?,?,?) returning id;

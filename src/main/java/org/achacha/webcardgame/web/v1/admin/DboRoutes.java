@@ -3,8 +3,8 @@ package org.achacha.webcardgame.web.v1.admin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.achacha.base.db.AdminDboFactory;
-import org.achacha.base.db.BaseIndexedDbo;
-import org.achacha.base.db.DboHelper;
+import org.achacha.base.db.BaseDbo;
+import org.achacha.base.db.DboClassHelper;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
@@ -36,7 +36,7 @@ public class DboRoutes {
         JsonObject obj = JsonHelper.getSuccessObject();
 
         JsonArray ary = new JsonArray();
-        DboHelper.getIndexedDboClasses().stream()
+        DboClassHelper.getIndexedDboClasses().stream()
                 .map(Class::getSimpleName)
                 .forEach(ary::add);
         obj.add("data", ary);
@@ -54,8 +54,8 @@ public class DboRoutes {
     @Path("/{name}/ids")
     @SecurityLevelRequired(SecurityLevel.ADMIN)
     public Response getAllObjectIds(@PathParam("name") String simpleName) {
-        Set<Class<? extends BaseIndexedDbo>> indexedDbos = DboHelper.getIndexedDboClasses();
-        Optional<Class<? extends BaseIndexedDbo>> clz = indexedDbos.stream().filter(cls->cls.getSimpleName().equals(simpleName)).findFirst();
+        Set<Class<? extends BaseDbo>> indexedDbos = DboClassHelper.getIndexedDboClasses();
+        Optional<Class<? extends BaseDbo>> clz = indexedDbos.stream().filter(cls->cls.getSimpleName().equals(simpleName)).findFirst();
         if (clz.isPresent()) {
             Set<Long> ids = AdminDboFactory.getAllIds(clz.get());
 
@@ -78,10 +78,10 @@ public class DboRoutes {
     @Path("/{name}/{id}")
     @SecurityLevelRequired(SecurityLevel.ADMIN)
     public Response getObjectData(@PathParam("name") String simpleName, @PathParam("id") long id) {
-        Set<Class<? extends BaseIndexedDbo>> indexedDbos = DboHelper.getIndexedDboClasses();
-        Optional<Class<? extends BaseIndexedDbo>> clz = indexedDbos.stream().filter(cls->cls.getSimpleName().equals(simpleName)).findFirst();
+        Set<Class<? extends BaseDbo>> indexedDbos = DboClassHelper.getIndexedDboClasses();
+        Optional<Class<? extends BaseDbo>> clz = indexedDbos.stream().filter(cls->cls.getSimpleName().equals(simpleName)).findFirst();
         if (clz.isPresent()) {
-            BaseIndexedDbo dbo = Global.getInstance().getDatabaseManager().byId(clz.get(), id);
+            BaseDbo dbo = Global.getInstance().getDatabaseManager().byId(clz.get(), id);
             if (dbo != null)
                 return Response.ok(
                         JsonHelper.getSuccessObject(simpleName, dbo)

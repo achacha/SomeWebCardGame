@@ -1,0 +1,1 @@
+delete from public.adventure where player__id=?;
