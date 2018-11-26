@@ -1,4 +1,4 @@
-package org.achacha.somewebcardgame.web.v1;
+package org.achacha.webcardgame.web.v1;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
