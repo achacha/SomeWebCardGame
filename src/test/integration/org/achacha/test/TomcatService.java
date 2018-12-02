@@ -31,6 +31,7 @@ Specify correct XML/XSL jars?
 */
 public class TomcatService {
     private static final String TOMCAT_HOME = "tomcat/catalina.home/";
+    private static final String TOMCAT_WORK = "build/tomcat/work/";
     private static final String TOMCAT_BASE = "build/libs/exploded/SomeWebCardGame-1.0-SNAPSHOT.war";
 
     private static Thread thread;
@@ -142,6 +143,7 @@ public class TomcatService {
         System.out.println("configuring app with basedir: " + new File("./" + TOMCAT_BASE).getAbsolutePath());
         ctx.setParentClassLoader(BaseIntegrationTest.class.getClassLoader());
         ctx.setTldValidation(false);
+        ctx.setWorkDir(TOMCAT_WORK);
 
         // Skip scanning XML/XSLT jars
         StandardJarScanner jarScanner = (StandardJarScanner)ctx.getJarScanner();
