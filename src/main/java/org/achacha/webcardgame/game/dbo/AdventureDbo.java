@@ -75,6 +75,10 @@ public class AdventureDbo extends BaseDbo {
         return encounters;
     }
 
+    public long getPlayerId() {
+        return playerId;
+    }
+
     /**
      * Used to set negative value to differentiate this adventure before the client selects an active
      * @param id id for this adventure

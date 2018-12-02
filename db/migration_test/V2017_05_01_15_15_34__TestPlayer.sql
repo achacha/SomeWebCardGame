@@ -4,6 +4,7 @@ INSERT INTO player(id,login__id,energy) VALUES
 INSERT INTO inventory(id,player__id) VALUES
   (1,1);
 
+-- TODO: Should build using Dbo insert
 INSERT INTO item(inventory__id,type,quantity) VALUES
    (1,1,31)   --white
   ,(1,2,16)  --green

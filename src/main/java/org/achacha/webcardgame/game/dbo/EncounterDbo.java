@@ -50,11 +50,20 @@ public class EncounterDbo extends BaseDbo {
         Builder() {
         }
 
+        public Builder withEnemy(CardType enemyType, int level, String name) {
+            CardDbo enemy = new CardDbo();
+            enemy.setType(enemyType);
+            enemy.setLevel(level);
+            enemy.setName(name);
+            enemies.add(enemy);
+            return this;
+        }
+
         public Builder withEnemy(CardType enemyType, int level) {
             CardDbo enemy = new CardDbo();
             enemy.setType(enemyType);
-            enemy.setName(NameHelper.generateName(enemyType.getNameType()));
             enemy.setLevel(level);
+            enemy.setName(NameHelper.generateName(enemyType.getNameType()));
             enemies.add(enemy);
             return this;
         }

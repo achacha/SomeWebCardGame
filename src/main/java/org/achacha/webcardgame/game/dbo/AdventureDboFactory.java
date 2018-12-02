@@ -16,14 +16,14 @@ public class AdventureDboFactory extends BaseDboFactory<AdventureDbo> {
 
     /**
      * Get active adventure for the player id
+     * @param connection Connection
      * @param playerId long
      * @return AdventureDbo or null
      */
     @Nullable
-    public AdventureDbo getByPlayerId(long playerId) {
+    public AdventureDbo getByPlayerId(Connection connection, long playerId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Adventure/SelectByPlayerId.sql",
@@ -44,12 +44,12 @@ public class AdventureDboFactory extends BaseDboFactory<AdventureDbo> {
 
     /**
      * Delete active for a player
+     * @param connection Connection to reuse
      * @param playerId long
      */
-    public void deleteAllByPlayerId(long playerId) {
+    public void deleteAllByPlayerId(Connection connection, long playerId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Adventure/DeleteAllByPlayerId.sql",

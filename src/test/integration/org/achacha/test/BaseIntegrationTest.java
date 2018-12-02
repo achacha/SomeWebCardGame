@@ -105,6 +105,9 @@ public class BaseIntegrationTest {
     @BeforeAll
     public static void beforeClass() {
         System.out.println("beforeAll");
+
+        BaseInitializedTest.init();
+
         if (!TomcatService.isTomcatRunning())
             TomcatService.startTomcat();
     }
@@ -116,6 +119,8 @@ public class BaseIntegrationTest {
     public static void afterClass() {
         if (!TomcatService.isTomcatRunning())
             TomcatService.stopTomcat();
+
+        BaseInitializedTest.deinit();
     }
 
     /**

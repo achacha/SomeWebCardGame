@@ -30,8 +30,6 @@ class AbstractRoutesTest {
         methods.forEach(method->{
             SecurityLevelRequired slr = method.getAnnotation(SecurityLevelRequired.class);
             assertNotNull(slr, "API method missing @SecurityLevelRequired: "+method.getName());
-
         });
     }
-
 }

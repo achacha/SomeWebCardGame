@@ -9,15 +9,18 @@ import org.achacha.webcardgame.game.logic.EncounterProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AdventureDboTest extends BaseInitializedTest {
     private AdventureDboFactory factory = Global.getInstance().getDatabaseManager().getFactory(AdventureDbo.class);
+    private AdventureArchiveDboFactory adventureArchiveFactory = Global.getInstance().getDatabaseManager().getFactory(AdventureArchiveDbo.class);
 
     @Test
     void testInsert() throws Exception {
@@ -38,16 +41,44 @@ class AdventureDboTest extends BaseInitializedTest {
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
             adventure.insert(connection);
             connection.commit();
-        }
 
-        AdventureDbo adventureLoaded = factory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
-        assertNotNull(adventureLoaded);
-        assertEquals(TestDataConstants.JUNIT_ADVENTURE_ID, adventureLoaded.playerId);
-        assertEquals(adventure.toJsonObject().toString(), adventureLoaded.toJsonObject().toString());
+            AdventureDbo adventureLoaded = factory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID);
+            assertNotNull(adventureLoaded);
+            assertEquals(TestDataConstants.JUNIT_PLAYER__ID, adventureLoaded.playerId);
+            assertEquals(adventure.toJsonObject().toString(), adventureLoaded.toJsonObject().toString());
 
-        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
             factory.deleteById(connection, adventure.getId());
             connection.commit();
+        }
+    }
+
+    @Test
+    void testUniqueActive() throws Exception {
+        AdventureDbo adventure1 = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
+        adventure1.getEncounters().add(EncounterDbo.builder()
+                .withEnemy(CardType.Human, 1)
+                .build());
+
+        AdventureDbo adventure2 = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
+        adventure2.getEncounters().add(EncounterDbo.builder()
+                .withEnemy(CardType.Human, 2)
+                .build());
+
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            adventure1.insert(connection);
+            connection.commit();
+
+            // This will throw duplicate new constrain since the playerId column is declared UNIQUE
+            assertThrows(SQLException.class, ()-> {
+                adventure2.insert(connection);
+                connection.commit();
+            });
+        }
+
+        // Cleanup (and test delete all code)
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            factory.deleteAllByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID);
+            assertNull(factory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID));
         }
     }
 
@@ -62,9 +93,6 @@ class AdventureDboTest extends BaseInitializedTest {
     @Test
     void persistence() throws Exception {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-
-        AdventureDboFactory adventureFactory = dbm.getFactory(AdventureDbo.class);
-        AdventureArchiveDboFactory adventureArchiveFactory = dbm.getFactory(AdventureArchiveDbo.class);
 
         try (Connection connection = dbm.getConnection()) {
             PlayerDbo player = dbm.<PlayerDboFactory>getFactory(PlayerDbo.class).getById(connection, TestDataConstants.JUNIT_PLAYER__ID);
@@ -97,11 +125,11 @@ class AdventureDboTest extends BaseInitializedTest {
             long adventureId = adventure.getId();
             AdventureArchiveDbo adventureArchive = new AdventureArchiveDbo(adventure);
             adventureArchive.insert(connection);
-            adventureFactory.deleteById(connection, adventureId);
+            factory.deleteById(connection, adventureId);
             connection.commit();
 
             // Verify move, original deleted
-            AdventureDbo deletedAdventure = adventureFactory.getById(connection, adventureId);
+            AdventureDbo deletedAdventure = factory.getById(connection, adventureId);
             assertNull(deletedAdventure);
 
             // Verify move, archive consistent
@@ -115,5 +143,17 @@ class AdventureDboTest extends BaseInitializedTest {
             assertTrue(archivedAdventure.getEncounters().get(0).getEnemies().size() > 0);
             assertEquals(3, archivedAdventure.getEncounters().get(0).getEnemies().get(0).getLevel());
         }
+    }
+
+    @Test
+    void testToFromJson() {
+        AdventureDbo original = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
+        original.getEncounters().add(EncounterDbo.builder().withEnemy(CardType.Human, 3, "enemy_1").build());
+        original.getEncounters().add(EncounterDbo.builder().withEnemy(CardType.Elf, 2, "enemy_2").build());
+        String originalJson = original.toJsonObject().toString();
+        assertEquals("{\"id\":0,\"playerId\":1,\"encounters\":[{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"name\":\"enemy_1\",\"type\":\"Human\",\"level\":3,\"xp\":0,\"health\":100,\"strength\":10,\"agility\":10,\"damage\":10,\"playerId\":0,\"encounterId\":0}],\"result\":\"None\"},{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"name\":\"enemy_2\",\"type\":\"Elf\",\"level\":2,\"xp\":0,\"health\":100,\"strength\":10,\"agility\":10,\"damage\":10,\"playerId\":0,\"encounterId\":0}],\"result\":\"None\"}]}", originalJson);
+
+        AdventureDbo restored = Global.getInstance().getGson().fromJson(originalJson, AdventureDbo.class);
+        assertEquals(originalJson, restored.toJsonObject().toString());
     }
 }

@@ -44,6 +44,7 @@ public class JsonHelper {
 
     // Json payload
     public static final String DATA = "data";
+    public static final String DATA_CLASS = "dataClass";
 
     /**
      * @return Simple success object
@@ -81,20 +82,49 @@ public class JsonHelper {
         if (data != null) {
             JsonElement je = Global.getInstance().getGson().toJsonTree(data);
             jobj.add(DATA, je);
+            jobj.addProperty(DATA_CLASS, data.getClass().getName());
         }
 
         return jobj;
     }
 
     /**
-     * Standard fail object
+     * Standard fail object with data added using String::toString
+     * success:false
+     *
+     * @param key String to add as 'key' (null if none)
+     * @param data String to stringify to JSON (null if none)
+     * @return JsonObject
+     */
+    public static JsonObject getFailObject(String key, String data) {
+
+        JsonObject jobj = new JsonObject();
+
+        jobj.addProperty(SUCCESS, false);
+
+        if (null != key) {
+            String message = UIMessageHelper.getInstance().getLocalizedMsg(key);
+            jobj.addProperty(MESSAGE, message);
+        }
+
+        // Serialize to JsonObject
+        if (data != null) {
+            jobj.addProperty(DATA, data);
+            jobj.addProperty(DATA_CLASS, data.getClass().getName());
+        }
+
+        return jobj;
+    }
+
+    /**
+     * Standard fail object with data serialized into a JSON tree
      * success:false
      *
      * @param key String to add as 'key' (null if none)
      * @param data Object to serialize to JSON (null if none)
      * @return JsonObject
      */
-    public static JsonObject getFailObject(String key, Object data) {
+    public static JsonObject getFailObjectEscaped(String key, Object data) {
 
         JsonObject jobj = new JsonObject();
 
@@ -109,6 +139,7 @@ public class JsonHelper {
         if (data != null) {
             JsonElement je = Global.getInstance().getGson().toJsonTree(data);
             jobj.add(DATA, je);
+            jobj.addProperty(DATA_CLASS, data.getClass().getName());
         }
 
         return jobj;

@@ -7,7 +7,7 @@ CREATE TABLE adventure
 (
   id serial NOT NULL PRIMARY KEY,
   player__id integer NOT NULL UNIQUE,    -- Player id of the owner of this item, only 1 adventure per player id
-  created time NOT NULL default now(),
+  created timestamp NOT NULL default now(),
   --
   CONSTRAINT adventure_player__id_fkey FOREIGN KEY (player__id) REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
@@ -26,9 +26,9 @@ CREATE TABLE adventure_archive
 (
   id serial NOT NULL PRIMARY KEY,
   original_id integer,     -- Original id
-  original_created time,   -- Original created
+  original_created timestamp,   -- Original created
   player__id integer NOT NULL,      -- Player id of the owner of this item
-  completed time NOT NULL default now(),
+  completed timestamp NOT NULL default now(),
   --
   CONSTRAINT adventure_player__id_fkey FOREIGN KEY (player__id) REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
