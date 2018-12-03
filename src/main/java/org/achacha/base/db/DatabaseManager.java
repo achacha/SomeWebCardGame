@@ -2,7 +2,6 @@ package org.achacha.base.db;
 
 import org.achacha.base.db.provider.JdbcDatabaseConnectionProvider;
 import org.achacha.base.db.provider.SqlProvider;
-import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -352,19 +351,5 @@ public class DatabaseManager {
         LOGGER.debug("SQL={}", sql);
         triple.resultSet = triple.statement.executeQuery(sql);
         return triple;
-    }
-
-    /**
-     * Load Dbo based on object id
-     * TODO: not sure we should have DB code that does not provide connection
-     */
-    @Nullable
-    public BaseDbo byId(Class<? extends BaseDbo> clz, long id) {
-        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection(true)) {
-            return this.getFactory(clz).getById(connection, id);
-        } catch (Exception sqle) {
-            LOGGER.error("Failed to find object", sqle);
-        }
-        return null;
     }
 }

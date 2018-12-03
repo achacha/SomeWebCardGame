@@ -9,6 +9,8 @@ import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,6 +18,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Connection;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,6 +28,7 @@ import java.util.Set;
 @Path("admin/dbo")
 @Produces(MediaType.APPLICATION_JSON)
 public class DboRoutes {
+    private static final Logger LOGGER = LogManager.getLogger(DboRoutes.class);
 
     /**
      * Get all available indexed Dbos
@@ -81,11 +85,17 @@ public class DboRoutes {
         Set<Class<? extends BaseDbo>> indexedDbos = DboClassHelper.getIndexedDboClasses();
         Optional<Class<? extends BaseDbo>> clz = indexedDbos.stream().filter(cls->cls.getSimpleName().equals(simpleName)).findFirst();
         if (clz.isPresent()) {
-            BaseDbo dbo = Global.getInstance().getDatabaseManager().byId(clz.get(), id);
-            if (dbo != null)
-                return Response.ok(
-                        JsonHelper.getSuccessObject(simpleName, dbo)
-                ).build();
+            try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+                BaseDbo dbo = Global.getInstance().getDatabaseManager().getFactory(clz.get()).getById(connection, id);
+                if (dbo != null)
+                    return Response.ok(
+                            JsonHelper.getSuccessObject(simpleName, dbo)
+                    ).build();
+            }
+            catch(Exception e) {
+                LOGGER.error("Failed to get dboClass="+clz.get()+" id="+id, e);
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
         }
         return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("Dbo not found", simpleName)).build();
     }
