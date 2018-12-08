@@ -7,6 +7,7 @@
 .DS_Store
 /etc/
 /yarn.lock
+/package-lock.json
 /.gradletasknamecache
 /src/main/generated/
 /src/test/generated_tests/
