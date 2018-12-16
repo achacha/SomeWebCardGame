@@ -1,15 +1,20 @@
 package org.achacha.webcardgame.game.dbo;
 
+import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseDbo;
+import org.achacha.base.global.Global;
 import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.logic.EncounterEventLog;
 import org.achacha.webcardgame.game.logic.NameHelper;
 import org.achacha.webcardgame.sticker.CardSticker;
 import org.achacha.webcardgame.sticker.CardStickerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -60,11 +65,11 @@ public class CardDbo extends BaseDbo {
      */
     protected int damage = 10;
 
-    /** Player that owns this inventory */
+    /** Player that owns this card */
     protected long playerId;
 
     /**
-     * Encounter that owns this inventory
+     * Encounter that owns this card
      * If 0 then not assigned to encounter yet
      */
     protected long encounterId;
@@ -100,6 +105,37 @@ public class CardDbo extends BaseDbo {
                 this.stickers.add(sticker);
             else
                 LOGGER.warn("Unknown sticker on cardId={} stickerName={}", id, name);
+        }
+    }
+
+    @Override
+    public void insert(Connection connection) throws SQLException {
+        Preconditions.checkState(playerId > 0);
+
+        try (
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
+                        connection,
+                        "/sql/Card/Insert.sql",
+                        p-> {
+                            p.setLong(1, playerId);
+                            p.setLong(2, encounterId);
+                            p.setString(3, name);
+                            p.setString(4, type.name());
+                            p.setInt(5, xp);
+                            p.setInt(6, strength);
+                            p.setInt(7, agility);
+                            p.setString(8, StringUtils.join(stickers, ","));
+                        }
+                );
+                ResultSet rs = pstmt.executeQuery()
+        ) {
+            if (rs.next()) {
+                this.id = rs.getLong(1);
+            }
+            else {
+                LOGGER.error("Failed to insert card={}", this);
+                throw new SQLException("Failed to insert card="+this);
+            }
         }
     }
 

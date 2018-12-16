@@ -2,7 +2,6 @@ package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.global.Global;
 import org.achacha.test.BaseInitializedTest;
-import org.achacha.test.TestDataConstants;
 import org.achacha.webcardgame.game.data.CardType;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +16,8 @@ class EncounterDboTest extends BaseInitializedTest {
 
     @Test
     void builder() {
-        EncounterDbo encounter = EncounterDbo.builder()
+        AdventureDbo adventure = new AdventureDbo();  // temp object
+        EncounterDbo encounter = EncounterDbo.builder(adventure)
                 .withEnemy(CardType.Elf, 75)
                 .withEnemy(CardType.Elf, 75)
                 .withEnemy(CardType.Elf, 75)
@@ -28,13 +28,14 @@ class EncounterDboTest extends BaseInitializedTest {
 
     @Test
     void persistance() throws Exception {
+        PlayerDbo player = createNewTestPlayer();
+
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
-            AdventureDbo adventure = new AdventureDbo();
-            adventure.playerId = TestDataConstants.JUNIT_PLAYER__ID;
+            AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
             adventure.insert(connection);
 
             // Insert encounter
-            EncounterDbo encounter = EncounterDbo.builder().withEnemy(CardType.Elf, 10).build();
+            EncounterDbo encounter = EncounterDbo.builder(adventure).withEnemy(CardType.Elf, 10).build();
             encounter.adventureId = adventure.getId();
             encounter.insert(connection);
             connection.commit();

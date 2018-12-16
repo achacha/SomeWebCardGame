@@ -1,5 +1,6 @@
 package org.achacha.webcardgame.game.dbo;
 
+import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseDbo;
 import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
@@ -102,10 +103,12 @@ public class AdventureDbo extends BaseDbo {
     /**
      * Insert new active adventure
      * @param connection Connection to reuse
-     * @throws Exception if failed to insert
+     * @throws SQLException if failed to insert
      */
     @Override
-    public void insert(Connection connection) throws Exception {
+    public void insert(Connection connection) throws SQLException {
+        Preconditions.checkState(playerId > 0);
+
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(connection,
                         "/sql/Adventure/Insert.sql",

@@ -16,7 +16,7 @@ CREATE TABLE card
   stickers character varying(4096),
   --
   CONSTRAINT card_player__id_fkey FOREIGN KEY (player__id)
-  REFERENCES player (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+  REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
 OIDS=FALSE

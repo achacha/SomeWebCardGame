@@ -27,13 +27,13 @@ class AdventureDboTest extends BaseInitializedTest {
         // Create adventure
         AdventureDbo adventure = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
 
-        adventure.getEncounters().add(EncounterDbo.builder()
+        adventure.getEncounters().add(EncounterDbo.builder(adventure)
                 .withEnemy(CardType.Human, 2)
                 .withEnemy(CardType.Goblin, 1)
                 .withEnemy(CardType.Goblin, 1)
                 .build());
 
-        adventure.getEncounters().add(EncounterDbo.builder()
+        adventure.getEncounters().add(EncounterDbo.builder(adventure)
                 .withEnemy(CardType.Elf, 3)
                 .withEnemy(CardType.Elf, 2)
                 .build());
@@ -54,13 +54,14 @@ class AdventureDboTest extends BaseInitializedTest {
 
     @Test
     void testUniqueActive() throws Exception {
-        AdventureDbo adventure1 = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
-        adventure1.getEncounters().add(EncounterDbo.builder()
+        PlayerDbo player = createNewTestPlayer();
+        AdventureDbo adventure1 = AdventureDbo.builder(player.getId()).build();
+        adventure1.getEncounters().add(EncounterDbo.builder(adventure1)
                 .withEnemy(CardType.Human, 1)
                 .build());
 
-        AdventureDbo adventure2 = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
-        adventure2.getEncounters().add(EncounterDbo.builder()
+        AdventureDbo adventure2 = AdventureDbo.builder(player.getId()).build();
+        adventure2.getEncounters().add(EncounterDbo.builder(adventure2)
                 .withEnemy(CardType.Human, 2)
                 .build());
 
@@ -95,17 +96,18 @@ class AdventureDboTest extends BaseInitializedTest {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
 
         try (Connection connection = dbm.getConnection()) {
-            PlayerDbo player = dbm.<PlayerDboFactory>getFactory(PlayerDbo.class).getById(connection, TestDataConstants.JUNIT_PLAYER__ID);
+            PlayerDbo player = createNewTestPlayer();
             assertNotNull(player);
 
+            // TODO: Auto-add encounter to adventure
             AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
-            adventure.getEncounters().add(EncounterDbo.builder()
+            adventure.getEncounters().add(EncounterDbo.builder(adventure)
                     .withEnemy(CardType.Goblin, 3)
                     .withEnemy(CardType.Goblin, 3)
                     .withEnemy(CardType.Human, 6)
                     .build());
 
-            adventure.getEncounters().add(EncounterDbo.builder()
+            adventure.getEncounters().add(EncounterDbo.builder(adventure)
                     .withEnemy(CardType.Elf, 5)
                     .withEnemy(CardType.Elf, 7)
                     .build());
@@ -148,8 +150,8 @@ class AdventureDboTest extends BaseInitializedTest {
     @Test
     void testToFromJson() {
         AdventureDbo original = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
-        original.getEncounters().add(EncounterDbo.builder().withEnemy(CardType.Human, 3, "enemy_1").build());
-        original.getEncounters().add(EncounterDbo.builder().withEnemy(CardType.Elf, 2, "enemy_2").build());
+        original.getEncounters().add(EncounterDbo.builder(original).withEnemy(CardType.Human, 3, "enemy_1").build());
+        original.getEncounters().add(EncounterDbo.builder(original).withEnemy(CardType.Elf, 2, "enemy_2").build());
         String originalJson = original.toJsonObject().toString();
         assertEquals("{\"id\":0,\"playerId\":1,\"encounters\":[{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"name\":\"enemy_1\",\"type\":\"Human\",\"level\":3,\"xp\":0,\"health\":100,\"strength\":10,\"agility\":10,\"damage\":10,\"playerId\":0,\"encounterId\":0}],\"result\":\"None\"},{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"name\":\"enemy_2\",\"type\":\"Elf\",\"level\":2,\"xp\":0,\"health\":100,\"strength\":10,\"agility\":10,\"damage\":10,\"playerId\":0,\"encounterId\":0}],\"result\":\"None\"}]}", originalJson);
 

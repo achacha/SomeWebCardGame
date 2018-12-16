@@ -81,7 +81,7 @@ public class LoginAttrDbo extends BaseDbo {
     }
 
     @Override
-    public void insert(Connection connection) throws Exception {
+    public void insert(Connection connection) throws SQLException {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(value);
         Preconditions.checkArgument(id==0, "Object id must be 0 for insert");
@@ -120,7 +120,7 @@ public class LoginAttrDbo extends BaseDbo {
     }
 
     @Override
-    public void update(Connection connection) throws Exception {
+    public void update(Connection connection) throws SQLException {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(value);
         Preconditions.checkArgument(id>0, "Object id must be >0 for update");

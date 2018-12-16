@@ -4,21 +4,12 @@ INSERT into login(id,email,fname,lname,pwd,salt,timezone,security_level,is_super
     'CST', 100, false, '1 Home Address', null, 'Austin', 'TX', '78731', '512-000-0000', '650-000-0000');
 
 --// Player #2 associated with login #4
-INSERT INTO player(id,login__id,energy) VALUES
-  (2,10,5000);
+INSERT INTO player(id,login__id) VALUES
+  (2,10);
 
---// Invetory #2 for player #2
-INSERT INTO inventory(id,player__id) VALUES
-  (2,2);
-
-INSERT INTO item(inventory__id,type,quantity) VALUES
-   (2,1,200) --white
-  ,(2,2,100) --green
-  ,(2,3,50)  --blue
-  ,(2,4,25)  --purple
-  ,(2,5,12)  --orange
-  ,(2,6,6)   --red
-;
+--// Inventory #2 for player #2
+INSERT INTO inventory(id,player__id,energy,materials) VALUES
+  (2,2,5000,10000);
 
 -- Card data
 INSERT INTO card(player__id,name,type,level,xp,strength,agility,damage,stickers) VALUES

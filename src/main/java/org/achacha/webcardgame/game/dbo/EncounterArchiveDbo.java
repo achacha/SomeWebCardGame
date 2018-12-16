@@ -86,7 +86,7 @@ public class EncounterArchiveDbo extends BaseDbo {
     }
 
     @Override
-    public void insert(Connection connection) throws Exception {
+    public void insert(Connection connection) throws SQLException {
         Preconditions.checkState(adventureArchiveId > 0);   // Should have been inserted and set on this
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(connection,

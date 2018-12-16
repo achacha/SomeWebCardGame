@@ -20,6 +20,8 @@ public class ItemDboFactory extends BaseDboFactory<ItemDbo> {
      * Get a list of items for a given inventory
      * @param inventoryId long
      * @return List of items (never null)
+     *
+     * @Deprecated Don't know if we need this since InventoryDbo will fetch this
      */
     @Nonnull
     public List<ItemDbo> getItemsForInventory(long inventoryId) {
@@ -42,5 +44,24 @@ public class ItemDboFactory extends BaseDboFactory<ItemDbo> {
             LOGGER.error("Failed to find item for inventoryId={}", inventoryId, sqle);
         }
         return items;
+    }
+
+    /**
+     * Delete all items for a given inventory
+     * @param inventoryId long
+     */
+    public void deleteAllByInventoryId(long inventoryId) {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+        try (
+                Connection connection = dbm.getConnection();
+                PreparedStatement pstmt = dbm.prepareStatement(
+                        connection,
+                        "/sql/Item/DeleteAllByInventoryId.sql",
+                        p -> p.setLong(1, inventoryId))
+        ) {
+            pstmt.executeUpdate();
+        } catch (Exception sqle) {
+            LOGGER.error("Failed to delete all for inventoryId={}", inventoryId, sqle);
+        }
     }
 }

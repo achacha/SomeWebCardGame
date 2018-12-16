@@ -6,7 +6,6 @@ CREATE TABLE player
 (
   id serial NOT NULL PRIMARY KEY,
   login__id integer, -- Login id of the owner of this item
-  energy integer, -- Energy
   --
   CONSTRAINT player_login__id_fkey FOREIGN KEY (login__id)
   REFERENCES login (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -16,7 +15,6 @@ OIDS=FALSE
 );
 ALTER TABLE player OWNER TO sawcog;
 COMMENT ON COLUMN player.login__id IS 'Login id of the owner of this player';
-COMMENT ON COLUMN player.energy IS 'Energy total';
 
 
 --
@@ -27,9 +25,16 @@ CREATE TABLE inventory
 (
   id serial NOT NULL PRIMARY KEY,
   player__id integer, -- Player id of the owner of this item
+
+  -- Main currency type
+  energy bigint,
+
+  -- Currency material types
+  materials bigint,
+
   --
   CONSTRAINT inventory_player__id_fkey FOREIGN KEY (player__id)
-  REFERENCES player (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+  REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
 OIDS=FALSE
@@ -50,7 +55,7 @@ CREATE TABLE item
   quantity integer, -- Quantity of the item
   --
   CONSTRAINT item_inventory__id_fkey FOREIGN KEY (inventory__id)
-  REFERENCES inventory (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+  REFERENCES inventory (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
 OIDS=FALSE

@@ -1,0 +1,1 @@
+insert into public.inventory(id,player__id,energy,materials) values(DEFAULT,?,?,?) returning id;

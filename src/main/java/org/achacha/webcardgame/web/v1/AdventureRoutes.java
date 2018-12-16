@@ -156,11 +156,11 @@ public class AdventureRoutes extends AbstractRoutes {
             // Use negative id since it is not persisted
             for (int tempId = 1; tempId <= COUNT; ++tempId) {
                 // TODO: need to randomize
-                AdventureDbo dbo = AdventureDbo.builder(player.getId()).build();
-                dbo.getEncounters().add(EncounterDbo.builder().withEnemy(CardType.Goblin, LEVEL).build());
-                dbo.getEncounters().add(EncounterDbo.builder().withEnemy(CardType.Goblin, LEVEL).build());
-                dbo.setId(-tempId);
-                adventures.add(dbo);
+                AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
+                adventure.getEncounters().add(EncounterDbo.builder(adventure).withEnemy(CardType.Goblin, LEVEL).build());
+                adventure.getEncounters().add(EncounterDbo.builder(adventure).withEnemy(CardType.Goblin, LEVEL).build());
+                adventure.setId(-tempId);
+                adventures.add(adventure);
 
             }
             httpRequest.getSession().setAttribute(SESSION_AVAILABLE, adventures);

@@ -15,7 +15,7 @@ class CardDboTest extends BaseInitializedTest {
     private CardDboFactory factory = Global.getInstance().getDatabaseManager().getFactory(CardDbo.class);
 
     @Test
-    void testGetCardsForPlayer() {
+    void testGetCardsForKnownPlayer() {
         Collection<CardDbo> cards = factory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
         assertNotNull(cards);
         assertEquals(5, cards.size());

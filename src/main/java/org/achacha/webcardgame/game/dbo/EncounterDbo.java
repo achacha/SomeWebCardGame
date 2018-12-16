@@ -40,14 +40,16 @@ public class EncounterDbo extends BaseDbo {
     /** Result from encounter */
     protected EncounterProcessor.Result result = EncounterProcessor.Result.None;
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(AdventureDbo adventure) {
+        return new Builder(adventure);
     }
 
     public static class Builder {
+        private final AdventureDbo adventure;
         private ArrayList<CardDbo> enemies = new ArrayList<>();
 
-        Builder() {
+        Builder(AdventureDbo adventure) {
+            this.adventure = adventure;
         }
 
         public Builder withEnemy(CardType enemyType, int level, String name) {
@@ -70,6 +72,7 @@ public class EncounterDbo extends BaseDbo {
 
         public EncounterDbo build() {
             EncounterDbo encounter = new EncounterDbo();
+            encounter.adventureId = adventure.getId();
             encounter.enemies = enemies;
             return encounter;
         }
@@ -118,7 +121,7 @@ public class EncounterDbo extends BaseDbo {
     }
 
     @Override
-    public void insert(Connection connection) throws Exception {
+    public void insert(Connection connection) throws SQLException {
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(connection,
                         "/sql/Encounter/Insert.sql",

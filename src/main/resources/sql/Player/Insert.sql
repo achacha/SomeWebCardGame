@@ -1,0 +1,1 @@
+insert into public.player(id,login__id) values(DEFAULT,?) returning id;

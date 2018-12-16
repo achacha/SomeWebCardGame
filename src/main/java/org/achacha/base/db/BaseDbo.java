@@ -48,9 +48,9 @@ public abstract class BaseDbo implements JsonEmittable {
      * Create a new instance and set id
      *
      * @param connection Connection to reuse
-     * @throws Exception if unable to insert
+     * @throws SQLException if unable to insert
      */
-    public void insert(Connection connection) throws Exception {
+    public void insert(Connection connection) throws SQLException {
         throw new NotImplementedException("Not implemented: "+getClass()+".insert()");
     }
 
@@ -58,9 +58,9 @@ public abstract class BaseDbo implements JsonEmittable {
      * Update current instance
      *
      * @param connection Connection to reuse
-     * @throws Exception if unable to update
+     * @throws SQLException if unable to update
      */
-    public void update(Connection connection) throws Exception {
+    public void update(Connection connection) throws SQLException {
         throw new NotImplementedException("Not implemented: "+getClass()+".update()");
     }
 

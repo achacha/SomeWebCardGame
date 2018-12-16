@@ -1,0 +1,1 @@
+delete from public.item where inventory__id = ?;

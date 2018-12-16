@@ -85,7 +85,7 @@ public class AdventureArchiveDbo extends BaseDbo {
      * @throws Exception If unable to insert
      */
     @Override
-    public void insert(Connection connection) throws Exception {
+    public void insert(Connection connection) throws SQLException {
         try(
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
