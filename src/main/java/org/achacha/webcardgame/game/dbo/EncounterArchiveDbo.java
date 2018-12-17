@@ -61,7 +61,7 @@ public class EncounterArchiveDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.adventureArchiveId = rs.getLong("adventure_archive__id");
 

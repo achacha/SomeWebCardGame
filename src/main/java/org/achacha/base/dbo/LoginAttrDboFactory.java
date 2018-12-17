@@ -22,9 +22,8 @@ public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
      * @param name String
      * @return true if deleted or false if it did not exist in the first place
      */
-    public LoginAttrDbo findByLoginIdAndName(long loginId, String name) {
+    public LoginAttrDbo findByLoginIdAndName(Connection connection, long loginId, String name) {
         try (
-                Connection connection = Global.getInstance().getDatabaseManager().getConnection();
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/LoginAttr/FindByLoginIdAndName.sql",
@@ -37,7 +36,7 @@ public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
         ) {
             if (rs.next()) {
                 LoginAttrDbo dbo = new LoginAttrDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
                 return dbo;
             } else {
                 LoginAttrDbo.LOGGER.debug("Failed to find login_attr playerId={}  name={}", loginId, name);
@@ -55,10 +54,9 @@ public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
      * @return Collection of LoginDbo
      */
     @Nonnull
-    public Collection<LoginAttrDbo> findByLoginId(long userId) {
+    public Collection<LoginAttrDbo> findByLoginId(Connection connection, long userId) {
         ArrayList<LoginAttrDbo> attrs = new ArrayList<>();
         try (
-                Connection connection = Global.getInstance().getDatabaseManager().getConnection();
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/LoginAttr/SelectByLoginId.sql",
@@ -67,7 +65,7 @@ public class LoginAttrDboFactory extends BaseDboFactory<LoginAttrDbo> {
         ) {
             while (rs.next()) {
                 LoginAttrDbo dbo = new LoginAttrDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
                 attrs.add(dbo);
             }
         } catch (Exception e) {

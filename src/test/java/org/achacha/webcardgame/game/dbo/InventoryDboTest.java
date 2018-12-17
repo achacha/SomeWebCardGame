@@ -16,10 +16,12 @@ class InventoryDboTest extends BaseInitializedTest {
     private InventoryDboFactory inventoryFactory = Global.getInstance().getDatabaseManager().getFactory(InventoryDbo.class);
 
     @Test
-    void testGetInventoryForExistingLogin() {
+    void testGetInventoryForExistingLogin() throws SQLException {
         // Default player has an inventory
-        InventoryDbo inventory = inventoryFactory.getByPlayerId(TestDataConstants.JUNIT_PLAYER__ID);
-        assertNotNull(inventory);
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            InventoryDbo inventory = inventoryFactory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID);
+            assertNotNull(inventory);
+        }
     }
 
     @Test
@@ -34,7 +36,7 @@ class InventoryDboTest extends BaseInitializedTest {
             connection.commit();
 
             // Verify clear
-            InventoryDbo inventoryCleared = inventoryFactory.getByPlayerId(player.getId());
+            InventoryDbo inventoryCleared = inventoryFactory.getByPlayerId(connection, player.getId());
             assertNotNull(inventoryCleared);
             assertEquals(inventory.toJsonObject(), inventoryCleared.toJsonObject());
 
@@ -47,7 +49,7 @@ class InventoryDboTest extends BaseInitializedTest {
             connection.commit();
 
             // Verify update
-            InventoryDbo inventoryAltered = inventoryFactory.getByPlayerId(player.getId());
+            InventoryDbo inventoryAltered = inventoryFactory.getByPlayerId(connection, player.getId());
             assertNotNull(inventoryAltered);
             assertEquals(inventory.toJsonObject(), inventoryAltered.toJsonObject());
 

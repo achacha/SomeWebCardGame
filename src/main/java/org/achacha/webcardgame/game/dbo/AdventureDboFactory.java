@@ -31,7 +31,7 @@ public class AdventureDboFactory extends BaseDboFactory<AdventureDbo> {
                 ResultSet rs = pstmt.executeQuery()
         ) {
             if (rs.next()) {
-                return createFromResultSet(rs);
+                return createFromResultSet(connection, rs);
             }
             if (rs.next()) {
                 LOGGER.error("Unexpected, playerId={} is on more than 1 adventure", playerId);

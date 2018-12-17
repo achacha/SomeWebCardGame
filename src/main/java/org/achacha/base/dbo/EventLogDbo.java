@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -44,7 +45,7 @@ public class EventLogDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         id = rs.getLong("id");
         createdOn = rs.getTimestamp("created_on");
         event = Event.valueOf(rs.getInt("event_id"));

@@ -34,7 +34,7 @@ public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
         ) {
             if (session.getResultSet().next()) {
                 LoginUserDbo dbo = new LoginUserDbo();
-                dbo.fromResultSet(session.getResultSet());
+                dbo.fromResultSet(session.getConnection(), session.getResultSet());
                 return dbo;
             } else {
                 LoginUserDbo.LOGGER.warn("Failed to find login id={}", emailToFind);
@@ -86,7 +86,7 @@ public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
         ) {
             if (session.getResultSet().next()) {
                 LoginUserDbo dbo = new LoginUserDbo();
-                dbo.fromResultSet(session.getResultSet());
+                dbo.fromResultSet(session.getConnection(), session.getResultSet());
                 return dbo;
             } else {
                 LoginUserDbo.LOGGER.warn("Login failed=[{}]", email);
@@ -122,7 +122,7 @@ public class LoginUserDboFactory extends BaseDboFactory<LoginUserDbo> {
         ) {
             if (session.getResultSet().next()) {
                 LoginUserDbo dbo = new LoginUserDbo();
-                dbo.fromResultSet(session.getResultSet());
+                dbo.fromResultSet(session.getConnection(), session.getResultSet());
 
                 // Set current login as imperesonator and set dbo as current login
                 dbo.setImpersonator(currentLogin);

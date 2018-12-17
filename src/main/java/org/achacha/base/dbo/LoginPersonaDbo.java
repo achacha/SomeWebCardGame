@@ -5,6 +5,7 @@ import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 
 import javax.persistence.Table;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -28,8 +29,8 @@ public class LoginPersonaDbo extends LoginUserDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
-        super.fromResultSet(rs);
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
+        super.fromResultSet(connection, rs);
 
         lname = rs.getString("lname");
         address1 = rs.getString("address1");
@@ -40,6 +41,7 @@ public class LoginPersonaDbo extends LoginUserDbo {
         postal = rs.getString("postal");
         phone1 = rs.getString("phone1");
         phone2 = rs.getString("phone2");
+        attrs = Global.getInstance().getDatabaseManager().<LoginAttrDboFactory>getFactory(LoginAttrDbo.class).findByLoginId(connection, id);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
@@ -61,19 +63,16 @@ public class LoginPersonaDbo extends LoginUserDbo {
         if (phone2 != null) obj.addProperty("phone2", phone2);
 
         // Lazy load and add attributes
-        obj.add("attrs", JsonHelper.toJsonArray(getAttrs()));
+        obj.add("attrs", JsonHelper.toJsonArray(attrs));
 
         return obj;
     }
 
     /**
-     * Lazy-load login attributes associated with this object
+     * Login attributes associated with this object
      * @return Collection of LoginAttrDbo
      */
-    public synchronized Collection<LoginAttrDbo> getAttrs() {
-        if (attrs == null) {
-            attrs = Global.getInstance().getDatabaseManager().<LoginAttrDboFactory>getFactory(LoginAttrDbo.class).findByLoginId(id);
-        }
+    public Collection<LoginAttrDbo> getAttrs() {
         return attrs;
     }
 }

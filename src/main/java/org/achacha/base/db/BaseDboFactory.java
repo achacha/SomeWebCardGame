@@ -10,6 +10,7 @@ import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Base class for all DboFactory types
@@ -44,15 +45,16 @@ public abstract class BaseDboFactory<T extends BaseDbo> {
 
     /**
      * Given ResultSet create and populate object
+     * @param connection Connection
      * @param rs ResultSet
      * @return T object or null if error occurred
      */
     @Nullable
-    protected T createFromResultSet(ResultSet rs) {
+    protected T createFromResultSet(Connection connection, ResultSet rs) {
         try {
             Constructor<? extends BaseDbo> ctor = dboClass.getDeclaredConstructor();
             T dbo = (T)ctor.newInstance();
-            dbo.fromResultSet(rs);
+            dbo.fromResultSet(connection, rs);
             return dbo;
         } catch (Exception e) {
             throw new RuntimeException("Unable to create Dbo for dboClass="+ dboClass, e);
@@ -65,9 +67,10 @@ public abstract class BaseDboFactory<T extends BaseDbo> {
      * @param connection Connection
      * @param id long
      * @return LoginUserDbo or null if not found
+     * @throws SQLException if unable to delete
      */
     @Nullable
-    public T getById(Connection connection, long id) {
+    public T getById(Connection connection, long id) throws SQLException {
         final String sql = Global.getInstance().getDatabaseManager().getSqlProvider()
                 .builder("/sql/base/SelectById.sql")
                 .withToken("TABLE", table.schema()+"."+table.name())
@@ -81,12 +84,10 @@ public abstract class BaseDboFactory<T extends BaseDbo> {
                 ResultSet rs = pstmt.executeQuery()
         ) {
             if (rs.next()) {
-                return createFromResultSet(rs);
+                return createFromResultSet(connection, rs);
             } else {
                 LOGGER.warn("Failed to find object id={}", id);
             }
-        } catch (Exception sqle) {
-            LOGGER.error("Failed to find object", sqle);
         }
 
         return null;
@@ -96,8 +97,9 @@ public abstract class BaseDboFactory<T extends BaseDbo> {
      * Delete by id
      * @param connection Connection
      * @param id long
+     * @throws SQLException if unable to delete
      */
-    public void deleteById(Connection connection, long id) {
+    public void deleteById(Connection connection, long id) throws SQLException {
         final String sql = Global.getInstance().getDatabaseManager().getSqlProvider()
                 .builder("/sql/base/DeleteById.sql")
                 .withToken("TABLE", table.schema()+"."+table.name())
@@ -111,8 +113,6 @@ public abstract class BaseDboFactory<T extends BaseDbo> {
             if (pstmt.executeUpdate() != 1) {
                 LOGGER.warn("Unable to delete, id={}", id);
             }
-        } catch (Exception e) {
-            LOGGER.error("Failed to delete, id="+id, e);
         }
     }
 }

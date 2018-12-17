@@ -73,7 +73,7 @@ public class ItemDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.inventoryId = rs.getLong("inventory__id");
         this.type = ItemType.of(rs.getInt("type"));

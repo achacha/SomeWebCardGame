@@ -66,14 +66,11 @@ public class BaseInitializedTest {
         return player;
     }
 
-    public void deletePlayer(PlayerDbo player) throws SQLException {
-        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
-            Global.getInstance().getDatabaseManager().getFactory(PlayerDbo.class).deleteById(connection, player.getId());
-            connection.commit();
-        }
+    public void deletePlayer(Connection connection, PlayerDbo player) throws SQLException {
+        Global.getInstance().getDatabaseManager().getFactory(PlayerDbo.class).deleteById(connection, player.getId());
 
         // Verify deleted
-        PlayerDbo playerDeleted = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(TestDataConstants.JUNIT_USER_LOGINID, TestDataConstants.JUNIT_PLAYER__ID);
+        PlayerDbo playerDeleted = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(connection, TestDataConstants.JUNIT_USER_LOGINID, TestDataConstants.JUNIT_PLAYER__ID);
         assertNotNull(playerDeleted);
     }
 }

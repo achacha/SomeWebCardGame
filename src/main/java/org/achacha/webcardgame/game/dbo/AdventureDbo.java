@@ -89,10 +89,10 @@ public class AdventureDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.playerId = rs.getLong("player__id");
-        this.encounters = Global.getInstance().getDatabaseManager().<EncounterDboFactory>getFactory(EncounterDbo.class).getEncountersForAdventure(this.id);
+        this.encounters = Global.getInstance().getDatabaseManager().<EncounterDboFactory>getFactory(EncounterDbo.class).getByAdventureId(connection, this.id);
         this.created = rs.getTimestamp("created");
 
         if (LOGGER.isDebugEnabled()) {

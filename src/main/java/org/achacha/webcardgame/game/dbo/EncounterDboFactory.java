@@ -22,11 +22,10 @@ public class EncounterDboFactory extends BaseDboFactory<EncounterDbo> {
      * @return List of items (never null)
      */
     @Nonnull
-    public List<EncounterDbo> getEncountersForAdventure(long adventureId) {
+    public List<EncounterDbo> getByAdventureId(Connection connection, long adventureId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         List<EncounterDbo> encounters = new ArrayList<>();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Encounter/SelectByAdventureId.sql",
@@ -35,7 +34,7 @@ public class EncounterDboFactory extends BaseDboFactory<EncounterDbo> {
         ) {
             while (rs.next()) {
                 EncounterDbo dbo = new EncounterDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
                 encounters.add(dbo);
             }
         } catch (Exception sqle) {

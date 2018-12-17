@@ -19,15 +19,15 @@ public class PlayerDboFactory extends BaseDboFactory<PlayerDbo> {
 
     /**
      * Get all PlayerDbo objects associated with a login id
+     * @param connection Connection
      * @param loginId long id
      * @return List of PlayerDbo, never null
      */
     @Nonnull
-    public List<PlayerDbo> getByLoginId(long loginId) {
+    public List<PlayerDbo> getByLoginId(Connection connection, long loginId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         List<PlayerDbo> dbos = new ArrayList<>();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Player/SelectByLoginId.sql",
@@ -36,7 +36,7 @@ public class PlayerDboFactory extends BaseDboFactory<PlayerDbo> {
         ) {
             if (rs.next()) {
                 PlayerDbo dbo = new PlayerDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
                 dbos.add(dbo);
             }
         } catch (Exception sqle) {
@@ -47,16 +47,16 @@ public class PlayerDboFactory extends BaseDboFactory<PlayerDbo> {
 
     /**
      * Get all PlayerDbo objects associated with a login id
+     * @param connection Connection
      * @param loginId long login id
      * @param playerId long player id
      * @return PlayerDbo or null
      */
     @Nullable
-    public PlayerDbo getByLoginIdAndPlayerId(long loginId, long playerId) {
+    public PlayerDbo getByLoginIdAndPlayerId(Connection connection, long loginId, long playerId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         PlayerDbo dbo = null;
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Player/SelectByPlayerId.sql",
@@ -69,7 +69,7 @@ public class PlayerDboFactory extends BaseDboFactory<PlayerDbo> {
         ) {
             if (rs.next()) {
                 dbo = new PlayerDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
             }
         } catch (Exception sqle) {
             LOGGER.error("Failed to find player for playerId={} and loginId={}", playerId, loginId, sqle);

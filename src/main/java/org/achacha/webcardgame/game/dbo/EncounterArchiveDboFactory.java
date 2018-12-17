@@ -22,11 +22,10 @@ public class EncounterArchiveDboFactory extends BaseDboFactory<EncounterArchiveD
      * @return List of items (never null)
      */
     @Nonnull
-    public List<EncounterArchiveDbo> getEncountersForAdventure(long adventureArchiveId) {
+    public List<EncounterArchiveDbo> getByAdventureId(Connection connection, long adventureArchiveId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         List<EncounterArchiveDbo> encounters = new ArrayList<>();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/EncounterArchive/SelectByAdventureArchiveId.sql",
@@ -34,7 +33,7 @@ public class EncounterArchiveDboFactory extends BaseDboFactory<EncounterArchiveD
                 ResultSet rs = pstmt.executeQuery()
         ) {
             while (rs.next()) {
-                encounters.add(createFromResultSet(rs));
+                encounters.add(createFromResultSet(connection, rs));
             }
         } catch (Exception sqle) {
             LOGGER.error("Failed to find encounters for adventureArchiveId={}", adventureArchiveId, sqle);

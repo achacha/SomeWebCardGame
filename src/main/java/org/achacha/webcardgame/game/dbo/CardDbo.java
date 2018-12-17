@@ -83,7 +83,7 @@ public class CardDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.playerId = rs.getLong("player__id");
         this.encounterId = rs.getLong("encounter__id");

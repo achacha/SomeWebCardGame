@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
@@ -103,7 +104,7 @@ public class LoginUserDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         id = rs.getLong("id");
         email = rs.getString("email");
         pwd = rs.getString("pwd");

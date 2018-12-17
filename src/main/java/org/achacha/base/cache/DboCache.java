@@ -86,7 +86,7 @@ public class DboCache<E extends BaseDbo> implements JsonEmittable {
             ) {
                 while (tuple.getResultSet().next()) {
                     E dbo = dboClass.getConstructor().newInstance();
-                    dbo.fromResultSet(tuple.getResultSet());
+                    dbo.fromResultSet(tuple.getConnection(), tuple.getResultSet());
                     data.put(dbo.getId(), dbo);
                 }
             } catch (Exception e) {
@@ -127,7 +127,7 @@ public class DboCache<E extends BaseDbo> implements JsonEmittable {
                         LOGGER.debug("Loading item into cache from DB, class={} id={}", dboClass.getSimpleName(), id);
                     }
                     E dbo = dboClass.getConstructor().newInstance();
-                    dbo.fromResultSet(tuple.getResultSet());
+                    dbo.fromResultSet(tuple.getConnection(), tuple.getResultSet());
                     return dbo;
                 } else {
                     // This does not exist in DB, don't check again in the future

@@ -50,12 +50,12 @@ public class AdventureRoutes extends AbstractRoutes {
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response activeAdventures(@QueryParam("playerId") long playerId) {
         // Get player by id for this login, if null then this login does not have such a player
-        PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
-        if (player == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound", "Player not found, playerId=" + playerId)).build();
-        }
-
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(connection, CallContextTls.get().getLogin().getId(), playerId);
+            if (player == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound", "Player not found, playerId=" + playerId)).build();
+            }
+
             AdventureDbo existingAdventure = Global.getInstance().getDatabaseManager().<AdventureDboFactory>getFactory(AdventureDbo.class).getByPlayerId(connection, playerId);
             return Response.ok(JsonHelper.getSuccessObject(existingAdventure)).build();
         } catch (Exception e) {
@@ -74,36 +74,35 @@ public class AdventureRoutes extends AbstractRoutes {
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response startAdventure(@QueryParam("playerId") long playerId, @QueryParam("adventureId") int adventureId) {
         // Get player by id for this login, if null then this login does not have such a player
-        PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
-        if (player == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
-
-        AdventureDbo existingAdventure = getActiveAdventure(playerId);
-        if (existingAdventure != null) {
-            return Response.status(Response.Status.FOUND).entity(existingAdventure).build();
-        }
-
-        List<AdventureDbo> adventures = (List<AdventureDbo>) httpRequest.getSession().getAttribute(SESSION_AVAILABLE);
-        int index = -adventureId - 1;
-        if (adventures == null || index < 0) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity(JsonHelper.getFailObject("error.invalid.input.data", "Invalid session or index"))
-                    .build();
-        }
-
-        AdventureDbo adventure = adventures.get(index);
-
-        // Create active
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(connection, CallContextTls.get().getLogin().getId(), playerId);
+            if (player == null)
+                return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
+
+            AdventureDbo existingAdventure = getActiveAdventure(playerId);
+            if (existingAdventure != null) {
+                return Response.status(Response.Status.FOUND).entity(existingAdventure).build();
+            }
+
+            List<AdventureDbo> adventures = (List<AdventureDbo>) httpRequest.getSession().getAttribute(SESSION_AVAILABLE);
+            int index = -adventureId - 1;
+            if (adventures == null || index < 0) {
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(JsonHelper.getFailObject("error.invalid.input.data", "Invalid session or index"))
+                        .build();
+            }
+
+            AdventureDbo adventure = adventures.get(index);
+
             adventure.insert(connection);
             connection.commit();
-        } catch (Exception e) {
-            LOGGER.error("Failed to add active adventure="+adventure, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(adventure).build();
-        }
 
-        return Response.status(Response.Status.OK).entity(adventure).build();
+            return Response.status(Response.Status.OK).entity(adventure).build();
+        } catch (Exception e) {
+            LOGGER.error("Failed to add active adventure", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     /**
@@ -113,11 +112,11 @@ public class AdventureRoutes extends AbstractRoutes {
     @Path("active")
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response deleteActiveAdventures(@QueryParam("playerId") long playerId) {
-        PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
-        if (player == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
-
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(connection, CallContextTls.get().getLogin().getId(), playerId);
+            if (player == null)
+                return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
+
             Global.getInstance().getDatabaseManager().<AdventureDboFactory>getFactory(AdventureDbo.class).deleteAllByPlayerId(connection, playerId);
             connection.commit();
         } catch (Exception e) {
@@ -137,37 +136,43 @@ public class AdventureRoutes extends AbstractRoutes {
     @Path("available")
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response availableAdventures(@QueryParam("playerId") long playerId, @QueryParam("regenerate") boolean regenerate) {
-        // Get player by id for this login, if null then this login does not have such a player
-        PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
-        if (player == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            // Get player by id for this login, if null then this login does not have such a player
+            PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(connection, CallContextTls.get().getLogin().getId(), playerId);
+            if (player == null)
+                return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound", "Player not found, playerId=" + playerId)).build();
 
-        // Check if player is already on an adventure
-        AdventureDbo existingAdventure = getActiveAdventure(playerId);
-        if (existingAdventure != null) {
-            return Response.status(Response.Status.FOUND).entity(existingAdventure).build();
-        }
-
-        List<AdventureDbo> adventures = (List<AdventureDbo>) httpRequest.getSession().getAttribute(SESSION_AVAILABLE);
-        if (adventures == null || regenerate) {
-            final int LEVEL = player.getCards().stream().map(CardDbo::getLevel).max(Integer::compare).orElse(0);
-            final int COUNT = RandomUtils.nextInt(2, 5);
-            adventures = new ArrayList<>(COUNT);
-            // Use negative id since it is not persisted
-            for (int tempId = 1; tempId <= COUNT; ++tempId) {
-                // TODO: need to randomize
-                AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
-                adventure.getEncounters().add(EncounterDbo.builder(adventure).withEnemy(CardType.Goblin, LEVEL).build());
-                adventure.getEncounters().add(EncounterDbo.builder(adventure).withEnemy(CardType.Goblin, LEVEL).build());
-                adventure.setId(-tempId);
-                adventures.add(adventure);
-
+            // Check if player is already on an adventure
+            AdventureDbo existingAdventure = getActiveAdventure(playerId);
+            if (existingAdventure != null) {
+                return Response.status(Response.Status.FOUND).entity(existingAdventure).build();
             }
-            httpRequest.getSession().setAttribute(SESSION_AVAILABLE, adventures);
-            LOGGER.debug("Generated new adventures={}", adventures);
-        }
 
-        return Response.status(Response.Status.OK).entity(JsonHelper.getSuccessObject(adventures)).build();
+            List<AdventureDbo> adventures = (List<AdventureDbo>) httpRequest.getSession().getAttribute(SESSION_AVAILABLE);
+            if (adventures == null || regenerate) {
+                final int LEVEL = player.getCards().stream().map(CardDbo::getLevel).max(Integer::compare).orElse(0);
+                final int COUNT = RandomUtils.nextInt(2, 5);
+                adventures = new ArrayList<>(COUNT);
+                // Use negative id since it is not persisted
+                for (int tempId = 1; tempId <= COUNT; ++tempId) {
+                    // TODO: need to randomize
+                    AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
+                    adventure.getEncounters().add(EncounterDbo.builder(adventure).withEnemy(CardType.Goblin, LEVEL).build());
+                    adventure.getEncounters().add(EncounterDbo.builder(adventure).withEnemy(CardType.Goblin, LEVEL).build());
+                    adventure.setId(-tempId);
+                    adventures.add(adventure);
+
+                }
+                httpRequest.getSession().setAttribute(SESSION_AVAILABLE, adventures);
+                LOGGER.debug("Generated new adventures={}", adventures);
+            }
+
+            return Response.status(Response.Status.OK).entity(JsonHelper.getSuccessObject(adventures)).build();
+        }
+        catch (Exception e) {
+            LOGGER.error("Failed to get available adventures", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     /**
@@ -193,12 +198,12 @@ public class AdventureRoutes extends AbstractRoutes {
     @Path("simulate")
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
     public Response simulateAdventure(@QueryParam("playerId") long playerId) {
-        // Get player by id for this login, if null then this login does not have such a player
-        PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(CallContextTls.get().getLogin().getId(), playerId);
-        if (player == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
-
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            // Get player by id for this login, if null then this login does not have such a player
+            PlayerDbo player = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(connection, CallContextTls.get().getLogin().getId(), playerId);
+            if (player == null)
+                return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
+
             AdventureDbo adventure = getActiveAdventure(playerId);
             if (adventure != null) {
                 AdventureArchiveDbo adventureArchive = AdventureLogic.simulateAdventure(connection, player, adventure);

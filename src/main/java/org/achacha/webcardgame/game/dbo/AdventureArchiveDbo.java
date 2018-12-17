@@ -117,12 +117,12 @@ public class AdventureArchiveDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         id = rs.getLong("id");
         originalId = rs.getLong("original_id");
         originalCreated = rs.getTimestamp("original_created");
         playerId = rs.getLong("player__id");
         completed = rs.getTimestamp("completed");
-        encounters = Global.getInstance().getDatabaseManager().<EncounterArchiveDboFactory>getFactory(EncounterArchiveDbo.class).getEncountersForAdventure(this.id);
+        encounters = Global.getInstance().getDatabaseManager().<EncounterArchiveDboFactory>getFactory(EncounterArchiveDbo.class).getByAdventureId(connection, this.id);
     }
 }

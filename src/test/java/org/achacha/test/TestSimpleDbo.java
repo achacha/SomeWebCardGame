@@ -3,6 +3,7 @@ package org.achacha.test;
 import org.achacha.base.db.BaseDbo;
 import org.achacha.base.i18n.LocalizedKey;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -41,7 +42,7 @@ public class TestSimpleDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.name = rs.getString("name");
         this.key = new LocalizedKey(rs.getString("key"));

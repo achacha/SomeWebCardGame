@@ -59,7 +59,7 @@ public class LoginAttrDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         id = rs.getLong("id");
         loginId = rs.getLong("login_id");
         name = rs.getString("name");

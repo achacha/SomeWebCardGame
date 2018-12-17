@@ -15,11 +15,10 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
         super(CardDbo.class);
     }
 
-    public List<CardDbo> getByPlayerId(long playerId) {
+    public List<CardDbo> getByPlayerId(Connection connection, long playerId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         ArrayList<CardDbo> dbos = new ArrayList<>();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Card/SelectByPlayerId.sql",
@@ -28,7 +27,7 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
         ) {
             while (rs.next()) {
                 CardDbo dbo = new CardDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
                 dbos.add(dbo);
             }
         } catch (Exception e) {
@@ -37,11 +36,11 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
         return dbos;
     }
 
-    public List<CardDbo> getByEncounterId(long encounterId) {
+    // TODO: Unit test or remove
+    public List<CardDbo> getByEncounterId(Connection connection, long encounterId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         ArrayList<CardDbo> dbos = new ArrayList<>();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Card/SelectByEncounterId.sql",
@@ -50,7 +49,7 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
         ) {
             while (rs.next()) {
                 CardDbo dbo = new CardDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
                 dbos.add(dbo);
             }
         } catch (Exception e) {

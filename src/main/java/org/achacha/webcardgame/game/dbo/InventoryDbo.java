@@ -45,14 +45,14 @@ public class InventoryDbo extends BaseDbo {
     }
 
     @Override
-    public void fromResultSet(ResultSet rs) throws SQLException {
+    public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.playerId = rs.getLong("player__id");
 
         this.energy = rs.getLong("energy");
         this.materials = rs.getLong("materials");
 
-        this.items = Global.getInstance().getDatabaseManager().<ItemDboFactory>getFactory(ItemDbo.class).getItemsForInventory(this.id);
+        this.items = Global.getInstance().getDatabaseManager().<ItemDboFactory>getFactory(ItemDbo.class).getByInventoryId(connection, this.id);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
@@ -110,7 +110,7 @@ public class InventoryDbo extends BaseDbo {
             pstmt.executeUpdate();
 
             // Remove all and update contained items
-            Global.getInstance().getDatabaseManager().<ItemDboFactory>getFactory(ItemDbo.class).deleteAllByInventoryId(id);
+            Global.getInstance().getDatabaseManager().<ItemDboFactory>getFactory(ItemDbo.class).deleteAllByInventoryId(connection, id);
             for (ItemDbo item : items) {
                 if (item.id == 0) {
                     item.inventoryId = this.id;

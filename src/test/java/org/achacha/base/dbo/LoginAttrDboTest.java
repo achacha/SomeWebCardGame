@@ -31,7 +31,7 @@ class LoginAttrDboTest extends BaseInitializedTest {
             // Attributes by playerId
             LoginUserDbo login = Global.getInstance().getDatabaseManager().<LoginUserDboFactory>getFactory(LoginUserDbo.class).getById(connection, TestDataConstants.JUNIT_USER_LOGINID);
             assertNotNull(login);
-            Collection<LoginAttrDbo> attrs = factoryAttr.findByLoginId(login.getId());
+            Collection<LoginAttrDbo> attrs = factoryAttr.findByLoginId(connection, login.getId());
             assertEquals(3, attrs.size());
             assertTrue(attrs.contains(dbo));
         }

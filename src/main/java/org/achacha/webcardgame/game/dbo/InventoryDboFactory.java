@@ -13,11 +13,10 @@ public class InventoryDboFactory extends BaseDboFactory<InventoryDbo> {
         super(InventoryDbo.class);
     }
 
-    public InventoryDbo getByPlayerId(long playerId) {
+    public InventoryDbo getByPlayerId(Connection connection, long playerId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         InventoryDbo dbo = null;
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Inventory/SelectByPlayerId.sql",
@@ -26,7 +25,7 @@ public class InventoryDboFactory extends BaseDboFactory<InventoryDbo> {
         ) {
             if (rs.next()) {
                 dbo = new InventoryDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
             }
         } catch (Exception sqle) {
             LOGGER.error("Failed to find inventory for playerId={}", playerId, sqle);

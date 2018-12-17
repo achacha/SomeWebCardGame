@@ -120,7 +120,7 @@ public class EventLogDboFactory extends BaseDboFactory<EventLogDbo> {
         ) {
             while (triple.getResultSet().next()) {
                 EventLogDbo dbo = new EventLogDbo();
-                dbo.fromResultSet(triple.getResultSet());
+                dbo.fromResultSet(triple.getConnection(), triple.getResultSet());
                 events.add(dbo);
             }
         } catch (Exception sqle) {
@@ -142,7 +142,7 @@ public class EventLogDboFactory extends BaseDboFactory<EventLogDbo> {
         ) {
             while (triple.getResultSet().next()) {
                 EventLogDbo dbo = new EventLogDbo();
-                dbo.fromResultSet(triple.getResultSet());
+                dbo.fromResultSet(triple.getConnection(), triple.getResultSet());
                 events.add(dbo);
             }
         } catch (Exception sqle) {

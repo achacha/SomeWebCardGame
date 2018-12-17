@@ -31,7 +31,7 @@ public abstract class BaseArchiveDboFactory<T extends BaseDbo> extends BaseDboFa
                 )
         ) {
             if (session.getResultSet().next()) {
-                return createFromResultSet(session.getResultSet());
+                return createFromResultSet(session.getConnection(), session.getResultSet());
             } else {
                 LOGGER.warn("Failed to find object id={}", id);
             }

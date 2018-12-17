@@ -18,17 +18,17 @@ public class ItemDboFactory extends BaseDboFactory<ItemDbo> {
 
     /**
      * Get a list of items for a given inventory
+     * @param connection Connection
      * @param inventoryId long
      * @return List of items (never null)
      *
      * @Deprecated Don't know if we need this since InventoryDbo will fetch this
      */
     @Nonnull
-    public List<ItemDbo> getItemsForInventory(long inventoryId) {
+    public List<ItemDbo> getByInventoryId(Connection connection, long inventoryId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         List<ItemDbo> items = new ArrayList<>();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Item/SelectByInventoryId.sql",
@@ -37,7 +37,7 @@ public class ItemDboFactory extends BaseDboFactory<ItemDbo> {
         ) {
             while (rs.next()) {
                 ItemDbo dbo = new ItemDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
                 items.add(dbo);
             }
         } catch (Exception sqle) {
@@ -48,12 +48,12 @@ public class ItemDboFactory extends BaseDboFactory<ItemDbo> {
 
     /**
      * Delete all items for a given inventory
+     * @param connection Connection
      * @param inventoryId long
      */
-    public void deleteAllByInventoryId(long inventoryId) {
+    public void deleteAllByInventoryId(Connection connection, long inventoryId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (
-                Connection connection = dbm.getConnection();
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
                         "/sql/Item/DeleteAllByInventoryId.sql",

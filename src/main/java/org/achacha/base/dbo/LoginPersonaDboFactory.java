@@ -17,13 +17,12 @@ public class LoginPersonaDboFactory extends BaseDboFactory<LoginPersonaDbo> {
 
     /**
      * Find login with persona by id
-     *
+     * @param connection Connection
      * @param idToFind long
      * @return LoginPersonaDbo or null if not found
      */
-    public LoginPersonaDbo findById(long idToFind) {
+    public LoginPersonaDbo findById(Connection connection, long idToFind) {
         try (
-                Connection connection = Global.getInstance().getDatabaseManager().getConnection();
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/Login/SelectPersonaById.sql",
@@ -32,7 +31,7 @@ public class LoginPersonaDboFactory extends BaseDboFactory<LoginPersonaDbo> {
         ) {
             if (rs.next()) {
                 LoginPersonaDbo dbo = new LoginPersonaDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
                 return dbo;
             } else {
                 LoginUserDbo.LOGGER.warn("Failed to find login id={}", idToFind);
@@ -45,15 +44,14 @@ public class LoginPersonaDboFactory extends BaseDboFactory<LoginPersonaDbo> {
 
     /**
      * Search for personas by search term and limit
-     *
+     * @param connection Connection
      * @param searchTerm String
      * @param limit      int
      * @return List of LoginPersonaDbo
      */
-    public Collection<LoginPersonaDbo> findSearch(String searchTerm, int limit) {
+    public Collection<LoginPersonaDbo> findSearch(Connection connection, String searchTerm, int limit) {
         List<LoginPersonaDbo> personas = new ArrayList<>();
         try (
-                Connection connection = Global.getInstance().getDatabaseManager().getConnection();
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/Login/SearchPersona.sql",
@@ -69,7 +67,7 @@ public class LoginPersonaDboFactory extends BaseDboFactory<LoginPersonaDbo> {
         ) {
             while (rs.next()) {
                 LoginPersonaDbo dbo = new LoginPersonaDbo();
-                dbo.fromResultSet(rs);
+                dbo.fromResultSet(connection, rs);
                 personas.add(dbo);
             }
         } catch (Exception sqle) {

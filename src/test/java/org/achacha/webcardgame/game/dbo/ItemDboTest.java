@@ -28,13 +28,13 @@ class ItemDboTest extends BaseInitializedTest {
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
             inventory.update(connection);
             connection.commit();
-        }
 
-        // Load it again and verify it was saved
-        InventoryDbo loadedInventory = Global.getInstance().getDatabaseManager().<InventoryDboFactory>getFactory(InventoryDbo.class).getByPlayerId(player.id);
-        assertNotNull(loadedInventory);
-        assertNotNull(loadedInventory.items);
-        assertEquals(1, loadedInventory.items.size());
-        assertEquals(inventory.toJsonObject().toString(), loadedInventory.toJsonObject().toString());
+            // Load it again and verify it was saved
+            InventoryDbo loadedInventory = Global.getInstance().getDatabaseManager().<InventoryDboFactory>getFactory(InventoryDbo.class).getByPlayerId(connection, player.id);
+            assertNotNull(loadedInventory);
+            assertNotNull(loadedInventory.items);
+            assertEquals(1, loadedInventory.items.size());
+            assertEquals(inventory.toJsonObject().toString(), loadedInventory.toJsonObject().toString());
+        }
     }
 }

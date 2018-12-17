@@ -85,8 +85,9 @@ public abstract class BaseDbo implements JsonEmittable {
 
     /**
      * Populate data from ResultSet
+     * @param connection Connection to use to fetch dependencies if any
      * @param rs ResultSet
      * @throws SQLException if fails to get data from ResultSet
      */
-    public abstract void fromResultSet(ResultSet rs) throws SQLException;
+    public abstract void fromResultSet(Connection connection, ResultSet rs) throws SQLException;
 }
