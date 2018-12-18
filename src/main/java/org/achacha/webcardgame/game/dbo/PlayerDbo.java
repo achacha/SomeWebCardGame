@@ -33,27 +33,25 @@ public class PlayerDbo extends BaseDbo {
     /** Cards */
     protected List<CardDbo> cards;
 
-    public PlayerDbo() {
-    }
-
     public static Builder builder(long loginId) {
         return new Builder(loginId);
     }
 
     public static class Builder {
-        final long loginId;
+        private final PlayerDbo player = new PlayerDbo();
 
         public Builder(long loginId) {
-            this.loginId = loginId;
+            player.loginId = loginId;
         }
 
         public PlayerDbo build() {
-            PlayerDbo player = new PlayerDbo();
-            player.loginId = loginId;
             player.inventory = new InventoryDbo();
             player.cards = new ArrayList<>();
             return player;
         }
+    }
+
+    public PlayerDbo() {
     }
 
     @Override

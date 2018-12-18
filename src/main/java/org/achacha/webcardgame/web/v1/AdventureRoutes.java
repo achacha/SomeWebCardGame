@@ -157,8 +157,8 @@ public class AdventureRoutes extends AbstractRoutes {
                 for (int tempId = 1; tempId <= COUNT; ++tempId) {
                     // TODO: need to randomize
                     AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
-                    adventure.getEncounters().add(EncounterDbo.builder(adventure).withEnemy(CardType.Goblin, LEVEL).build());
-                    adventure.getEncounters().add(EncounterDbo.builder(adventure).withEnemy(CardType.Goblin, LEVEL).build());
+                    adventure.getEncounters().add(EncounterDbo.builder(adventure).withGeneratedCard(CardType.Goblin, LEVEL).build());
+                    adventure.getEncounters().add(EncounterDbo.builder(adventure).withGeneratedCard(CardType.Goblin, LEVEL).build());
                     adventure.setId(-tempId);
                     adventures.add(adventure);
 

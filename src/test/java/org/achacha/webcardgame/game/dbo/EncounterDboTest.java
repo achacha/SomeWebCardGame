@@ -18,9 +18,9 @@ class EncounterDboTest extends BaseInitializedTest {
     void builder() {
         AdventureDbo adventure = new AdventureDbo();  // temp object
         EncounterDbo encounter = EncounterDbo.builder(adventure)
-                .withEnemy(CardType.Elf, 75)
-                .withEnemy(CardType.Elf, 75)
-                .withEnemy(CardType.Elf, 75)
+                .withGeneratedCard(CardType.Elf, 75)
+                .withGeneratedCard(CardType.Elf, 75)
+                .withGeneratedCard(CardType.Elf, 75)
                 .build();
         assertEquals(3, encounter.getEnemies().size());
         assertEquals(3, encounter.getEnemies().stream().filter(enemy-> enemy.getLevel() == 75).count());
@@ -35,7 +35,7 @@ class EncounterDboTest extends BaseInitializedTest {
             adventure.insert(connection);
 
             // Insert encounter
-            EncounterDbo encounter = EncounterDbo.builder(adventure).withEnemy(CardType.Elf, 10).build();
+            EncounterDbo encounter = EncounterDbo.builder(adventure).withGeneratedCard(CardType.Elf, 10).build();
             encounter.adventureId = adventure.getId();
             encounter.insert(connection);
             connection.commit();

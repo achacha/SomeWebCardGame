@@ -13,7 +13,7 @@ INSERT INTO inventory(id,player__id,energy,materials) VALUES
 
 -- Card data
 INSERT INTO card(player__id,name,type,level,xp,strength,agility,damage,stickers) VALUES
-   (2,'Patient Zero','Human',6,18000,8,18,12,'HOT_MAJOR')
-  ,(2,'Ol One Eye','Goblin',3,48000,14,12,10,'HOT_MINOR')
-  ,(2,'Sylvae','Elf',4,99900,12,15,11,'NOP')
+   (2,'Patient Zero','Human',6,18000,8,18,12,'HOT_AT5,DOT_AT3')
+  ,(2,'Ol One Eye','Goblin',3,48000,14,12,10,'HOT_AT3')
+  ,(2,'Sylvae','Elf',4,99900,12,15,11,'DOT_AT5')
 ;

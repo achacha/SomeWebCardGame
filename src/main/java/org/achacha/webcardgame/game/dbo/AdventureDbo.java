@@ -47,18 +47,22 @@ public class AdventureDbo extends BaseDbo {
     }
 
     public static class Builder {
-        private final long playerId;
+        private AdventureDbo adventure = new AdventureDbo();
 
         Builder(long playerId) {
-            this.playerId = playerId;
+            adventure.playerId = playerId;
+            adventure.encounters = new ArrayList<>();
+        }
+
+        public Builder withEncounter(EncounterDbo encounter) {
+            adventure.encounters.add(encounter);
+            return this;
         }
 
         /**
          * @return Build adventure
          */
         public AdventureDbo build() {
-            AdventureDbo adventure = new AdventureDbo();
-            adventure.playerId = playerId;
             adventure.encounters = new ArrayList<>();
             return adventure;
         }

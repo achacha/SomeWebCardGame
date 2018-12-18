@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(schema="public", name="card")
 public class CardDbo extends BaseDbo {
@@ -26,6 +27,9 @@ public class CardDbo extends BaseDbo {
 
     /** Card id */
     protected long id;
+
+    /** Player that owns this card */
+    protected long playerId;
 
     /** Card name */
     protected String name;
@@ -37,18 +41,6 @@ public class CardDbo extends BaseDbo {
      * Level
      */
     protected int level;
-
-    /**
-     * Experience into the level
-     * when xp > 100,000 then level is increased
-     */
-    protected int xp;
-
-    /**
-     * Percent health [0,100]
-     * Not saved to database, health is reset to 100 before each adventure
-     */
-    protected int health = 100;
 
     /**
      * strength - combat damage, change to absorb damage
@@ -65,9 +57,6 @@ public class CardDbo extends BaseDbo {
      */
     protected int damage = 10;
 
-    /** Player that owns this card */
-    protected long playerId;
-
     /**
      * Encounter that owns this card
      * If 0 then not assigned to encounter yet
@@ -76,6 +65,96 @@ public class CardDbo extends BaseDbo {
 
     /** Card stickers */
     protected List<CardSticker> stickers;
+
+    /**
+     * Experience into the level
+     * when xp > 100 then level is increased and xp is reset
+     */
+    protected int xp;
+
+    /**
+     * Percent health [0,100]
+     * Not saved to database, health is reset to 100 before each adventure
+     */
+    protected int health = 100;
+
+    /**
+     * Internal/testing use only
+     * @see #builder(long)
+     */
+    public CardDbo() {
+    }
+
+    /**
+     * Builder
+     * @param playerId Player id that will own this
+     * @return Builder
+     */
+    public static Builder builder(long playerId) {
+        return new Builder(playerId);
+    }
+
+    public static class Builder {
+        private CardDbo card = new CardDbo();
+
+        public Builder(long playerId) {
+            card.playerId = playerId;
+            card.stickers = new ArrayList<>();
+        }
+
+        public Builder withName(String name) {
+            card.name = name;
+            return this;
+        }
+
+        public Builder withType(CardType type) {
+            card.type = type;
+            return this;
+        }
+
+        public Builder withTypeAndRandomName(CardType type) {
+            card.type = type;
+            card.name = NameHelper.generateName(type.getNameType());
+            return this;
+        }
+
+        public Builder withLevel(int level) {
+            card.level = level;
+            return this;
+        }
+
+        public Builder withStrength(int strength) {
+            card.strength = strength;
+            return this;
+        }
+
+        public Builder withAgility(int agility) {
+            card.agility = agility;
+            return this;
+        }
+
+        public Builder withDamage(int damage) {
+            card.damage = damage;
+            return this;
+        }
+
+        public Builder withXp(int xp) {
+            card.xp = xp;
+            return this;
+        }
+
+        public Builder withSticker(CardSticker.Type stickerType) {
+            card.stickers.add(CardStickerFactory.getSticker(stickerType));
+            return this;
+        }
+
+        public CardDbo build() {
+            Preconditions.checkNotNull(card.type);
+            Preconditions.checkState(StringUtils.isNotEmpty(card.name));
+
+            return card;
+        }
+    }
 
     @Override
     public long getId() {
@@ -111,6 +190,7 @@ public class CardDbo extends BaseDbo {
     @Override
     public void insert(Connection connection) throws SQLException {
         Preconditions.checkState(playerId > 0);
+        Preconditions.checkNotNull(type);
 
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
@@ -121,10 +201,13 @@ public class CardDbo extends BaseDbo {
                             p.setLong(2, encounterId);
                             p.setString(3, name);
                             p.setString(4, type.name());
-                            p.setInt(5, xp);
-                            p.setInt(6, strength);
-                            p.setInt(7, agility);
-                            p.setString(8, StringUtils.join(stickers, ","));
+                            p.setInt(5, level);
+                            p.setInt(6, xp);
+                            p.setInt(7, strength);
+                            p.setInt(8, agility);
+
+                            String stickerNames = stickers.stream().map(CardSticker::getTypeName).collect(Collectors.joining(","));
+                            p.setString(9, stickerNames);
                         }
                 );
                 ResultSet rs = pstmt.executeQuery()

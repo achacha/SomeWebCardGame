@@ -8,7 +8,6 @@ import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.logic.EncounterProcessor;
-import org.achacha.webcardgame.game.logic.NameHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.postgresql.util.PGobject;
@@ -46,34 +45,41 @@ public class EncounterDbo extends BaseDbo {
 
     public static class Builder {
         private final AdventureDbo adventure;
-        private ArrayList<CardDbo> enemies = new ArrayList<>();
+        private EncounterDbo encounter = new EncounterDbo();
 
         Builder(AdventureDbo adventure) {
             this.adventure = adventure;
+            encounter.adventureId = adventure.getId();
+            encounter.enemies = new ArrayList<>();
         }
 
-        public Builder withEnemy(CardType enemyType, int level, String name) {
-            CardDbo enemy = new CardDbo();
-            enemy.setType(enemyType);
-            enemy.setLevel(level);
-            enemy.setName(name);
-            enemies.add(enemy);
+        public Builder withCard(CardDbo card) {
+            encounter.enemies.add(card);
             return this;
         }
 
-        public Builder withEnemy(CardType enemyType, int level) {
-            CardDbo enemy = new CardDbo();
-            enemy.setType(enemyType);
-            enemy.setLevel(level);
-            enemy.setName(NameHelper.generateName(enemyType.getNameType()));
-            enemies.add(enemy);
+        public Builder withGeneratedCard(CardType enemyType, int level, String name) {
+            encounter.enemies.add(CardDbo.builder(adventure.playerId)
+                    .withType(enemyType)
+                    .withLevel(level)
+                    .withName(name)
+                    .build()
+            );
+            return this;
+        }
+
+        /** Generate random name for type provided */
+        public Builder withGeneratedCard(CardType enemyType, int level) {
+            encounter.enemies.add(
+                    CardDbo.builder(adventure.playerId)
+                            .withTypeAndRandomName(enemyType)
+                            .withLevel(level)
+                            .build()
+            );
             return this;
         }
 
         public EncounterDbo build() {
-            EncounterDbo encounter = new EncounterDbo();
-            encounter.adventureId = adventure.getId();
-            encounter.enemies = enemies;
             return encounter;
         }
     }

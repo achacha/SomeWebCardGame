@@ -7,7 +7,6 @@ import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.EncounterDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDbo;
 import org.achacha.webcardgame.sticker.CardSticker;
-import org.achacha.webcardgame.sticker.CardStickerFactory;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -18,39 +17,46 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EncounterTest extends BaseInitializedTest {
     @Test
     void testEncounterCombat() throws SQLException {
-        // TODO: Builder extended withCards()
         PlayerDbo player = createNewTestPlayer();
         player.getInventory().setEnergy(100);
 
-        CardDbo card = new CardDbo();
-        card.setLevel(1);
-        card.setStrength(12);
-        card.setAgility(10);
-        card.setDamage(12);
-        card.setStickers(
-                CardStickerFactory.builder()
-                        .add(CardSticker.Type.HOT_AT5)
-                        .add(CardSticker.Type.DOT_AT10)
+        player.getCards().add(
+                CardDbo.builder(player.getId())
+                        .withTypeAndRandomName(CardType.Human)
+                        .withLevel(1)
+                        .withStrength(12)
+                        .withAgility(12)
+                        .withDamage(12)
+                        .withSticker(CardSticker.Type.HOT_AT5)
+                        .withSticker(CardSticker.Type.DOT_AT10)
                         .build()
         );
-        player.getCards().add(card);
 
+        // TODO: Encounter contained in adventure should get a builder from adventure?
         // Encounter
-        AdventureDbo adventure = new AdventureDbo();
-        EncounterDbo encounter = EncounterDbo.builder(adventure).withEnemy(CardType.Goblin, 1).build();
-        CardDbo enemyCard = encounter.getEnemies().get(0);
-        enemyCard.setStrength(8);
-        enemyCard.setAgility(15);
-        enemyCard.setDamage(9);
-        enemyCard.setXp(1000);
-        enemyCard.setStickers(
-                CardStickerFactory.builder()
-                        .add(CardSticker.Type.HOT_AT1)
-                        .add(CardSticker.Type.DOT_AT3)
+        AdventureDbo adventure = AdventureDbo
+                .builder(player.getId())
+                .build();
+        adventure.getEncounters().add(
+                EncounterDbo
+                        .builder(adventure)
+                        .withCard(
+                            CardDbo.builder(player.getId())
+                                    .withType(CardType.Goblin)
+                                    .withName("Bobo")
+                                    .withLevel(1)
+                                    .withStrength(8)
+                                    .withAgility(15)
+                                    .withDamage(9)
+                                    .withXp(1000)
+                                    .withSticker(CardSticker.Type.HOT_AT1)
+                                    .withSticker(CardSticker.Type.DOT_AT3)
+                                    .build()
+                        )
                         .build()
         );
 
-        EncounterProcessor processor = new EncounterProcessor(player, encounter);
+        EncounterProcessor processor = new EncounterProcessor(player, adventure.getEncounters().get(0));
         EncounterProcessor.Result result = processor.doEncounter();
         assertNotSame(result, EncounterProcessor.Result.None);  // None means the encounter started and has not finished
         assertTrue(processor.getEventLog().getEvents().size() > 0);

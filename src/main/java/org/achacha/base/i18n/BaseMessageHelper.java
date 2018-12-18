@@ -74,7 +74,8 @@ public abstract class BaseMessageHelper {
     public Locale getUserLocale() {
         CallContext context = CallContextTls.get();
         if (null == context) {
-            LOGGER.debug("Message resolution is missing CallContext (possibly called in JSP before login), using default Locale");
+            //This is too noisy especially during unit testing
+            //LOGGER.trace("Message resolution is missing CallContext (possibly called in JSP before login), using default Locale");
             return Locale.getDefault();
         }
 

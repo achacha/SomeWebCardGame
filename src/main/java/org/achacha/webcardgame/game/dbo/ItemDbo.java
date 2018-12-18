@@ -30,7 +30,7 @@ public class ItemDbo extends BaseDbo {
     protected ItemType type;
 
     /** Quantity stack */
-    protected long quantity;
+    protected long quantity = 1;
 
     /**
      * Builder for an item of type
@@ -42,24 +42,21 @@ public class ItemDbo extends BaseDbo {
     }
 
     public static class Builder {
-        final long inventoryId;
-        final ItemType type;
-        long quantity = 1;
+        private ItemDbo item = new ItemDbo();
 
         Builder(long inventoryId, ItemType type) {
-            this.type = type;
-            this.inventoryId = inventoryId;
+            item.type = type;
+            item.inventoryId = inventoryId;
         }
 
         public Builder withQuantity(long quantity) {
-            this.quantity = quantity;
+            Preconditions.checkState(quantity > 0);
+            item.quantity = quantity;
             return this;
         }
 
         ItemDbo build() {
-            ItemDbo item = new ItemDbo();
-            item.type = type;
-            item.quantity = quantity;
+            Preconditions.checkNotNull(item.type);
             return item;
         }
     }

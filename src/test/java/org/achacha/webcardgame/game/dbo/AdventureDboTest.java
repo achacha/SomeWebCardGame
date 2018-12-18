@@ -28,14 +28,14 @@ class AdventureDboTest extends BaseInitializedTest {
         AdventureDbo adventure = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
 
         adventure.getEncounters().add(EncounterDbo.builder(adventure)
-                .withEnemy(CardType.Human, 2)
-                .withEnemy(CardType.Goblin, 1)
-                .withEnemy(CardType.Goblin, 1)
+                .withGeneratedCard(CardType.Human, 2)
+                .withGeneratedCard(CardType.Goblin, 1)
+                .withGeneratedCard(CardType.Goblin, 1)
                 .build());
 
         adventure.getEncounters().add(EncounterDbo.builder(adventure)
-                .withEnemy(CardType.Elf, 3)
-                .withEnemy(CardType.Elf, 2)
+                .withGeneratedCard(CardType.Elf, 3)
+                .withGeneratedCard(CardType.Elf, 2)
                 .build());
 
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
@@ -57,12 +57,12 @@ class AdventureDboTest extends BaseInitializedTest {
         PlayerDbo player = createNewTestPlayer();
         AdventureDbo adventure1 = AdventureDbo.builder(player.getId()).build();
         adventure1.getEncounters().add(EncounterDbo.builder(adventure1)
-                .withEnemy(CardType.Human, 1)
+                .withGeneratedCard(CardType.Human, 1)
                 .build());
 
         AdventureDbo adventure2 = AdventureDbo.builder(player.getId()).build();
         adventure2.getEncounters().add(EncounterDbo.builder(adventure2)
-                .withEnemy(CardType.Human, 2)
+                .withGeneratedCard(CardType.Human, 2)
                 .build());
 
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
@@ -102,14 +102,14 @@ class AdventureDboTest extends BaseInitializedTest {
             // TODO: Auto-add encounter to adventure
             AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
             adventure.getEncounters().add(EncounterDbo.builder(adventure)
-                    .withEnemy(CardType.Goblin, 3)
-                    .withEnemy(CardType.Goblin, 3)
-                    .withEnemy(CardType.Human, 6)
+                    .withGeneratedCard(CardType.Goblin, 3)
+                    .withGeneratedCard(CardType.Goblin, 3)
+                    .withGeneratedCard(CardType.Human, 6)
                     .build());
 
             adventure.getEncounters().add(EncounterDbo.builder(adventure)
-                    .withEnemy(CardType.Elf, 5)
-                    .withEnemy(CardType.Elf, 7)
+                    .withGeneratedCard(CardType.Elf, 5)
+                    .withGeneratedCard(CardType.Elf, 7)
                     .build());
 
             adventure.insert(connection);
@@ -150,10 +150,10 @@ class AdventureDboTest extends BaseInitializedTest {
     @Test
     void testToFromJson() {
         AdventureDbo original = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
-        original.getEncounters().add(EncounterDbo.builder(original).withEnemy(CardType.Human, 3, "enemy_1").build());
-        original.getEncounters().add(EncounterDbo.builder(original).withEnemy(CardType.Elf, 2, "enemy_2").build());
+        original.getEncounters().add(EncounterDbo.builder(original).withGeneratedCard(CardType.Human, 3, "enemy_1").build());
+        original.getEncounters().add(EncounterDbo.builder(original).withGeneratedCard(CardType.Elf, 2, "enemy_2").build());
         String originalJson = original.toJsonObject().toString();
-        assertEquals("{\"id\":0,\"playerId\":1,\"encounters\":[{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"name\":\"enemy_1\",\"type\":\"Human\",\"level\":3,\"xp\":0,\"health\":100,\"strength\":10,\"agility\":10,\"damage\":10,\"playerId\":0,\"encounterId\":0}],\"result\":\"None\"},{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"name\":\"enemy_2\",\"type\":\"Elf\",\"level\":2,\"xp\":0,\"health\":100,\"strength\":10,\"agility\":10,\"damage\":10,\"playerId\":0,\"encounterId\":0}],\"result\":\"None\"}]}", originalJson);
+        assertEquals("{\"id\":0,\"playerId\":1,\"encounters\":[{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_1\",\"type\":\"Human\",\"level\":3,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"},{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_2\",\"type\":\"Elf\",\"level\":2,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"}]}", originalJson);
 
         AdventureDbo restored = Global.getInstance().getGson().fromJson(originalJson, AdventureDbo.class);
         assertEquals(originalJson, restored.toJsonObject().toString());

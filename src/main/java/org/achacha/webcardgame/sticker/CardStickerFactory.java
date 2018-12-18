@@ -22,15 +22,15 @@ public class CardStickerFactory {
      * Initialize
      */
     static {
-        STICKERS.put(CardSticker.Type.NOP.name(), new CardStickerHealing("ecs.nop", 0, 0, 0, 0));
-        STICKERS.put(CardSticker.Type.HOT_AT1.name(), new CardStickerHealing("ecs.hot.at1", 0, 0, 1, 0));
-        STICKERS.put(CardSticker.Type.HOT_AT3.name(), new CardStickerHealing("ecs.hot.at3", 0, 0, 3, 0));
-        STICKERS.put(CardSticker.Type.HOT_AT5.name(), new CardStickerHealing("ecs.hot.at5", 0, 0, 5, 0));
-        STICKERS.put(CardSticker.Type.HOT_AT10.name(), new CardStickerHealing("ecs.hot.at10", 0, 0, 10, 0));
-        STICKERS.put(CardSticker.Type.DOT_AT1.name(), new CardStickerDamage("ecs.dot.at1", 0, 0, 1, 0));
-        STICKERS.put(CardSticker.Type.DOT_AT3.name(), new CardStickerDamage("ecs.dot.at3", 0, 0, 3, 0));
-        STICKERS.put(CardSticker.Type.DOT_AT5.name(), new CardStickerDamage("ecs.dot.at5", 0, 0, 5, 0));
-        STICKERS.put(CardSticker.Type.DOT_AT10.name(), new CardStickerDamage("ecs.dot.at10", 0, 0, 10, 0));
+        STICKERS.put(CardSticker.Type.NOP.name(), new CardStickerHealing(CardSticker.Type.NOP, "ecs.nop", 0, 0, 0, 0));
+        STICKERS.put(CardSticker.Type.HOT_AT1.name(), new CardStickerHealing(CardSticker.Type.HOT_AT1, "ecs.hot.at1", 0, 0, 1, 0));
+        STICKERS.put(CardSticker.Type.HOT_AT3.name(), new CardStickerHealing(CardSticker.Type.HOT_AT3, "ecs.hot.at3", 0, 0, 3, 0));
+        STICKERS.put(CardSticker.Type.HOT_AT5.name(), new CardStickerHealing(CardSticker.Type.HOT_AT5, "ecs.hot.at5", 0, 0, 5, 0));
+        STICKERS.put(CardSticker.Type.HOT_AT10.name(), new CardStickerHealing(CardSticker.Type.HOT_AT10, "ecs.hot.at10", 0, 0, 10, 0));
+        STICKERS.put(CardSticker.Type.DOT_AT1.name(), new CardStickerDamage(CardSticker.Type.DOT_AT1, "ecs.dot.at1", 0, 0, 1, 0));
+        STICKERS.put(CardSticker.Type.DOT_AT3.name(), new CardStickerDamage(CardSticker.Type.DOT_AT3, "ecs.dot.at3", 0, 0, 3, 0));
+        STICKERS.put(CardSticker.Type.DOT_AT5.name(), new CardStickerDamage(CardSticker.Type.DOT_AT5, "ecs.dot.at5", 0, 0, 5, 0));
+        STICKERS.put(CardSticker.Type.DOT_AT10.name(), new CardStickerDamage(CardSticker.Type.DOT_AT10, "ecs.dot.at10", 0, 0, 10, 0));
     }
 
     public static Builder builder() {

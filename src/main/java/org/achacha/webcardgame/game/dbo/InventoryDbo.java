@@ -36,7 +36,33 @@ public class InventoryDbo extends BaseDbo {
     /** Materials */
     long materials;
 
-    public InventoryDbo() {
+    public static Builder builder(PlayerDbo player) {
+        return new Builder(player);
+    }
+
+    public static class Builder {
+        private InventoryDbo inventory = new InventoryDbo();
+
+        public Builder(PlayerDbo player) {
+            inventory.playerId = player.id;
+        }
+
+        public Builder withEnergy(long energy) {
+            inventory.energy = energy;
+            return this;
+        }
+
+        public Builder withMaterials(long materials) {
+            inventory.materials = materials;
+            return this;
+        }
+
+        public InventoryDbo build() {
+            return inventory;
+        }
+    }
+
+    InventoryDbo() {
     }
 
     @Override

@@ -16,15 +16,15 @@ public class CardStickerHealing extends CardSticker {
     /**
      * Healing
      * NOTE: All healing values are percent of total and must be [0,100]
-     *
+     * @param type Type
      * @param messageKeyBase message key base
      * @param beforeEncounterHeal before encounter
      * @param beforeTurnHeal before each turn
      * @param afterTurnHeal after each turn
      * @param afterEncounterHeal after encounter
      */
-    public CardStickerHealing(String messageKeyBase, int beforeEncounterHeal, int beforeTurnHeal, int afterTurnHeal, int afterEncounterHeal) {
-        super(messageKeyBase);
+    public CardStickerHealing(Type type, String messageKeyBase, int beforeEncounterHeal, int beforeTurnHeal, int afterTurnHeal, int afterEncounterHeal) {
+        super(type, messageKeyBase);
 
         this.beforeEncounterHeal = beforeEncounterHeal;
         this.beforeTurnHeal = beforeTurnHeal;

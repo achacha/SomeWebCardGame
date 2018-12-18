@@ -17,14 +17,15 @@ public class CardStickerDamage extends CardSticker {
      * Damaging
      * NOTE: All damaging values are percent of total and must be [0,100]
      *
+     * @param type Type
      * @param messageKeyBase message key base
      * @param beforeEncounterDamage before encounter
      * @param beforeTurnDamage before each turn
      * @param afterTurnDamage after each turn
      * @param afterEncounterDamage after encounter
      */
-    public CardStickerDamage(String messageKeyBase, int beforeEncounterDamage, int beforeTurnDamage, int afterTurnDamage, int afterEncounterDamage) {
-        super(messageKeyBase);
+    public CardStickerDamage(Type type, String messageKeyBase, int beforeEncounterDamage, int beforeTurnDamage, int afterTurnDamage, int afterEncounterDamage) {
+        super(type, messageKeyBase);
 
         this.beforeEncounterDamage = beforeEncounterDamage;
         this.beforeTurnDamage = beforeTurnDamage;
