@@ -17,5 +17,4 @@ public class TestDataConstants {
 
     // player for JUNIT_USER_LOGINID
     public static final long JUNIT_PLAYER__ID = 1;
-    public static final long JUNIT_INVENTORY_ID = 1;  // TODO: This will go away, data is to be generated dynamically and looked up by player id
 }
