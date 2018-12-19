@@ -115,7 +115,8 @@ public class PlayerDbo extends BaseDbo {
 
         inventory.update(connection);
 
-        //TODO: How to handle deleted cards (do we support that?) should we just flag it inactive?
+        // Delete cards not part of the existing list
+        Global.getInstance().getDatabaseManager().<CardDboFactory>getFactory(CardDbo.class).deleteNotIn(connection, id, cards);
         for (CardDbo card : cards) {
             if (card.id == 0) {
                 card.playerId = this.id;

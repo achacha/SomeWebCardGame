@@ -1,0 +1,1 @@
+delete from public.card where player__id=? AND id != ANY(?);

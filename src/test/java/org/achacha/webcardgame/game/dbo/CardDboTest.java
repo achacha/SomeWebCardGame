@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class CardDboTest extends BaseInitializedTest {
@@ -38,7 +39,7 @@ class CardDboTest extends BaseInitializedTest {
     }
 
     @Test
-    public void cardStickerNameConsistency() throws SQLException {
+    void cardStickerNameConsistency() throws SQLException {
         PlayerDbo player = createNewTestPlayer();
         CardDbo card = CardDbo.builder(player.getId())
                 .withTypeAndRandomName(CardType.Human)
@@ -54,6 +55,52 @@ class CardDboTest extends BaseInitializedTest {
             CardDbo cardLoaded = Global.getInstance().getDatabaseManager().<CardDboFactory>getFactory(CardDbo.class).getById(connection, card.getId());
             assertNotNull(cardLoaded);
             assertEquals(card.toJsonObject().toString(), cardLoaded.toJsonObject().toString());
+        }
+    }
+
+    @Test
+    void testDeleteRemovedCards() throws SQLException {
+        PlayerDbo player = createNewTestPlayer();
+        player.getCards().add(CardDbo.builder(player.getId())
+                .withTypeAndRandomName(CardType.Human)
+                .withLevel(4)
+                .withSticker(CardSticker.Type.HOT_AT3)
+                .withSticker(CardSticker.Type.DOT_AT10)
+                .build());
+        player.getCards().add(CardDbo.builder(player.getId())
+                .withTypeAndRandomName(CardType.Human)
+                .withLevel(5)
+                .withSticker(CardSticker.Type.HOT_AT3)
+                .withSticker(CardSticker.Type.DOT_AT10)
+                .build()
+        );
+
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            // This should insert the cards
+            player.update(connection);
+            connection.commit();
+
+            // Verify it saved
+            PlayerDbo loadedPlayer = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getById(connection, player.getId());
+            assertNotNull(loadedPlayer);
+            assertEquals(2, loadedPlayer.getCards().size());
+
+            // Remove card, add new card and update
+            CardDbo removedCard = player.getCards().remove(0);
+            assertEquals(1, player.getCards().size());
+
+            player.getCards().add(CardDbo.builder(player.getId())
+                    .withTypeAndRandomName(CardType.Human)
+                    .withLevel(6)
+                    .build()
+            );
+            player.update(connection);
+            connection.commit();
+
+            PlayerDbo loadedPlayerAgain = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getById(connection, player.getId());
+            assertNotNull(loadedPlayerAgain);
+            assertEquals(2, loadedPlayerAgain.getCards().size());
+            assertFalse(loadedPlayerAgain.getCards().stream().map(CardDbo::getId).anyMatch(id-> id == removedCard.getId()));
         }
     }
 }

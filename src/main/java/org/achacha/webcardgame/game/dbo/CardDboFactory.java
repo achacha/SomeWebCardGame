@@ -1,12 +1,15 @@
 package org.achacha.webcardgame.game.dbo;
 
+import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseDboFactory;
 import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.global.Global;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,4 +62,25 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
 
     }
 
+    public void deleteNotIn(Connection connection, long playerId, List<CardDbo> existingCards) throws SQLException {
+        Preconditions.checkState(playerId > 0);
+
+        if (existingCards.size() > 0) {
+            DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+            try (PreparedStatement pstmt = dbm.prepareStatement(
+                    connection,
+                    "/sql/Card/DeleteNotIn.sql",
+                    p -> {
+                        p.setLong(1, playerId);
+
+                        // Get all ids >0 and delete anything that is no longer present, id == 0 means it was not yet inserted
+                        Object[] ids = existingCards.stream().map(CardDbo::getId).filter(id-> id > 0).toArray();
+                        Array ary = connection.createArrayOf("INTEGER", ids);
+                        p.setArray(2, ary);
+                    }
+            )) {
+                pstmt.executeUpdate();
+            }
+        }
+    }
 }

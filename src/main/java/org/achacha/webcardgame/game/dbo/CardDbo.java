@@ -176,14 +176,19 @@ public class CardDbo extends BaseDbo {
         this.agility = rs.getInt("agility");
 
         String stickerString = rs.getString("stickers");
-        String[] stickerArray = stickerString.split(",");
-        this.stickers = new ArrayList<>(stickerArray.length);
-        for (String name : stickerArray) {
-            CardSticker sticker = CardStickerFactory.getSticker(name);
-            if (sticker != null)
-                this.stickers.add(sticker);
-            else
-                LOGGER.warn("Unknown sticker on cardId={} stickerName={}", id, name);
+        if (StringUtils.isNotEmpty(stickerString)) {
+            String[] stickerArray = stickerString.split(",");
+            this.stickers = new ArrayList<>(stickerArray.length);
+            for (String name : stickerArray) {
+                CardSticker sticker = CardStickerFactory.getSticker(name);
+                if (sticker != null)
+                    this.stickers.add(sticker);
+                else
+                    LOGGER.warn("Unknown sticker on cardId={} stickerName={}", id, name);
+            }
+        }
+        else {
+            this.stickers = new ArrayList<>();
         }
     }
 
@@ -219,6 +224,37 @@ public class CardDbo extends BaseDbo {
                 LOGGER.error("Failed to insert card={}", this);
                 throw new SQLException("Failed to insert card="+this);
             }
+        }
+    }
+
+    @Override
+    public void update(Connection connection) throws SQLException {
+        Preconditions.checkState(id > 0);
+        Preconditions.checkState(playerId > 0);
+        Preconditions.checkNotNull(type);
+
+        try (
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
+                        connection,
+                        "/sql/Card/Update.sql",
+                        p-> {
+                            p.setLong(1, playerId);
+                            p.setLong(2, encounterId);
+                            p.setString(3, name);
+                            p.setString(4, type.name());
+                            p.setInt(5, level);
+                            p.setInt(6, xp);
+                            p.setInt(7, strength);
+                            p.setInt(8, agility);
+
+                            String stickerNames = stickers.stream().map(CardSticker::getTypeName).collect(Collectors.joining(","));
+                            p.setString(9, stickerNames);
+
+                            p.setLong(10, id);
+                        }
+                )
+        ) {
+            pstmt.executeUpdate();
         }
     }
 
