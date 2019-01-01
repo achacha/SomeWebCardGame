@@ -4,7 +4,6 @@ import org.achacha.base.context.CallContextTls;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
-import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.dbo.AdventureArchiveDbo;
 import org.achacha.webcardgame.game.dbo.AdventureDbo;
 import org.achacha.webcardgame.game.dbo.AdventureDboFactory;
@@ -155,10 +154,9 @@ public class AdventureRoutes extends AbstractRoutes {
                 adventures = new ArrayList<>(COUNT);
                 // Use negative id since it is not persisted
                 for (int tempId = 1; tempId <= COUNT; ++tempId) {
-                    // TODO: need to randomize
+                    // Randomize
                     AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
-                    adventure.getEncounters().add(EncounterDbo.builder(adventure).withGeneratedCard(CardType.Goblin, LEVEL).build());
-                    adventure.getEncounters().add(EncounterDbo.builder(adventure).withGeneratedCard(CardType.Goblin, LEVEL).build());
+                    adventure.getEncounters().add(EncounterDbo.builder(adventure).withRandomGeneratedCards(LEVEL, RandomUtils.nextInt(1,3)).build());
                     adventure.setId(-tempId);
                     adventures.add(adventure);
 

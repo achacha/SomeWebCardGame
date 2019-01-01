@@ -79,6 +79,22 @@ public class EncounterDbo extends BaseDbo {
             return this;
         }
 
+        /**
+         * Generate more than 1 card
+         * Generate random name for type provided
+         */
+        public Builder withRandomGeneratedCards(int level, int numberOfCards) {
+            for (int i=0; i<numberOfCards; ++i) {
+                encounter.enemies.add(
+                        CardDbo.builder(adventure.playerId)
+                                .withTypeAndRandomName(CardType.random())
+                                .withLevel(level)
+                                .build()
+                );
+            }
+            return this;
+        }
+
         public EncounterDbo build() {
             return encounter;
         }
