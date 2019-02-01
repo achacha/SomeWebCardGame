@@ -2,6 +2,7 @@ package org.achacha.base.global;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
@@ -64,6 +65,17 @@ public abstract class Global {
     /** Gson for convert to/from Json, pretty version does user indented formatting */
     protected Gson gson;
     protected Gson gsonPretty;
+
+    /**
+     * @return Build information
+     */
+    public static JsonObject getBuildVersion() {
+        JsonObject jobj = new JsonObject();
+        jobj.addProperty("Vendor", Global.class.getPackage().getImplementationVendor());
+        jobj.addProperty("Title", Global.class.getPackage().getImplementationTitle());
+        jobj.addProperty("Version", Global.class.getPackage().getImplementationVersion());
+        return jobj;
+    }
 
     public enum Mode {
         DEV,

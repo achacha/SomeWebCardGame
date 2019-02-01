@@ -3,6 +3,7 @@ package org.achacha.webcardgame.web.v1;
 import com.google.gson.JsonObject;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
+import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.web.AbstractRoutes;
@@ -29,6 +30,7 @@ public class ServerRoutes extends AbstractRoutes {
         CallContext callContext = CallContextTls.get();
 
         JsonObject obj = JsonHelper.getSuccessObject();
+        obj.add("build", Global.getBuildVersion());
         obj.addProperty("httpRequest", httpRequest.toString());
         obj.addProperty("requestContext", requestContext.toString());
         obj.addProperty("application", application.toString());
