@@ -13,11 +13,11 @@
   "author": "achacha",
   "license": "UNLICENSED",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18",
     "bootstrap": "~v4",
     "font-awesome": "^4.7.0",
     "jquery": "~3",
-    "phaser-ce": "~2.10",
+    "phaser-ce": "~2.11",
     "popper.js": "^1.12.9",
     "requirejs": "~2",
     "tether": "~>1.4",

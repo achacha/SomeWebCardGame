@@ -1,17 +1,17 @@
 package org.achacha.webcardgame.game.data;
 
-import org.achacha.webcardgame.game.logic.NameHelper;
+import org.achacha.webcardgame.game.logic.CardNameGenerator;
 import org.apache.commons.lang3.RandomUtils;
 
 public enum CardType {
-    Grue(NameHelper.NameType.Grue),
-    Human(NameHelper.NameType.Human),
-    Elf(NameHelper.NameType.Elf),
-    Goblin(NameHelper.NameType.Goblin);
+    Grue(CardNameGenerator.NameType.Grue),
+    Human(CardNameGenerator.NameType.Human),
+    Elf(CardNameGenerator.NameType.Elf),
+    Goblin(CardNameGenerator.NameType.Goblin);
 
-    final NameHelper.NameType nameType;
+    final CardNameGenerator.NameType nameType;
 
-    CardType(NameHelper.NameType nameType) {
+    CardType(CardNameGenerator.NameType nameType) {
         this.nameType = nameType;
     }
 
@@ -23,7 +23,7 @@ public enum CardType {
         return values()[RandomUtils.nextInt(1, values().length)];
     }
 
-    public NameHelper.NameType getNameType() {
+    public CardNameGenerator.NameType getNameType() {
         return nameType;
     }
 }

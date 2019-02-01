@@ -33,6 +33,9 @@ public class AdventureArchiveDbo extends BaseDbo {
     /** Player ID */
     private long playerId;
 
+    /** Title */
+    private String title;
+
     /**
      * Completed time
      * This will be set by the database using NOW() upon insert and returned and set on object
@@ -50,6 +53,7 @@ public class AdventureArchiveDbo extends BaseDbo {
         this.originalId = originalAdventure.id;
         this.originalCreated = originalAdventure.created;
         this.playerId = originalAdventure.playerId;
+        this.title = originalAdventure.title;
         this.encounters = originalAdventure.encounters.stream().map(EncounterArchiveDbo::new).collect(Collectors.toList());
     }
 
@@ -70,6 +74,10 @@ public class AdventureArchiveDbo extends BaseDbo {
         return playerId;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public Timestamp getCompleted() {
         return completed;
     }
@@ -82,7 +90,7 @@ public class AdventureArchiveDbo extends BaseDbo {
      * Insert new adventure archive after it is completed
      * id and completed are set upon insert and set on object
      * @param connection Connection to reuse
-     * @throws Exception If unable to insert
+     * @throws SQLException If unable to insert
      */
     @Override
     public void insert(Connection connection) throws SQLException {
@@ -94,6 +102,7 @@ public class AdventureArchiveDbo extends BaseDbo {
                             p.setLong(1, originalId);
                             p.setTimestamp(2, originalCreated);
                             p.setLong(3, playerId);
+                            p.setString(4, title);
                         }
                 );
                 ResultSet rs = pstmt.executeQuery()
@@ -122,6 +131,7 @@ public class AdventureArchiveDbo extends BaseDbo {
         originalId = rs.getLong("original_id");
         originalCreated = rs.getTimestamp("original_created");
         playerId = rs.getLong("player__id");
+        title = rs.getString("title");
         completed = rs.getTimestamp("completed");
         encounters = Global.getInstance().getDatabaseManager().<EncounterArchiveDboFactory>getFactory(EncounterArchiveDbo.class).getByAdventureId(connection, this.id);
     }

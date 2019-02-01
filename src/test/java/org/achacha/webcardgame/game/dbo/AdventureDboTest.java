@@ -25,7 +25,9 @@ class AdventureDboTest extends BaseInitializedTest {
     @Test
     void testInsert() throws Exception {
         // Create adventure
-        AdventureDbo adventure = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
+        AdventureDbo adventure = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID)
+                .withTitle("Some adventure")
+                .build();
 
         adventure.getEncounters().add(EncounterDbo.builder(adventure)
                 .withGeneratedCard(CardType.Human, 2)
@@ -45,6 +47,7 @@ class AdventureDboTest extends BaseInitializedTest {
             AdventureDbo adventureLoaded = factory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID);
             assertNotNull(adventureLoaded);
             assertEquals(TestDataConstants.JUNIT_PLAYER__ID, adventureLoaded.playerId);
+            assertEquals("Some adventure", adventureLoaded.title);
             assertEquals(adventure.toJsonObject().toString(), adventureLoaded.toJsonObject().toString());
 
             factory.deleteById(connection, adventure.getId());
@@ -99,8 +102,10 @@ class AdventureDboTest extends BaseInitializedTest {
             PlayerDbo player = createNewTestPlayer();
             assertNotNull(player);
 
-            // TODO: Auto-add encounter to adventure
-            AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
+            AdventureDbo adventure = AdventureDbo.builder(player.getId())
+                    .withTitle("Not Quite The Quest For The Holy Grail")
+                    .build();
+
             adventure.getEncounters().add(EncounterDbo.builder(adventure)
                     .withGeneratedCard(CardType.Goblin, 3)
                     .withGeneratedCard(CardType.Goblin, 3)
@@ -137,6 +142,7 @@ class AdventureDboTest extends BaseInitializedTest {
             // Verify move, archive consistent
             AdventureArchiveDbo archivedAdventure = adventureArchiveFactory.getByOriginalId(connection, adventureId);
             assertNotNull(archivedAdventure);
+            assertEquals("Not Quite The Quest For The Holy Grail", archivedAdventure.getTitle());
             assertEquals(adventureId, archivedAdventure.getOriginalId());
             assertEquals(originalCreated, archivedAdventure.getOriginalCreated());
             assertNotNull(archivedAdventure.getCompleted());
@@ -152,8 +158,14 @@ class AdventureDboTest extends BaseInitializedTest {
         AdventureDbo original = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
         original.getEncounters().add(EncounterDbo.builder(original).withGeneratedCard(CardType.Human, 3, "enemy_1").build());
         original.getEncounters().add(EncounterDbo.builder(original).withGeneratedCard(CardType.Elf, 2, "enemy_2").build());
+
+        // Due to random titles, we replace title with original for the check
+        original.setTitle("Stroll around the block");
         String originalJson = original.toJsonObject().toString();
-        assertEquals("{\"id\":0,\"playerId\":1,\"encounters\":[{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_1\",\"type\":\"Human\",\"level\":3,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"},{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_2\",\"type\":\"Elf\",\"level\":2,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"}]}", originalJson);
+        assertEquals(
+                "{\"id\":0,\"playerId\":1,\"title\":\"Stroll around the block\",\"encounters\":[{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_1\",\"type\":\"Human\",\"level\":3,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"},{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_2\",\"type\":\"Elf\",\"level\":2,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"}]}",
+                originalJson
+        );
 
         AdventureDbo restored = Global.getInstance().getGson().fromJson(originalJson, AdventureDbo.class);
         assertEquals(originalJson, restored.toJsonObject().toString());

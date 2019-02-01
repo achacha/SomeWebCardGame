@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseDbo;
 import org.achacha.base.global.Global;
 import org.achacha.webcardgame.game.data.CardType;
+import org.achacha.webcardgame.game.logic.CardNameGenerator;
 import org.achacha.webcardgame.game.logic.EncounterEventLog;
-import org.achacha.webcardgame.game.logic.NameHelper;
 import org.achacha.webcardgame.sticker.CardSticker;
 import org.achacha.webcardgame.sticker.CardStickerFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -114,7 +114,7 @@ public class CardDbo extends BaseDbo {
 
         public Builder withTypeAndRandomName(CardType type) {
             card.type = type;
-            card.name = NameHelper.generateName(type.getNameType());
+            card.name = CardNameGenerator.generateName(type.getNameType());
             return this;
         }
 
@@ -342,7 +342,7 @@ public class CardDbo extends BaseDbo {
      * Generate a new name based on CardType.NameType
      */
     public void generateName() {
-        this.name = NameHelper.generateName(this.type.getNameType());
+        this.name = CardNameGenerator.generateName(this.type.getNameType());
     }
 
     /**

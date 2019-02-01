@@ -4,9 +4,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>hello phaser!</title>
-  <script src="./js/phaser-ce/build/phaser.js"></script>
+    <meta charset="UTF-8" />
+    <title>hello phaser!</title>
+    <script src="./js/phaser-ce/build/phaser.js"></script>
+    <script src="./js/axios/dist/axios.min.js"></script>
 </head>
 <body>
 <%
@@ -54,7 +55,7 @@
                 card0.inputEnabled = true;
                 card0.input.enableDrag();
                 card0.inputEnabled = true;
-                card0.events.onInputDown.add(getInputDownFn("Clicked on card "+i, text0), this);
+                card0.events.onInputDown.add(getInputDownFn(c, "Clicked on card "+i, text0), this);
                 cards.push(card0);
                 cardtexts.push(cardtext0);
             }
@@ -65,9 +66,29 @@
             }
         }
 
-        function getInputDownFn(basetext, text0) {
+        function getInputDownFn(card, basetext, text0) {
             return (function(sprite, pointer) {
-                console.log("clicked "+text0.text+"  this="+this);
+                console.log("clicked "+text0.text+"  this="+this+"  card="+card);
+
+                //loadAvailableAdventures()
+                axios({
+                    method: 'get',
+                    url: '/api/adventure/available?playerId='+card.playerId
+                }).then(function (response) {
+                    if (response.data.success === true) {
+                        //console.log(response.data.data);  //TODO: Continue
+                        var availableAdventures = response.data.data;
+                        for(i=0; i<availableAdventures.length; ++i)
+                            console.log(i+": "+availableAdventures[i].title);
+                    }
+                    else {
+                        console.log("FAIL: "+response);
+                    }
+                }).catch(function(error) {
+                    console.log("ERROR: "+error);
+                });
+
+
                 if (!(text0.text !== basetext))
                     text0.text = basetext+", again.";
                 else

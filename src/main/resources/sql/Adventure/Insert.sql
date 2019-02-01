@@ -1,1 +1,1 @@
-insert into public.adventure(id,player__id) values(DEFAULT,?) returning id, created;
+insert into public.adventure(id,player__id,title) values(DEFAULT,?,?) returning id, created;

@@ -1,8 +1,10 @@
 package org.achacha.webcardgame.game.dbo;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import org.achacha.base.db.BaseDbo;
 import org.achacha.base.global.Global;
+import org.achacha.webcardgame.game.logic.AdventureNameGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +30,9 @@ public class AdventureDbo extends BaseDbo {
 
     /** Player that owns this adventure */
     protected long playerId;
+
+    /** Title of this adventure */
+    protected String title;
 
     /** Encounters in this Adventure */
     protected List<EncounterDbo> encounters;
@@ -59,11 +64,20 @@ public class AdventureDbo extends BaseDbo {
             return this;
         }
 
+        public Builder withTitle(String title) {
+            adventure.title = title;
+            return this;
+        }
+
         /**
          * @return Build adventure
          */
         public AdventureDbo build() {
             adventure.encounters = new ArrayList<>();
+
+            if (adventure.title == null)
+                adventure.title = AdventureNameGenerator.generateAdventureName(adventure);
+
             return adventure;
         }
     }
@@ -74,6 +88,15 @@ public class AdventureDbo extends BaseDbo {
     @Override
     public long getId() {
         return this.id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    @VisibleForTesting
+    void setTitle(String title) {
+        this.title = title;
     }
 
     public List<EncounterDbo> getEncounters() {
@@ -96,6 +119,7 @@ public class AdventureDbo extends BaseDbo {
     public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.playerId = rs.getLong("player__id");
+        this.title = rs.getString("title");
         this.encounters = Global.getInstance().getDatabaseManager().<EncounterDboFactory>getFactory(EncounterDbo.class).getByAdventureId(connection, this.id);
         this.created = rs.getTimestamp("created");
 
@@ -118,6 +142,7 @@ public class AdventureDbo extends BaseDbo {
                         "/sql/Adventure/Insert.sql",
                         p -> {
                             p.setLong(1, playerId);
+                            p.setString(2, title);
                         }
                 );
                 ResultSet rs = pstmt.executeQuery()

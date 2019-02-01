@@ -1,4 +1,8 @@
 dependencies {
+    // DadaWorddEngine
+    //compile files("../DadaWordEngine/target/DadaWordEngine-1.3.5-SNAPSHOT.jar")
+    compile "io.github.achacha:DadaWordEngine:${dadaWordEngineVersion}"
+
     // Kotlin support
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
