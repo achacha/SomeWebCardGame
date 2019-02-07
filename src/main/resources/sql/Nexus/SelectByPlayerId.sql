@@ -1,0 +1,1 @@
+select * from public.nexus where player__id=?;

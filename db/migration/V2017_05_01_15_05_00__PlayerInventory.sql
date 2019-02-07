@@ -33,7 +33,7 @@ CREATE TABLE inventory
   materials bigint,
 
   --
-  CONSTRAINT inventory_player__id_fkey FOREIGN KEY (player__id)
+  CONSTRAINT "FK_inventory_player__id" FOREIGN KEY (player__id)
   REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
@@ -54,7 +54,7 @@ CREATE TABLE item
   type integer, -- Item type
   quantity integer, -- Quantity of the item
   --
-  CONSTRAINT item_inventory__id_fkey FOREIGN KEY (inventory__id)
+  CONSTRAINT "FK_item_inventory__id" FOREIGN KEY (inventory__id)
   REFERENCES inventory (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (

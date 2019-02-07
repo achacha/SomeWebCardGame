@@ -40,7 +40,7 @@ public class AdventureDbo extends BaseDbo {
     /** Timestamp for when this adventure was created/activated */
     protected Timestamp created;
 
-    // TODO: Reward
+    // TODO: Reward (energy and materials)
 
     /**
      * Create a builder

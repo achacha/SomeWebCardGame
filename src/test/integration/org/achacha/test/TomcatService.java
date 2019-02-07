@@ -11,6 +11,8 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 import org.apache.juli.OneLineFormatter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import org.apache.tomcat.util.scan.StandardJarScanner;
 
@@ -30,12 +32,20 @@ Specify correct XML/XSL jars?
 
 */
 public class TomcatService {
+    private static final Logger LOGGER = LogManager.getLogger(TomcatService.class);
+
     private static final String TOMCAT_HOME = "tomcat/catalina.home/";
     private static final String TOMCAT_WORK = "build/tomcat/work/";
-    private static final String TOMCAT_BASE = "build/libs/exploded/SomeWebCardGame-1.0-SNAPSHOT.war";
+    static final String TOMCAT_BASE = "build/libs/exploded/SomeWebCardGame-1.0.1-SNAPSHOT.war";
 
     private static Thread thread;
     private static TomcatRunner tomcatRunner;
+
+    public static boolean isWarValid() {
+        File deployedWar = new File(TOMCAT_BASE);
+        LOGGER.info("Deploying embedded tomcat with TOMCAT_BASE="+deployedWar.getAbsolutePath());
+        return deployedWar.exists();
+    }
 
     static class TomcatRunner implements Runnable {
         private static Tomcat tomcat;

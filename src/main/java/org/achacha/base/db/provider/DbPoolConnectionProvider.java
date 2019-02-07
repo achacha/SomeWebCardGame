@@ -20,6 +20,8 @@ public class DbPoolConnectionProvider extends JdbcDatabaseConnectionProvider {
         super(properties);
 
         HikariConfig config = new HikariConfig(properties);
+        LOGGER.info("Setting all connections to transactional mode (autoCommit=false)");
+        config.setAutoCommit(false);
         dataSource = new HikariDataSource(config);
     }
 

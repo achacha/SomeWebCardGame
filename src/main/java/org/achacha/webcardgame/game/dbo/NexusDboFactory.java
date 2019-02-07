@@ -4,37 +4,39 @@ import org.achacha.base.db.BaseDboFactory;
 import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.global.Global;
 
+import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class InventoryDboFactory extends BaseDboFactory<InventoryDbo> {
-    public InventoryDboFactory() {
-        super(InventoryDbo.class);
+public class NexusDboFactory extends BaseDboFactory<NexusDbo> {
+    public NexusDboFactory() {
+        super(NexusDbo.class);
     }
 
     /**
-     * Inventory for a player
+     * Load nexus for player
      * @param connection Connection
-     * @param playerId PLayerDbo id
-     * @return InventoryDbo or null if none
+     * @param playerId PlayerDbo id
+     * @return NexusDbo or null if none
      */
-    public InventoryDbo getByPlayerId(Connection connection, long playerId) {
+    @Nullable
+    public NexusDbo getByPlayerId(Connection connection, long playerId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-        InventoryDbo dbo = null;
+        NexusDbo dbo = null;
         try (
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
-                        "/sql/Inventory/SelectByPlayerId.sql",
+                        "/sql/Nexus/SelectByPlayerId.sql",
                         p -> p.setLong(1, playerId));
                 ResultSet rs = pstmt.executeQuery()
         ) {
             if (rs.next()) {
-                dbo = new InventoryDbo();
+                dbo = new NexusDbo();
                 dbo.fromResultSet(connection, rs);
             }
         } catch (Exception sqle) {
-            LOGGER.error("Failed to find inventory for playerId={}", playerId, sqle);
+            LOGGER.error("Failed to find nexus for playerId={}", playerId, sqle);
         }
         return dbo;
 

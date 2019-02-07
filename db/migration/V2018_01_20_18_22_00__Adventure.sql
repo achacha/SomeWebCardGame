@@ -10,7 +10,7 @@ CREATE TABLE adventure
   title varchar(256) NOT NULL,
   created timestamp NOT NULL default now(),
   --
-  CONSTRAINT adventure_player__id_fkey FOREIGN KEY (player__id) REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT "FK_adventure_player__id" FOREIGN KEY (player__id) REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
 OIDS=FALSE
@@ -34,7 +34,7 @@ CREATE TABLE adventure_archive
   title varchar(256) NOT NULL,  -- Original title
   completed timestamp NOT NULL default now(),
   --
-  CONSTRAINT adventure_player__id_fkey FOREIGN KEY (player__id) REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT "FK_adventure_player__id" FOREIGN KEY (player__id) REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
 OIDS=FALSE
@@ -57,7 +57,7 @@ CREATE TABLE encounter
   enemy_cards json,
   result integer,
   --
-  CONSTRAINT encounter_adventure__id_fkey FOREIGN KEY (adventure__id) REFERENCES adventure (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT "FK_encounter_adventure__id" FOREIGN KEY (adventure__id) REFERENCES adventure (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
 OIDS=FALSE
@@ -77,7 +77,7 @@ CREATE TABLE encounter_archive
   enemy_cards json,
   result integer,
   --
-  CONSTRAINT encounter_adventure__id_fkey FOREIGN KEY (adventure_archive__id) REFERENCES adventure_archive (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT "FK_encounter_adventure__id" FOREIGN KEY (adventure_archive__id) REFERENCES adventure_archive (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
 OIDS=FALSE

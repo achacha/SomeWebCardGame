@@ -106,6 +106,8 @@ public class BaseIntegrationTest {
     public static void beforeClass() {
         System.out.println("beforeAll");
 
+        assertTrue(TomcatService.isWarValid(), "Missing base deployment: "+TomcatService.TOMCAT_BASE);
+
         BaseInitializedTest.init();
 
         if (!TomcatService.isTomcatRunning())

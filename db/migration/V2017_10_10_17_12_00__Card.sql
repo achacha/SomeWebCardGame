@@ -15,7 +15,7 @@ CREATE TABLE card
   damage integer default 10,
   stickers character varying(4096),
   --
-  CONSTRAINT card_player__id_fkey FOREIGN KEY (player__id)
+  CONSTRAINT "FK_card_player__id" FOREIGN KEY (player__id)
   REFERENCES player (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (

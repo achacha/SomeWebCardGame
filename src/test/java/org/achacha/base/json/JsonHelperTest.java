@@ -7,31 +7,25 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JsonHelperTest extends BaseInitializedTest {
     @Test
     void testGetSuccessObject() {
         JsonObject obj = JsonHelper.getSuccessObject();
-        assertThat(obj.toString(), is("{\"success\":true}"));
+        assertEquals("{\"success\":true}", obj.toString());
     }
 
     @Test
     void testGetSuccessObjectWithMessage() {
         JsonObject obj = JsonHelper.getSuccessObject("Engage!");
-        assertThat(
-                obj.toString(),
-                is("{\"success\":true,\"data\":\"Engage!\",\"dataClass\":\"java.lang.String\"}"));
+        assertEquals("{\"success\":true,\"data\":\"Engage!\",\"dataClass\":\"java.lang.String\"}", obj.toString());
     }
 
     @Test
     void testGetFailObject() {
         JsonObject obj = JsonHelper.getFailObject(null, "Cantdoit...");
-        assertThat(
-                obj.toString(),
-                is("{\"success\":false,\"data\":\"Cantdoit...\",\"dataClass\":\"java.lang.String\"}"));
+        assertEquals("{\"success\":false,\"data\":\"Cantdoit...\",\"dataClass\":\"java.lang.String\"}", obj.toString());
     }
 
     @Test
