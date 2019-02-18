@@ -1,1 +1,1 @@
-insert into public.player(id,login__id) values(DEFAULT,?) returning id;
+insert into public.player(id,login__id) values(DEFAULT,?) returning id, last_tick;

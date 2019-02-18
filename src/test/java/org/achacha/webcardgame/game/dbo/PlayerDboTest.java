@@ -11,10 +11,12 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,9 +50,21 @@ class PlayerDboTest extends BaseInitializedTest {
     }
 
     @Test
+    void testUpdateLastTick() throws SQLException {
+        PlayerDbo player = createNewTestPlayer();
+        Timestamp initial = player.getLastTick();
+
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            player.updateLastTickToNow(connection);
+            assertNotEquals(initial, player.getLastTick());
+        }
+    }
+
+    @Test
     void testPlayerDeleteWithCascade() throws SQLException {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         PlayerDbo player = createNewTestPlayer();
+        assertNotNull(player.getLastTick());
 
         // Build inventory
         player.getInventory().energy = 100;

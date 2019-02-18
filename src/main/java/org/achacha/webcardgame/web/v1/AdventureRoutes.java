@@ -12,6 +12,7 @@ import org.achacha.webcardgame.game.dbo.EncounterDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDboFactory;
 import org.achacha.webcardgame.game.logic.AdventureLogic;
+import org.achacha.webcardgame.game.tick.GameSession;
 import org.achacha.webcardgame.web.AbstractRoutes;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
 import org.apache.commons.lang3.RandomUtils;
@@ -195,6 +196,7 @@ public class AdventureRoutes extends AbstractRoutes {
     @PUT
     @Path("simulate")
     @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
+    @Deprecated
     public Response simulateAdventure(@QueryParam("playerId") long playerId) {
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
             // Get player by id for this login, if null then this login does not have such a player
@@ -212,6 +214,25 @@ public class AdventureRoutes extends AbstractRoutes {
             else {
                 return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound", "Adventure not found, playerId=" + playerId)).build();
             }
+        } catch (Exception e) {
+            LOGGER.error("Failed to load active adventure", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PUT
+    @Path("process")
+    @SecurityLevelRequired(SecurityLevel.AUTHENTICATED)
+    public Response processPlayerTicks(@QueryParam("playerId") long playerId, @QueryParam("forceTick") boolean forceTick) {
+        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            PlayerDbo playerDbo = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(connection, CallContextTls.get().getLogin().getId(), playerId);
+            if (playerDbo == null)
+                return Response.status(Response.Status.NOT_FOUND).entity(JsonHelper.getFailObject("dbo.notfound","Player not found, playerId="+playerId)).build();
+
+            GameSession gameSession = new GameSession(connection, playerDbo);
+            gameSession.process();
+
+            return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
             LOGGER.error("Failed to load active adventure", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

@@ -1,7 +1,6 @@
 package org.achacha.webcardgame.game.dbo;
 
 import org.achacha.base.db.BaseDboFactory;
-import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.global.Global;
 
 import javax.annotation.Nonnull;
@@ -25,10 +24,9 @@ public class PlayerDboFactory extends BaseDboFactory<PlayerDbo> {
      */
     @Nonnull
     public List<PlayerDbo> getByLoginId(Connection connection, long loginId) {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         List<PlayerDbo> dbos = new ArrayList<>();
         try (
-                PreparedStatement pstmt = dbm.prepareStatement(
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/Player/SelectByLoginId.sql",
                         p -> p.setLong(1, loginId));
@@ -54,10 +52,9 @@ public class PlayerDboFactory extends BaseDboFactory<PlayerDbo> {
      */
     @Nullable
     public PlayerDbo getByLoginIdAndPlayerId(Connection connection, long loginId, long playerId) {
-        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         PlayerDbo dbo = null;
         try (
-                PreparedStatement pstmt = dbm.prepareStatement(
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
                         connection,
                         "/sql/Player/SelectByPlayerId.sql",
                         p -> {

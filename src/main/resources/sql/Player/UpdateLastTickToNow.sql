@@ -1,0 +1,1 @@
+update public.player set last_tick=now() where id=? returning last_tick;

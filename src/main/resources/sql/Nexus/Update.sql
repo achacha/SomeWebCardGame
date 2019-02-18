@@ -1,3 +1,3 @@
 update public.nexus
-set level = ?, energy_gatherer_type = ?, material_processing_type = ?
+set level = ?, raw_resources_available = ?, energy_gatherer_type = ?, material_processing_type = ?
 where id=?;

@@ -18,6 +18,7 @@ public class AdventureLogic {
 
     /**
      * Simulate adventure, create archive and delete active adventure
+     * @param connection Connection
      * @param player PlayerDbo
      * @param adventure AdventureDbo
      * @return AdventureArchiveDbo or null if failed
@@ -27,6 +28,8 @@ public class AdventureLogic {
         Preconditions.checkState(player.getId() == adventure.getPlayerId());
 
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+
+        // TODO: This should be done per tick
         // Simulate encounters
         adventure.getEncounters().forEach(encounter -> {
             EncounterProcessor processor = new EncounterProcessor(player, encounter);

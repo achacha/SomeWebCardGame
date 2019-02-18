@@ -43,6 +43,7 @@ class InventoryDboTest extends BaseInitializedTest {
             // Modify and save
             inventory.energy = 100;
             inventory.materials = 2400;
+            inventory.resources = 500;
             inventory.items.add(ItemDbo.builder(inventory, ItemType.ElementGreen).withQuantity(3).build());
             inventory.items.add(ItemDbo.builder(inventory, ItemType.ElementOrange).withQuantity(1).build());
             inventory.update(connection);

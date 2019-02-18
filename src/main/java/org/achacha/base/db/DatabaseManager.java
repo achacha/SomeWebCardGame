@@ -1,7 +1,9 @@
 package org.achacha.base.db;
 
+import com.google.common.base.Preconditions;
 import org.achacha.base.db.provider.JdbcDatabaseConnectionProvider;
 import org.achacha.base.db.provider.SqlProvider;
+import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -352,4 +355,22 @@ public class DatabaseManager {
         triple.resultSet = triple.statement.executeQuery(sql);
         return triple;
     }
+
+    /**
+     * Get now() from database, it's the official and final reference on time
+     * @param connection Connection
+     * @return Timestamp
+     * @throws SQLException if unable to get now() from database
+     */
+    @Nonnull
+    public static Timestamp getTimestampNow(Connection connection) throws SQLException {
+        try (
+                PreparedStatement ps = Global.getInstance().getDatabaseManager().prepareStatement(connection, "/sql/base/GetTimestampNow.sql", null);
+                ResultSet rs = ps.executeQuery()
+        ) {
+            Preconditions.checkState(rs.next());
+            return rs.getTimestamp(1);
+        }
+    }
+
 }

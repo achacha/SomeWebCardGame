@@ -36,6 +36,9 @@ public class InventoryDbo extends BaseDbo {
     /** Materials */
     long materials;
 
+    /** Raw resources */
+    long resources;
+
     public static Builder builder(PlayerDbo player) {
         return new Builder(player);
     }
@@ -54,6 +57,11 @@ public class InventoryDbo extends BaseDbo {
 
         public Builder withMaterials(long materials) {
             inventory.materials = materials;
+            return this;
+        }
+
+        public Builder withResources(long resources) {
+            inventory.resources = resources;
             return this;
         }
 
@@ -76,6 +84,7 @@ public class InventoryDbo extends BaseDbo {
         this.playerId = rs.getLong("player__id");
 
         this.energy = rs.getLong("energy");
+        this.resources = rs.getLong("resources");
         this.materials = rs.getLong("materials");
 
         this.items = Global.getInstance().getDatabaseManager().<ItemDboFactory>getFactory(ItemDbo.class).getByInventoryId(connection, this.id);
@@ -96,7 +105,8 @@ public class InventoryDbo extends BaseDbo {
                         p-> {
                             p.setLong(1, playerId);
                             p.setLong(2, energy);
-                            p.setLong(3, materials);
+                            p.setLong(3, resources);
+                            p.setLong(4, materials);
                         }
                 );
                 ResultSet rs = pstmt.executeQuery()
@@ -127,9 +137,10 @@ public class InventoryDbo extends BaseDbo {
                         "/sql/Inventory/Update.sql",
                         p-> {
                             p.setLong(1, energy);
-                            p.setLong(2, materials);
+                            p.setLong(2, resources);
+                            p.setLong(3, materials);
 
-                            p.setLong(3, id);
+                            p.setLong(4, id);
                         }
                 )
         ) {
@@ -171,15 +182,29 @@ public class InventoryDbo extends BaseDbo {
         return energy;
     }
 
+    public void addEnergy(long energyToAdd) {
+        // TODO: Handle max energy
+        this.energy += energyToAdd;
+    }
+
+    public void setEnergy(long energy) {
+        // TODO: Handle max energy
+        this.energy = energy;
+    }
+
     public long getMaterials() {
         return materials;
     }
 
-    public void setEnergy(long energy) {
-        this.energy = energy;
-    }
-
     public void setMaterials(long materials) {
         this.materials = materials;
+    }
+
+    public long getResources() {
+        return resources;
+    }
+
+    public void setResources(long resources) {
+        this.resources = resources;
     }
 }

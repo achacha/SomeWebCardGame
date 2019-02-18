@@ -1,3 +1,3 @@
 update public.inventory
-set energy = ?, materials = ?
+set energy = ?, resources = ?, materials = ?
 where id=?;

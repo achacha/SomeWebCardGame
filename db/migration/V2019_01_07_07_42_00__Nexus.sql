@@ -9,6 +9,9 @@ CREATE TABLE nexus
   -- Level of the nexus
   level integer,
 
+  -- storage
+  raw_resources_available integer,
+
   -- Structures
   energy_gatherer_type integer,
   material_processing_type integer,
@@ -26,5 +29,6 @@ ALTER TABLE nexus OWNER TO sawcog;
 GRANT ALL ON nexus TO sawcog;
 COMMENT ON COLUMN nexus.player__id IS 'Player id of the owner of this nexus';
 COMMENT ON COLUMN nexus.level IS 'Level of the nexus';
+COMMENT ON COLUMN nexus.raw_resources_available IS 'Raw resource available';
 COMMENT ON COLUMN nexus.energy_gatherer_type IS 'Energy gatherer type';
 COMMENT ON COLUMN nexus.material_processing_type IS 'Material processing type';

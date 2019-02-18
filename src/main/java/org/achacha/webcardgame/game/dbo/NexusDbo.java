@@ -40,31 +40,10 @@ public class NexusDbo extends BaseDbo {
      */
     int materialProcessingType;
 
-//    public static Builder builder(PlayerDbo player) {
-//        return new Builder(player);
-//    }
-//
-//    public static class Builder {
-//        private NexusDbo inventory = new NexusDbo();
-//
-//        public Builder(PlayerDbo player) {
-//            inventory.playerId = player.id;
-//        }
-//
-//        public Builder withEnergy(long energy) {
-//            inventory.energy = energy;
-//            return this;
-//        }
-//
-//        public Builder withMaterials(long materials) {
-//            inventory.materials = materials;
-//            return this;
-//        }
-//
-//        public NexusDbo build() {
-//            return inventory;
-//        }
-//    }
+    /**
+     * Total raw resources available for processing
+     */
+    int rawResourcesAvailable;
 
     NexusDbo() {
     }
@@ -80,6 +59,7 @@ public class NexusDbo extends BaseDbo {
         this.playerId = rs.getLong("player__id");
 
         this.level = rs.getInt("level");
+        this.rawResourcesAvailable = rs.getInt("raw_resources_available");
         this.energyGathererType = rs.getInt("energy_gatherer_type");
         this.materialProcessingType = rs.getInt("material_processing_type");
 
@@ -99,8 +79,9 @@ public class NexusDbo extends BaseDbo {
                         p-> {
                             p.setLong(1, playerId);
                             p.setLong(2, level);
-                            p.setLong(3, energyGathererType);
-                            p.setLong(4, materialProcessingType);
+                            p.setLong(3, rawResourcesAvailable);
+                            p.setLong(4, energyGathererType);
+                            p.setLong(5, materialProcessingType);
                         }
                 );
                 ResultSet rs = pstmt.executeQuery()
@@ -126,10 +107,11 @@ public class NexusDbo extends BaseDbo {
                         "/sql/Nexus/Update.sql",
                         p-> {
                             p.setLong(1, level);
-                            p.setLong(2, energyGathererType);
-                            p.setLong(3, materialProcessingType);
+                            p.setLong(2, rawResourcesAvailable);
+                            p.setLong(3, energyGathererType);
+                            p.setLong(4, materialProcessingType);
 
-                            p.setLong(4, id);
+                            p.setLong(5, id);
                         }
                 )
         ) {
@@ -147,6 +129,18 @@ public class NexusDbo extends BaseDbo {
 
     public int getLevel() {
         return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setEnergyGathererType(int energyGathererType) {
+        this.energyGathererType = energyGathererType;
+    }
+
+    public void setMaterialProcessingType(int materialProcessingType) {
+        this.materialProcessingType = materialProcessingType;
     }
 
     public int getEnergyGathererType() {

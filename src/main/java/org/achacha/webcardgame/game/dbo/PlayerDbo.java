@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,9 @@ public class PlayerDbo extends BaseDbo {
 
     /** Login that owns this player */
     protected long loginId;
+
+    /** Timestamp of the last processed tick */
+    protected Timestamp lastTick;
 
     /** Inventory */
     protected InventoryDbo inventory;
@@ -59,10 +63,15 @@ public class PlayerDbo extends BaseDbo {
         return this.id;
     }
 
+    public Timestamp getLastTick() {
+        return lastTick;
+    }
+
     @Override
     public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.loginId = rs.getLong("login__id");
+        this.lastTick = rs.getTimestamp("last_tick");
 
         this.inventory = Global.getInstance().getDatabaseManager().<InventoryDboFactory>getFactory(InventoryDbo.class).getByPlayerId(connection, this.id);
         this.cards = Global.getInstance().getDatabaseManager().<CardDboFactory>getFactory(CardDbo.class).getByPlayerId(connection, this.id);
@@ -88,6 +97,7 @@ public class PlayerDbo extends BaseDbo {
         ) {
             if (rs.next()) {
                 this.id = rs.getLong(1);
+                this.lastTick = rs.getTimestamp(2);
             }
             else {
                 LOGGER.error("Failed to insert player={}", this);
@@ -125,6 +135,28 @@ public class PlayerDbo extends BaseDbo {
             else {
                 card.update(connection);
             }
+        }
+    }
+
+    /**
+     * Set the last tick update to now()
+     * Commits on update
+     * @param connection Connection
+     */
+    public void updateLastTickToNow(Connection connection) throws SQLException {
+        try (
+                PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
+                        connection,
+                        "/sql/Player/UpdateLastTickToNow.sql",
+                        p -> {
+                            p.setLong(1, id);
+                        }
+                );
+                ResultSet rs = pstmt.executeQuery()
+        ) {
+            connection.commit();
+            Preconditions.checkState(rs.next());
+            lastTick = rs.getTimestamp(1);
         }
     }
 

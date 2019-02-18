@@ -6,6 +6,7 @@ CREATE TABLE player
 (
   id serial NOT NULL PRIMARY KEY,
   login__id integer, -- Login id of the owner of this item
+  last_tick timestamp NOT NULL DEFAULT now(),
   --
   CONSTRAINT player_login__id_fkey FOREIGN KEY (login__id)
   REFERENCES login (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -15,6 +16,7 @@ OIDS=FALSE
 );
 ALTER TABLE player OWNER TO sawcog;
 COMMENT ON COLUMN player.login__id IS 'Login id of the owner of this player';
+COMMENT ON COLUMN player.last_tick IS 'Last time tick occurred';
 
 
 --
@@ -26,10 +28,13 @@ CREATE TABLE inventory
   id serial NOT NULL PRIMARY KEY,
   player__id integer, -- Player id of the owner of this item
 
-  -- Main currency type
+  -- Energy
   energy bigint,
 
-  -- Currency material types
+  -- Raw resources
+  resources bigint,
+
+  -- Processed materials
   materials bigint,
 
   --

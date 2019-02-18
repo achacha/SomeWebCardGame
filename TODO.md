@@ -1,5 +1,6 @@
 TODO
 =
+0. Generated Dbo insert/load?
 
 
 Structures
