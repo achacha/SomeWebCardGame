@@ -27,11 +27,14 @@ class EncounterDboTest extends BaseInitializedTest {
     }
 
     @Test
-    void persistance() throws Exception {
-        PlayerDbo player = createNewTestPlayer();
+    void persistence() throws Exception {
+        PlayerDbo player = createNewTestPlayer("test_encounter_persistence");
 
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
-            AdventureDbo adventure = AdventureDbo.builder(player.getId()).build();
+            AdventureDbo adventure = AdventureDbo.builder(player.getId())
+                    .withCard(player.cards.get(1))
+                    .withCard(player.cards.get(0))
+                    .build();
             adventure.insert(connection);
 
             // Insert encounter

@@ -32,7 +32,7 @@ public class AdventureLogic {
         // TODO: This should be done per tick
         // Simulate encounters
         adventure.getEncounters().forEach(encounter -> {
-            EncounterProcessor processor = new EncounterProcessor(player, encounter);
+            EncounterProcessor processor = new EncounterProcessor(player, adventure, encounter);
             processor.doEncounter();
         });
 

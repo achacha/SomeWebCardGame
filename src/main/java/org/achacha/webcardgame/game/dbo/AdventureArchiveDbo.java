@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Table;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,6 +34,9 @@ public class AdventureArchiveDbo extends BaseDbo {
     /** Player ID */
     private long playerId;
 
+    /** Player cards (in correct order) used on this adventure */
+    private List<CardDbo> playerCards;
+
     /** Title */
     private String title;
 
@@ -53,6 +57,7 @@ public class AdventureArchiveDbo extends BaseDbo {
         this.originalId = originalAdventure.id;
         this.originalCreated = originalAdventure.created;
         this.playerId = originalAdventure.playerId;
+        this.playerCards = originalAdventure.getPlayerCards();
         this.title = originalAdventure.title;
         this.encounters = originalAdventure.encounters.stream().map(EncounterArchiveDbo::new).collect(Collectors.toList());
     }
@@ -72,6 +77,10 @@ public class AdventureArchiveDbo extends BaseDbo {
 
     public long getPlayerId() {
         return playerId;
+    }
+
+    public List<CardDbo> getPlayerCards() {
+        return playerCards;
     }
 
     public String getTitle() {
@@ -102,7 +111,11 @@ public class AdventureArchiveDbo extends BaseDbo {
                             p.setLong(1, originalId);
                             p.setTimestamp(2, originalCreated);
                             p.setLong(3, playerId);
-                            p.setString(4, title);
+                            p.setArray(4, connection.createArrayOf(
+                                    "INTEGER",
+                                    playerCards.stream().map(CardDbo::getId).toArray())
+                            );
+                            p.setString(5, title);
                         }
                 );
                 ResultSet rs = pstmt.executeQuery()
@@ -131,6 +144,10 @@ public class AdventureArchiveDbo extends BaseDbo {
         originalId = rs.getLong("original_id");
         originalCreated = rs.getTimestamp("original_created");
         playerId = rs.getLong("player__id");
+
+        Array cardIds = rs.getArray("player_cards");
+        this.playerCards = Global.getInstance().getDatabaseManager().<CardDboFactory>getFactory(CardDbo.class).getByIds(connection, cardIds);
+
         title = rs.getString("title");
         completed = rs.getTimestamp("completed");
         encounters = Global.getInstance().getDatabaseManager().<EncounterArchiveDboFactory>getFactory(EncounterArchiveDbo.class).getByAdventureId(connection, this.id);

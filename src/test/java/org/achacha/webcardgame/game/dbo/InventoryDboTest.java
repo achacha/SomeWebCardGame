@@ -26,7 +26,7 @@ class InventoryDboTest extends BaseInitializedTest {
 
     @Test
     void testUpdate() throws SQLException {
-        PlayerDbo player = createNewTestPlayer();
+        PlayerDbo player = createNewTestPlayer("test_inventory_update");
         InventoryDbo inventory = player.inventory;
 
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {

@@ -17,7 +17,7 @@ class NexusDboTest extends BaseInitializedTest {
     void crudNexus() throws SQLException {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
 
-        PlayerDbo player = createNewTestPlayer();
+        PlayerDbo player = createNewTestPlayer("test_nexus_crud");
 
         try (Connection connection = dbm.getConnection()) {
             NexusDbo nexus = dbm.<NexusDboFactory>getFactory(NexusDbo.class).getByPlayerId(connection, player.getId());

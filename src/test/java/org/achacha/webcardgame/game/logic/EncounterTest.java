@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EncounterTest extends BaseInitializedTest {
     @Test
     void testEncounterCombat() throws SQLException {
-        PlayerDbo player = createNewTestPlayer();
+        PlayerDbo player = createNewTestPlayer("test_encounter_combat");
         player.getInventory().setEnergy(100);
 
         player.getCards().add(
@@ -56,7 +56,7 @@ class EncounterTest extends BaseInitializedTest {
                         .build()
         );
 
-        EncounterProcessor processor = new EncounterProcessor(player, adventure.getEncounters().get(0));
+        EncounterProcessor processor = new EncounterProcessor(player, adventure, adventure.getEncounters().get(0));
         EncounterProcessor.Result result = processor.doEncounter();
         assertNotSame(result, EncounterProcessor.Result.None);  // None means the encounter started and has not finished
         assertTrue(processor.getEventLog().getEvents().size() > 0);

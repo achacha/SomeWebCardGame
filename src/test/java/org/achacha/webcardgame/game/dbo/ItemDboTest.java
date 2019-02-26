@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ItemDboTest extends BaseInitializedTest {
     @Test
     void testGetItemsForInventory() throws SQLException {
-        PlayerDbo player = createNewTestPlayer();
+        PlayerDbo player = createNewTestPlayer("test_item_get");
         InventoryDbo inventory = Preconditions.checkNotNull(player).getInventory();
         List<ItemDbo> items = Preconditions.checkNotNull(inventory).items;
         assertNotNull(items);  // New player should have an inventory with non-null items container

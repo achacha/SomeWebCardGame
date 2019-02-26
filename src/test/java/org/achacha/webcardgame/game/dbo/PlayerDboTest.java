@@ -32,6 +32,7 @@ class PlayerDboTest extends BaseInitializedTest {
             assertTrue(players.size() > 0);  // Concurrent tests may be running that create players
 
             PlayerDbo player = players.get(0);
+            assertEquals("JUNIT_PLAYER", player.getName());
             assertEquals(1200, player.getInventory().getEnergy());
             assertEquals(5000, player.getInventory().getMaterials());
             assertEquals(TestDataConstants.JUNIT_PLAYER__ID, player.getId());
@@ -43,6 +44,7 @@ class PlayerDboTest extends BaseInitializedTest {
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
             PlayerDbo player = factory.getByLoginIdAndPlayerId(connection, TestDataConstants.JUNIT_USER_LOGINID, TestDataConstants.JUNIT_PLAYER__ID);
             assertNotNull(player);
+            assertEquals("JUNIT_PLAYER", player.getName());
             assertEquals(1200, player.getInventory().getEnergy());
             assertEquals(5000, player.getInventory().getMaterials());
             assertEquals(TestDataConstants.JUNIT_PLAYER__ID, player.getId());
@@ -51,7 +53,7 @@ class PlayerDboTest extends BaseInitializedTest {
 
     @Test
     void testUpdateLastTick() throws SQLException {
-        PlayerDbo player = createNewTestPlayer();
+        PlayerDbo player = createNewTestPlayer("test_player_update_tick");
         Timestamp initial = player.getLastTick();
 
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
@@ -63,7 +65,7 @@ class PlayerDboTest extends BaseInitializedTest {
     @Test
     void testPlayerDeleteWithCascade() throws SQLException {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
-        PlayerDbo player = createNewTestPlayer();
+        PlayerDbo player = createNewTestPlayer("test_player_delete_cascade");
         assertNotNull(player.getLastTick());
 
         // Build inventory

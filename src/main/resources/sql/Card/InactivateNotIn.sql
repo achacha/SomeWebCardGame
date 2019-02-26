@@ -1,0 +1,1 @@
+update public.card set active=false where player__id=? AND id != ALL(?);

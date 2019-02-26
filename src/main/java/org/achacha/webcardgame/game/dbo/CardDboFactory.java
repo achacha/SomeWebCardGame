@@ -18,13 +18,19 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
         super(CardDbo.class);
     }
 
+    /**
+     * Get all active cards for the player
+     * @param connection Connection
+     * @param playerId long
+     * @return List of active CardDbo
+     */
     public List<CardDbo> getByPlayerId(Connection connection, long playerId) {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         ArrayList<CardDbo> dbos = new ArrayList<>();
         try (
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
-                        "/sql/Card/SelectByPlayerId.sql",
+                        "/sql/Card/SelectActiveByPlayerId.sql",
                         p -> p.setLong(1, playerId));
                 ResultSet rs = pstmt.executeQuery()
         ) {
@@ -34,20 +40,27 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
                 dbos.add(dbo);
             }
         } catch (Exception e) {
-            LOGGER.error("Failed to find cards for playerId={}", playerId, e);
+            LOGGER.error("Failed to find active cards for playerId={}", playerId, e);
         }
         return dbos;
     }
 
-    // TODO: Unit test or remove
-    public List<CardDbo> getByEncounterId(Connection connection, long encounterId) {
+    /**
+     * Get cards for specific ids
+     * @param connection Connection
+     * @param ids Array of ids
+     * @return List of CardDbo
+     * @throws SQLException on DB error
+     */
+    //TODO: Test
+    public List<CardDbo> getByIds(Connection connection, Array ids) throws SQLException {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         ArrayList<CardDbo> dbos = new ArrayList<>();
         try (
                 PreparedStatement pstmt = dbm.prepareStatement(
                         connection,
-                        "/sql/Card/SelectByEncounterId.sql",
-                        p -> p.setLong(1, encounterId));
+                        "/sql/Card/SelectByIds.sql",
+                        p -> p.setArray(1, ids));
                 ResultSet rs = pstmt.executeQuery()
         ) {
             while (rs.next()) {
@@ -55,21 +68,27 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
                 dbo.fromResultSet(connection, rs);
                 dbos.add(dbo);
             }
-        } catch (Exception e) {
-            LOGGER.error("Failed to find cards for encounterId={}", encounterId, e);
         }
         return dbos;
 
     }
 
-    public void deleteNotIn(Connection connection, long playerId, List<CardDbo> existingCards) throws SQLException {
+    /**
+     * Mark existing cards inactive
+     * @param connection Connection
+     * @param playerId long
+     * @param existingCards List of existing cards to make inactive
+     * @throws SQLException on DB error
+     */
+    // TODO: Test
+    public void inactivateNotIn(Connection connection, long playerId, List<CardDbo> existingCards) throws SQLException {
         Preconditions.checkState(playerId > 0);
 
         if (existingCards.size() > 0) {
             DatabaseManager dbm = Global.getInstance().getDatabaseManager();
             try (PreparedStatement pstmt = dbm.prepareStatement(
                     connection,
-                    "/sql/Card/DeleteNotIn.sql",
+                    "/sql/Card/InactivateNotIn.sql",
                     p -> {
                         p.setLong(1, playerId);
 

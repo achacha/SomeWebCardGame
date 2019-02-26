@@ -6,6 +6,7 @@ CREATE TABLE player
 (
   id serial NOT NULL PRIMARY KEY,
   login__id integer, -- Login id of the owner of this item
+  name varchar(128),
   last_tick timestamp NOT NULL DEFAULT now(),
   --
   CONSTRAINT player_login__id_fkey FOREIGN KEY (login__id)
@@ -15,7 +16,9 @@ WITH (
 OIDS=FALSE
 );
 ALTER TABLE player OWNER TO sawcog;
+GRANT ALL ON player TO sawcog;
 COMMENT ON COLUMN player.login__id IS 'Login id of the owner of this player';
+COMMENT ON COLUMN player.name IS 'Player name';
 COMMENT ON COLUMN player.last_tick IS 'Last time tick occurred';
 
 

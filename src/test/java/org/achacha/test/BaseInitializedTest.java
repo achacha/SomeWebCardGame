@@ -2,6 +2,8 @@ package org.achacha.test;
 
 import org.achacha.base.global.Global;
 import org.achacha.base.global.GlobalForTest;
+import org.achacha.webcardgame.game.data.CardType;
+import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDboFactory;
 import org.apache.logging.log4j.LogManager;
@@ -53,19 +55,36 @@ public class BaseInitializedTest {
 
     /**
      * Creates a player owned by TestDataConstants.JUNIT_USER_LOGINID and persists it
+     * Contains 3 cards
+     * @param playerName String
      * @return PlayerDbo
      */
-    public PlayerDbo createNewTestPlayer() throws SQLException {
-        PlayerDbo player = PlayerDbo.builder(TestDataConstants.JUNIT_USER_LOGINID).build();
-
+    public PlayerDbo createNewTestPlayer(String playerName) throws SQLException {
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
+            PlayerDbo player = PlayerDbo.builder(TestDataConstants.JUNIT_USER_LOGINID, playerName)
+                    .withCard(CardDbo.builder()
+                            .withType(CardType.Human)
+                            .withName(playerName+"_card0")
+                            .build())
+                    .withCard(CardDbo.builder()
+                            .withType(CardType.Human)
+                            .withName(playerName+"_card1")
+                            .build())
+                    .withCard(CardDbo.builder()
+                            .withType(CardType.Human)
+                            .withName(playerName+"_card2")
+                            .build())
+                    .build();
+
+            // Insert call will correctly propagate player ID to child classes
             player.insert(connection);
             connection.commit();
-        }
 
-        return player;
+            return player;
+        }
     }
 
+    // TODO: Test this
     public void deletePlayer(Connection connection, PlayerDbo player) throws SQLException {
         Global.getInstance().getDatabaseManager().getFactory(PlayerDbo.class).deleteById(connection, player.getId());
 

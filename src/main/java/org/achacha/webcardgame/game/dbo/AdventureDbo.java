@@ -8,7 +8,9 @@ import org.achacha.webcardgame.game.logic.AdventureNameGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.persistence.Table;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,13 +36,16 @@ public class AdventureDbo extends BaseDbo {
     /** Title of this adventure */
     protected String title;
 
+    /** Player cards (in correct order) on this adventure */
+    protected List<CardDbo> playerCards = new ArrayList<>();
+
     /** Encounters in this Adventure */
     protected List<EncounterDbo> encounters;
 
     /** Timestamp for when this adventure was created/activated */
     protected Timestamp created;
 
-    // TODO: Reward (energy and materials)
+    // TODO: Reward (energy and materials), calculated based on encounter count, card count, etc
 
     /**
      * Create a builder
@@ -59,6 +64,17 @@ public class AdventureDbo extends BaseDbo {
             adventure.encounters = new ArrayList<>();
         }
 
+        /**
+         * Adds card to the order of usage
+         * @param card CardDbo
+         * @return Builder
+         */
+        public Builder withCard(CardDbo card) {
+            Preconditions.checkState(card.playerId == adventure.playerId);
+            adventure.playerCards.add(card);
+            return this;
+        }
+
         public Builder withEncounter(EncounterDbo encounter) {
             adventure.encounters.add(encounter);
             return this;
@@ -70,11 +86,10 @@ public class AdventureDbo extends BaseDbo {
         }
 
         /**
+         * If no cards were added, will use first 5 from player
          * @return Build adventure
          */
         public AdventureDbo build() {
-            adventure.encounters = new ArrayList<>();
-
             if (adventure.title == null)
                 adventure.title = AdventureNameGenerator.generateAdventureName(adventure);
 
@@ -107,6 +122,11 @@ public class AdventureDbo extends BaseDbo {
         return playerId;
     }
 
+    @Nonnull
+    public List<CardDbo> getPlayerCards() {
+        return playerCards;
+    }
+
     /**
      * Used to set negative value to differentiate this adventure before the client selects an active
      * @param id id for this adventure
@@ -123,6 +143,9 @@ public class AdventureDbo extends BaseDbo {
         this.encounters = Global.getInstance().getDatabaseManager().<EncounterDboFactory>getFactory(EncounterDbo.class).getByAdventureId(connection, this.id);
         this.created = rs.getTimestamp("created");
 
+        Array cardIds = rs.getArray("player_cards");
+        this.playerCards = Global.getInstance().getDatabaseManager().<CardDboFactory>getFactory(CardDbo.class).getByIds(connection, cardIds);
+
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
         }
@@ -136,6 +159,7 @@ public class AdventureDbo extends BaseDbo {
     @Override
     public void insert(Connection connection) throws SQLException {
         Preconditions.checkState(playerId > 0);
+        Preconditions.checkState(playerCards.size() > 0);
 
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(connection,
@@ -143,6 +167,10 @@ public class AdventureDbo extends BaseDbo {
                         p -> {
                             p.setLong(1, playerId);
                             p.setString(2, title);
+                            p.setArray(3, connection.createArrayOf(
+                                    "INTEGER",
+                                    playerCards.stream().map(CardDbo::getId).toArray())
+                            );
                         }
                 );
                 ResultSet rs = pstmt.executeQuery()

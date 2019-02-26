@@ -1,6 +1,7 @@
 package org.achacha.webcardgame.game.logic;
 
 import com.google.common.base.Preconditions;
+import org.achacha.webcardgame.game.dbo.AdventureDbo;
 import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.EncounterDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDbo;
@@ -16,6 +17,7 @@ public class EncounterProcessor {
     private static final Logger LOGGER = LogManager.getLogger(EncounterProcessor.class);
 
     private final PlayerDbo player;
+    private final AdventureDbo adventure;
     private final EncounterDbo encounter;
 
     private EncounterEventLog eventLog;
@@ -30,8 +32,14 @@ public class EncounterProcessor {
 
     private Result result = Result.None;
 
-    public EncounterProcessor(PlayerDbo player, EncounterDbo encounter) {
+    /**
+     * @param player PlayerDbo
+     * @param adventure AdventureDbo owner of this encounter
+     * @param encounter EncounterDbo being processed
+     */
+    public EncounterProcessor(PlayerDbo player, AdventureDbo adventure, EncounterDbo encounter) {
         this.player = player;
+        this.adventure = adventure;
         this.encounter = encounter;
         eventLog = new EncounterEventLog(player, encounter);
     }
@@ -51,6 +59,7 @@ public class EncounterProcessor {
     public Result doEncounter() {
         eventLog.add(EncounterEvent.builder(EventType.Start, false).withId(encounter.getId()).build());
         eventLog.add(EncounterEvent.builder(EventType.Start).withId(player.getId()).build());
+
         Optional<CardDbo> playerCard1 = getNextPlayerCard();
         Optional<CardDbo> enemyCard1 = getNextEnemyCard();
 
@@ -182,6 +191,6 @@ public class EncounterProcessor {
     }
 
     private Optional<CardDbo> getNextPlayerCard() {
-        return player.getCards().stream().filter(CardDbo::isAlive).findFirst();
+        return adventure.getPlayerCards().stream().filter(CardDbo::isAlive).findFirst();
     }
 }

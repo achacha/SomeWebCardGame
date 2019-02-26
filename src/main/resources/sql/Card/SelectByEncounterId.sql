@@ -1,1 +1,0 @@
-select * from public.card where encounter__id=?;

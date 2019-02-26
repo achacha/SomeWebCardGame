@@ -7,6 +7,7 @@ CREATE TABLE adventure
 (
   id serial NOT NULL PRIMARY KEY,
   player__id integer NOT NULL UNIQUE,    -- Player id of the owner of this item, only 1 adventure per player id
+  player_cards integer[] NOT NULL,
   title varchar(256) NOT NULL,
   created timestamp NOT NULL default now(),
   --
@@ -18,6 +19,7 @@ OIDS=FALSE
 ALTER TABLE adventure OWNER TO sawcog;
 GRANT ALL ON adventure TO sawcog;
 COMMENT ON COLUMN adventure.player__id IS 'Player id of the owner of this adventure';
+COMMENT ON COLUMN adventure.player_cards IS 'Array of ordered card ids that player is sending on this adventure';
 COMMENT ON COLUMN adventure.title IS 'Generated title for this adventure';
 COMMENT ON COLUMN adventure.created IS 'Timestamp set when adventure is made active';
 
@@ -31,6 +33,7 @@ CREATE TABLE adventure_archive
   original_id integer,          -- Original id
   original_created timestamp,   -- Original created
   player__id integer NOT NULL,  -- Player id of the owner of this item
+  player_cards integer[] NOT NULL,
   title varchar(256) NOT NULL,  -- Original title
   completed timestamp NOT NULL default now(),
   --
@@ -42,6 +45,7 @@ OIDS=FALSE
 ALTER TABLE adventure_archive OWNER TO sawcog;
 GRANT ALL ON adventure_archive TO sawcog;
 COMMENT ON COLUMN adventure_archive.player__id IS 'Player id of the owner of this adventure';
+COMMENT ON COLUMN adventure.player_cards IS 'Array of ordered card ids that player sent on this adventure';
 COMMENT ON COLUMN adventure_archive.title IS 'Generated title for this adventure';
 COMMENT ON COLUMN adventure_archive.original_id IS 'Original id of this adventure';
 COMMENT ON COLUMN adventure_archive.original_created IS 'Original create time';

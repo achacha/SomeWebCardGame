@@ -13,6 +13,8 @@ import org.achacha.base.cache.DboCacheManager;
 import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.i18n.LocalizedKey;
 import org.achacha.base.i18n.LocalizedKeyAdapter;
+import org.achacha.webcardgame.sticker.CardSticker;
+import org.achacha.webcardgame.sticker.CardStickerAdapter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -244,7 +246,9 @@ public abstract class Global {
         LOGGER.debug("+ Initializing Gson");
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalizedKey.class, new LocalizedKeyAdapter());
+        gsonBuilder.registerTypeAdapter(CardSticker.class, new CardStickerAdapter());
         gson = gsonBuilder.create();
+
         gsonPretty = gsonBuilder.setPrettyPrinting().create();
 
         LOGGER.debug("+ Initializing JsonPath for Gson");

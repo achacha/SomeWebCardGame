@@ -24,9 +24,14 @@ class AdventureDboTest extends BaseInitializedTest {
 
     @Test
     void testInsert() throws Exception {
+        PlayerDbo player = createNewTestPlayer("adventure_test_insert");
+
         // Create adventure
-        AdventureDbo adventure = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID)
+        AdventureDbo adventure = AdventureDbo.builder(player.getId())
                 .withTitle("Some adventure")
+                .withCard(player.cards.get(0))
+                .withCard(player.cards.get(1))
+                .withCard(player.cards.get(2))
                 .build();
 
         adventure.getEncounters().add(EncounterDbo.builder(adventure)
@@ -44,10 +49,10 @@ class AdventureDboTest extends BaseInitializedTest {
             adventure.insert(connection);
             connection.commit();
 
-            AdventureDbo adventureLoaded = factory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID);
+            AdventureDbo adventureLoaded = factory.getByPlayerId(connection, player.getId());
             assertNotNull(adventureLoaded);
-            assertEquals(TestDataConstants.JUNIT_PLAYER__ID, adventureLoaded.playerId);
-            assertEquals("Some adventure", adventureLoaded.title);
+            assertEquals(adventure.getPlayerId(), adventureLoaded.playerId);
+            assertEquals(adventure.title, adventureLoaded.title);
             assertEquals(adventure.toJsonObject().toString(), adventureLoaded.toJsonObject().toString());
 
             factory.deleteById(connection, adventure.getId());
@@ -57,13 +62,17 @@ class AdventureDboTest extends BaseInitializedTest {
 
     @Test
     void testUniqueActive() throws Exception {
-        PlayerDbo player = createNewTestPlayer();
-        AdventureDbo adventure1 = AdventureDbo.builder(player.getId()).build();
+        PlayerDbo player = createNewTestPlayer("test_adventure_unique_active");
+        AdventureDbo adventure1 = AdventureDbo.builder(player.getId())
+                .withCard(player.cards.get(0))
+                .build();
         adventure1.getEncounters().add(EncounterDbo.builder(adventure1)
                 .withGeneratedCard(CardType.Human, 1)
                 .build());
 
-        AdventureDbo adventure2 = AdventureDbo.builder(player.getId()).build();
+        AdventureDbo adventure2 = AdventureDbo.builder(player.getId())
+                .withCard(player.cards.get(0))
+                .build();
         adventure2.getEncounters().add(EncounterDbo.builder(adventure2)
                 .withGeneratedCard(CardType.Human, 2)
                 .build());
@@ -99,11 +108,13 @@ class AdventureDboTest extends BaseInitializedTest {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
 
         try (Connection connection = dbm.getConnection()) {
-            PlayerDbo player = createNewTestPlayer();
+            PlayerDbo player = createNewTestPlayer("test_adventure_persistence");
             assertNotNull(player);
 
             AdventureDbo adventure = AdventureDbo.builder(player.getId())
                     .withTitle("Not Quite The Quest For The Holy Grail")
+                    .withCard(player.cards.get(1))
+                    .withCard(player.cards.get(0))
                     .build();
 
             adventure.getEncounters().add(EncounterDbo.builder(adventure)
@@ -124,7 +135,7 @@ class AdventureDboTest extends BaseInitializedTest {
 
             // Simulate encounters
             adventure.getEncounters().forEach(encounter->{
-                EncounterProcessor processor = new EncounterProcessor(player, encounter);
+                EncounterProcessor processor = new EncounterProcessor(player, adventure, encounter);
                 processor.doEncounter();
             });
 
@@ -147,6 +158,7 @@ class AdventureDboTest extends BaseInitializedTest {
             assertEquals(originalCreated, archivedAdventure.getOriginalCreated());
             assertNotNull(archivedAdventure.getCompleted());
             assertNotNull(archivedAdventure.getEncounters());
+            assertEquals(adventure.getPlayerCards().size(), archivedAdventure.getPlayerCards().size());
             assertEquals(2, archivedAdventure.getEncounters().size());
             assertTrue(archivedAdventure.getEncounters().get(0).getEnemies().size() > 0);
             assertEquals(3, archivedAdventure.getEncounters().get(0).getEnemies().get(0).getLevel());
@@ -154,20 +166,27 @@ class AdventureDboTest extends BaseInitializedTest {
     }
 
     @Test
-    void testToFromJson() {
-        AdventureDbo original = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
-        original.getEncounters().add(EncounterDbo.builder(original).withGeneratedCard(CardType.Human, 3, "enemy_1").build());
-        original.getEncounters().add(EncounterDbo.builder(original).withGeneratedCard(CardType.Elf, 2, "enemy_2").build());
+    void testToFromJson() throws SQLException {
+        DatabaseManager dbm = Global.getInstance().getDatabaseManager();
+        try (Connection connection = dbm.getConnection()) {
+            PlayerDbo player = dbm.<PlayerDboFactory>getFactory(PlayerDbo.class).getById(connection, TestDataConstants.JUNIT_PLAYER__ID);
+            AdventureDbo original = AdventureDbo.builder(player.getId())
+                    .withCard(player.cards.get(1))
+                    .withCard(player.cards.get(0))
+                    .build();
+            original.getEncounters().add(EncounterDbo.builder(original).withGeneratedCard(CardType.Human, 3, "enemy_1").build());
+            original.getEncounters().add(EncounterDbo.builder(original).withGeneratedCard(CardType.Elf, 2, "enemy_2").build());
 
-        // Due to random titles, we replace title with original for the check
-        original.setTitle("Stroll around the block");
-        String originalJson = original.toJsonObject().toString();
-        assertEquals(
-                "{\"id\":0,\"playerId\":1,\"title\":\"Stroll around the block\",\"encounters\":[{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_1\",\"type\":\"Human\",\"level\":3,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"},{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_2\",\"type\":\"Elf\",\"level\":2,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"}]}",
-                originalJson
-        );
+            // Due to random titles, we replace title with original for the check
+            original.setTitle("Stroll around the block");
+            String originalJson = original.toJsonObject().toString();
+            assertEquals(
+                    "{\"id\":0,\"playerId\":1,\"title\":\"Stroll around the block\",\"playerCards\":[{\"id\":2,\"playerId\":1,\"name\":\"Card #2\",\"type\":\"Elf\",\"level\":6,\"strength\":10,\"agility\":12,\"damage\":10,\"encounterId\":0,\"stickers\":[\"HOT_AT3\"],\"xp\":0,\"health\":100},{\"id\":1,\"playerId\":1,\"name\":\"Card 1\",\"type\":\"Human\",\"level\":8,\"strength\":12,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[\"NOP\",\"HOT_AT1\",\"HOT_AT5\"],\"xp\":99990,\"health\":100}],\"encounters\":[{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_1\",\"type\":\"Human\",\"level\":3,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"},{\"id\":0,\"adventureId\":0,\"enemies\":[{\"id\":0,\"playerId\":1,\"name\":\"enemy_2\",\"type\":\"Elf\",\"level\":2,\"strength\":10,\"agility\":10,\"damage\":10,\"encounterId\":0,\"stickers\":[],\"xp\":0,\"health\":100}],\"result\":\"None\"}]}",
+                    originalJson
+            );
 
-        AdventureDbo restored = Global.getInstance().getGson().fromJson(originalJson, AdventureDbo.class);
-        assertEquals(originalJson, restored.toJsonObject().toString());
+            AdventureDbo restored = Global.getInstance().getGson().fromJson(originalJson, AdventureDbo.class);
+            assertEquals(originalJson, restored.toJsonObject().toString());
+        }
     }
 }

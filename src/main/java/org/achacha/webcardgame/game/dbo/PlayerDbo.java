@@ -28,6 +28,9 @@ public class PlayerDbo extends BaseDbo {
     /** Login that owns this player */
     protected long loginId;
 
+    /** Player name */
+    protected String name;
+
     /** Timestamp of the last processed tick */
     protected Timestamp lastTick;
 
@@ -37,20 +40,32 @@ public class PlayerDbo extends BaseDbo {
     /** Cards */
     protected List<CardDbo> cards;
 
-    public static Builder builder(long loginId) {
-        return new Builder(loginId);
+    public static Builder builder(long loginId, String name) {
+        return new Builder(loginId, name);
     }
 
     public static class Builder {
         private final PlayerDbo player = new PlayerDbo();
 
-        public Builder(long loginId) {
+        public Builder(long loginId, String name) {
             player.loginId = loginId;
+            player.name = name;
+            player.cards = new ArrayList<>();
+            player.inventory = new InventoryDbo();
+        }
+
+        /**
+         * Add a card
+         * NOTE: You don't need player id on this card, it will be correctly adjusted on insert
+         * @param card CardDbo
+         * @return Builder
+         */
+        public Builder withCard(CardDbo card) {
+            player.cards.add(card);
+            return this;
         }
 
         public PlayerDbo build() {
-            player.inventory = new InventoryDbo();
-            player.cards = new ArrayList<>();
             return player;
         }
     }
@@ -67,10 +82,15 @@ public class PlayerDbo extends BaseDbo {
         return lastTick;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public void fromResultSet(Connection connection, ResultSet rs) throws SQLException {
         this.id = rs.getLong("id");
         this.loginId = rs.getLong("login__id");
+        this.name = rs.getString("name");
         this.lastTick = rs.getTimestamp("last_tick");
 
         this.inventory = Global.getInstance().getDatabaseManager().<InventoryDboFactory>getFactory(InventoryDbo.class).getByPlayerId(connection, this.id);
@@ -91,6 +111,7 @@ public class PlayerDbo extends BaseDbo {
                         "/sql/Player/Insert.sql",
                         p-> {
                             p.setLong(1, loginId);
+                            p.setString(2, name);
                         }
                 );
                 ResultSet rs = pstmt.executeQuery()
@@ -122,11 +143,10 @@ public class PlayerDbo extends BaseDbo {
         Preconditions.checkState(loginId > 0);
 
         // Player doesn't have any updatable data at this time, propagate changes to members
-
         inventory.update(connection);
 
-        // Delete cards not part of the existing list
-        Global.getInstance().getDatabaseManager().<CardDboFactory>getFactory(CardDbo.class).deleteNotIn(connection, id, cards);
+        // Inactivate cards not part of the existing list
+        Global.getInstance().getDatabaseManager().<CardDboFactory>getFactory(CardDbo.class).inactivateNotIn(connection, id, cards);
         for (CardDbo card : cards) {
             if (card.id == 0) {
                 card.playerId = this.id;

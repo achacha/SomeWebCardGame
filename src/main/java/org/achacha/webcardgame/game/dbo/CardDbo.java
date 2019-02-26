@@ -86,6 +86,14 @@ public class CardDbo extends BaseDbo {
     }
 
     /**
+     * Builder with no associtaed player, this is used before the player/cards are persisted
+     * @return Builder
+     */
+    public static Builder builder() {
+        return new Builder(0);  // This will be set to correct player ID when we insert the player
+    }
+
+    /**
      * Builder
      * @param playerId Player id that will own this
      * @return Builder

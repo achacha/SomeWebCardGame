@@ -1,0 +1,1 @@
+select * from public.card where player__id=? and active is true;

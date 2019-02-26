@@ -4,8 +4,8 @@ INSERT into login(id,email,fname,lname,pwd,salt,timezone,security_level,is_super
     'CST', 100, false, '1 Home Address', null, 'Austin', 'TX', '78731', '512-000-0000', '650-000-0000');
 
 --// Player #2 associated with login #4
-INSERT INTO player(id,login__id) VALUES
-  (2,10);
+INSERT INTO player(id,login__id,name) VALUES
+  (2,10,'Qlex');
 
 --// Inventory #2 for player #2
 INSERT INTO inventory(id,player__id,energy,materials) VALUES

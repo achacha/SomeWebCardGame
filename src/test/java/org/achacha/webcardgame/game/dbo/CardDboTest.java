@@ -40,7 +40,7 @@ class CardDboTest extends BaseInitializedTest {
 
     @Test
     void cardStickerNameConsistency() throws SQLException {
-        PlayerDbo player = createNewTestPlayer();
+        PlayerDbo player = createNewTestPlayer("test_card_sticker_consistency");
         CardDbo card = CardDbo.builder(player.getId())
                 .withTypeAndRandomName(CardType.Human)
                 .withLevel(4)
@@ -60,20 +60,8 @@ class CardDboTest extends BaseInitializedTest {
 
     @Test
     void testDeleteRemovedCards() throws SQLException {
-        PlayerDbo player = createNewTestPlayer();
-        player.getCards().add(CardDbo.builder(player.getId())
-                .withTypeAndRandomName(CardType.Human)
-                .withLevel(4)
-                .withSticker(CardSticker.Type.HOT_AT3)
-                .withSticker(CardSticker.Type.DOT_AT10)
-                .build());
-        player.getCards().add(CardDbo.builder(player.getId())
-                .withTypeAndRandomName(CardType.Human)
-                .withLevel(5)
-                .withSticker(CardSticker.Type.HOT_AT3)
-                .withSticker(CardSticker.Type.DOT_AT10)
-                .build()
-        );
+        PlayerDbo player = createNewTestPlayer("test_card_delete_remove");
+        int originalCount = player.getCards().size();
 
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
             // This should insert the cards
@@ -83,11 +71,11 @@ class CardDboTest extends BaseInitializedTest {
             // Verify it saved
             PlayerDbo loadedPlayer = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getById(connection, player.getId());
             assertNotNull(loadedPlayer);
-            assertEquals(2, loadedPlayer.getCards().size());
+            assertEquals(originalCount, loadedPlayer.getCards().size());
 
             // Remove card, add new card and update
             CardDbo removedCard = player.getCards().remove(0);
-            assertEquals(1, player.getCards().size());
+            assertEquals(originalCount-1, player.getCards().size());
 
             player.getCards().add(CardDbo.builder(player.getId())
                     .withTypeAndRandomName(CardType.Human)
@@ -99,7 +87,7 @@ class CardDboTest extends BaseInitializedTest {
 
             PlayerDbo loadedPlayerAgain = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getById(connection, player.getId());
             assertNotNull(loadedPlayerAgain);
-            assertEquals(2, loadedPlayerAgain.getCards().size());
+            assertEquals(originalCount, loadedPlayerAgain.getCards().size());
             assertFalse(loadedPlayerAgain.getCards().stream().map(CardDbo::getId).anyMatch(id-> id == removedCard.getId()));
         }
     }

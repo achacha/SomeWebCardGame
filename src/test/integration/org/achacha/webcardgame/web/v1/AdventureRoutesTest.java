@@ -50,7 +50,11 @@ public class AdventureRoutesTest extends BaseIntegrationTest {
 
             // Activate adventure
             WebRequest wrActivateAdventure = new WebRequest(
-                    getUrl("/api/adventure/active?adventureId="+adventureAvailable.getId()+"&playerId="+TestDataConstants.JUNIT_PLAYER__ID),
+                    getUrl(
+                            "/api/adventure/active?adventureId="+adventureAvailable.getId()+
+                            "&playerId="+TestDataConstants.JUNIT_PLAYER__ID+
+                            "&cards=2,1,0"
+                    ),
                     HttpMethod.PUT
             );
             final Page pageActivateAdventure = webClient.getPage(wrActivateAdventure);

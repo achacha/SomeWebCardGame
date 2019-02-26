@@ -41,7 +41,7 @@ public class Adventure implements Tickable {
         LOGGER.debug("+++Tick start for adventure={}", this);
         if (currentEncounter.hasNext()) {
             EncounterDbo encounter = currentEncounter.next();
-            EncounterProcessor processor = new EncounterProcessor(player, encounter);
+            EncounterProcessor processor = new EncounterProcessor(player, adventure, encounter);
             processor.doEncounter();
         }
         else {
