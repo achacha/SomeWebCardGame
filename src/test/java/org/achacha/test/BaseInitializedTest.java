@@ -5,7 +5,6 @@ import org.achacha.base.global.GlobalForTest;
 import org.achacha.webcardgame.game.data.CardType;
 import org.achacha.webcardgame.game.dbo.CardDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDbo;
-import org.achacha.webcardgame.game.dbo.PlayerDboFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
@@ -16,8 +15,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class BaseInitializedTest {
     private static final Logger LOGGER = LogManager.getLogger(BaseInitializedTest.class);
@@ -82,14 +79,5 @@ public class BaseInitializedTest {
 
             return player;
         }
-    }
-
-    // TODO: Test this
-    public void deletePlayer(Connection connection, PlayerDbo player) throws SQLException {
-        Global.getInstance().getDatabaseManager().getFactory(PlayerDbo.class).deleteById(connection, player.getId());
-
-        // Verify deleted
-        PlayerDbo playerDeleted = Global.getInstance().getDatabaseManager().<PlayerDboFactory>getFactory(PlayerDbo.class).getByLoginIdAndPlayerId(connection, TestDataConstants.JUNIT_USER_LOGINID, TestDataConstants.JUNIT_PLAYER__ID);
-        assertNotNull(playerDeleted);
     }
 }

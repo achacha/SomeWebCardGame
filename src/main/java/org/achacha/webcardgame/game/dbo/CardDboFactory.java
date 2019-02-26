@@ -52,7 +52,6 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
      * @return List of CardDbo
      * @throws SQLException on DB error
      */
-    //TODO: Test
     public List<CardDbo> getByIds(Connection connection, Array ids) throws SQLException {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         ArrayList<CardDbo> dbos = new ArrayList<>();
@@ -80,7 +79,6 @@ public class CardDboFactory extends BaseDboFactory<CardDbo> {
      * @param existingCards List of existing cards to make inactive
      * @throws SQLException on DB error
      */
-    // TODO: Test
     public void inactivateNotIn(Connection connection, long playerId, List<CardDbo> existingCards) throws SQLException {
         Preconditions.checkState(playerId > 0);
 
