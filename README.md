@@ -4,30 +4,51 @@ Mostly used as a base project to integrate various technologies.
 
 Requirements
 ---
-JDK 8.0 or newer
-Tomcat 8.5 or newer
-Nodejs and NPM
-Git bash shell (if using windows)
+- JDK 11 or newer
+- Tomcat 8.5 or newer
+- Nodejs and NPM
+- Git bash shell (if using windows)
 
 
-Project
+Project specs
 ---
-Gradle build integrated with IntelliJ
-NPM via gradle
+- Gradle build integrated with IntelliJ
+- NPM via gradle
 
 
-Server
+Server specs
 ---
-WAR based Java REST server
-Jersey JAX-RS
-Hibernate DB layer
-Slf4j binding to JDK14 in Tomcat
+- WAR based Java REST server
+- Jersey JAX-RS
+- Hibernate DB layer
+- Slf4j binding to JDK14 in Tomcat
 
 
 Client
 ---
-NPM package.json
-PhaserJS UI library
+- NPM package.json
+- PhaserJS UI library
+
+
+Install via npm into package.json
+---
+1. `npm install --save axios`
+1. `npm install --save tether bootstrap font-awesome`
+1. `npm install --save-dev webpack webpack-cli webpack-dev-server`
+1. `npm install --save-dev @babel/core @babel/cli @babel/preset-env`
+1. `npm install --save @babel/polyfill`
+1. `npm install --save-dev html-webpack-plugin`
+1. `npm install --save vue`
+
+1. Set in package.json at scripts:`"build": "webpack"`
+    _(This allows us to use `npm run build`)_
+
+1. Then inside IntelliJ:  https://www.jetbrains.com/help/idea/using-webpack.html
+
+
+Install phaser dependencies into package.json
+---
+1. `npm install --save jquery popper.js phaser-ce`
 
 
 Building
@@ -35,7 +56,9 @@ Building
 Import IntelliJ project from Gradle
 Run tasks:
     
-    ./gradlew npmSetup
+    # Webpack Vue app
+    ./gradlew npmWebpack
+    # Phaser app (to be moved into webpack)
     ./gradlew copyJs
   
 copyJs will move needed JavaScipt libraries from /node_modules to /src/main/webapp/js, 

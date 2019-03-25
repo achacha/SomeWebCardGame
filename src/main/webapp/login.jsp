@@ -13,7 +13,7 @@
 
     <script src="./js/axios/dist/axios.min.js"></script>
 
-    <script src="./js/jquery/dist/jquery.slim.min.js"></script>
+    <%--<script src="./js/jquery/dist/jquery.slim.min.js"></script>--%>
     <script src="./js/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link href="./js/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="./js/font-awesome/css/font-awesome.min.css">
