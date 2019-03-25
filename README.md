@@ -37,7 +37,6 @@ Install via npm into package.json
 1. `npm install --save-dev webpack webpack-cli webpack-dev-server`
 1. `npm install --save-dev @babel/core @babel/cli @babel/preset-env`
 1. `npm install --save @babel/polyfill`
-1. `npm install --save-dev html-webpack-plugin`
 1. `npm install --save vue`
 
 1. Set in package.json at scripts:`"build": "webpack"`
