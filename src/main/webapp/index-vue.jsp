@@ -13,9 +13,13 @@
 <head>
     <meta charset="UTF-8" />
     <title></title>
-    <script type="text/javascript" src="dist/app.bundle.js"></script>
 </head>
 <body>
 
+<div id="app">
+    <LoginView/>
+</div>
+
 </body>
+<script type="text/javascript" src="dist/app.bundle.js"></script>
 </html>

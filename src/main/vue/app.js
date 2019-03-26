@@ -1,3 +1,12 @@
-let test = () => console.log('123456');
+import Vue from 'vue'
+import LoginView from './component/LoginView/LoginView.vue'
 
-test();
+export default {
+    components: {
+        LoginView
+    }
+}
+
+var vapp = new Vue({
+    el: "#app"
+});
