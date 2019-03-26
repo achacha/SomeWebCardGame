@@ -115,7 +115,7 @@ test {
     maxHeapSize = '1G'
 }
 
-task copyJs(type: Copy, dependsOn: [ 'cleanJs', 'npmSetup', 'nodeSetup', 'yarn' ] ) {
+task copyJs(type: Copy, dependsOn: [ 'cleanJs', 'npmSetup', 'nodeSetup', 'yarnInstall' ] ) {
     group 'build'
     description 'Copy JavaScript dependencies to webapp'
     from 'node_modules'
@@ -132,6 +132,8 @@ task cleanJs(type: Delete) {
     group 'build'
     description 'Remove JavaScript from webapp'
     delete "${projectDir}/src/main/webapp/js"
+    delete "${projectDir}/package-lock.json"
+    delete "${projectDir}/yarn.lock"
 }
 
 war.dependsOn copyJs

@@ -13,13 +13,15 @@
 <head>
     <meta charset="UTF-8" />
     <title></title>
+    <script src="./js/vue/dist/vue.js"></script>
 </head>
 <body>
 
 <div id="app">
-    <LoginView/>
+    <span v-bind:title="message">Hover over to see title!</span><br/>
+    <div style="background-color: floralwhite"><login-view></login-view></div>
 </div>
 
 </body>
-<script type="text/javascript" src="dist/app.bundle.js"></script>
+<script type="text/javascript" src="app/app.js"></script>
 </html>
