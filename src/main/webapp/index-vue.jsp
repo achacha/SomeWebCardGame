@@ -14,6 +14,7 @@
     <meta charset="UTF-8" />
     <title></title>
     <script src="./js/vue/dist/vue.js"></script>
+    <script src="./js/axios/dist/axios.js"></script>
 </head>
 <body>
 
@@ -23,5 +24,6 @@
 </div>
 
 </body>
+<script type="text/javascript" src="app/login-view.js"></script>
 <script type="text/javascript" src="app/app.js"></script>
 </html>
