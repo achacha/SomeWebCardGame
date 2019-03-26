@@ -21,9 +21,14 @@
 <div id="app">
     <span v-bind:title="message">Hover over to see title!</span><br/>
     <div style="background-color: floralwhite"><login-view></login-view></div>
+    <div style="background-color: darksalmon"><player-view></player-view></div>
+    <!-- TODO: Add to player component info on cards -->
+    <!-- TODO: Add component of active adventures -->
+    <!-- TODO: Add component of available adventures -->
 </div>
 
 </body>
 <script type="text/javascript" src="app/login-view.js"></script>
+<script type="text/javascript" src="app/player-view.js"></script>
 <script type="text/javascript" src="app/app.js"></script>
 </html>

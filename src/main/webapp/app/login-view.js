@@ -1,9 +1,10 @@
 Vue.component('login-view', {
-    template: '<div v:if="loaded">' +
-        '<span>Name: {{ user.fname }}</span><br/>' +
-        '<span>Email: {{ user.email }}</span><br/>' +
-        '<span>State: {{ state }}</span><br/>' +
-        '</div>',
+    template: `
+<div v:if="loaded">
+    <span>Name: {{ user.fname }}</span><br/>
+    <span>Email: {{ user.email }}</span><br/>
+    <span>State: {{ state }}</span><br/>
+</div>`,
     data() {
         return {
             user: {},
