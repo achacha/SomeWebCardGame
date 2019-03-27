@@ -1,14 +1,19 @@
 Vue.component('login-view', {
     template: `
 <div v:if="loaded">
-    <span>Name: {{ user.fname }}</span><br/>
-    <span>Email: {{ user.email }}</span><br/>
-    <span>State: {{ state }}</span><br/>
+    <span>Name: {{ user.fname }} ({{ user.email }})</span><br/>
+    <div v-if="!success">
+        <span>State: {{ state }}</span><br/>
+    </div>
+    <div v-else>
+        <span>State: Ok</span><br/>
+    </div>
 </div>`,
     data() {
         return {
             user: {},
             loaded: false,
+            success: true,
             state: "Incomplete"
         }
     },
@@ -19,17 +24,20 @@ Vue.component('login-view', {
             .then(function (response) {
                 if (response.data.success === true) {
                     self.user = response.data.user;
-                    self.state = 'Success';
+                    self.success = true;
                     console.log("SUCCESS: " + JSON.stringify(response.data.user));
                 } else {
                     console.log("FAIL: " + response);
-                    self.state = response;
+                    self.state = "FAIL: "+response;
                 }
             })
             .catch(function (error) {
                 console.log("ERROR: " + error);
-                self.state = error;
+                self.state = "ERROR:" + error;
             })
-            .finally(() => self.loaded = true);
+            .finally(() => {
+                self.loaded = true;
+                self.state = "Complete";
+            });
     }
 });

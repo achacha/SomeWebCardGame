@@ -12,7 +12,7 @@
 <body>
 <%
     if (CallContextTls.get().getLogin() == null) {
-        session.setAttribute(CallContext.SESSION_REDIRECT_FROM, "/");
+        session.setAttribute(CallContext.SESSION_REDIRECT_FROM, "/index-phaser.jsp");
         response.sendRedirect("/login.jsp");
         return;
     }

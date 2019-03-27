@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
     if (CallContextTls.get().getLogin() == null) {
-        session.setAttribute(CallContext.SESSION_REDIRECT_FROM, "/");
+        session.setAttribute(CallContext.SESSION_REDIRECT_FROM, "/index-vue.jsp");
         response.sendRedirect("/login.jsp");
         return;
     }
@@ -19,10 +19,8 @@
 <body>
 
 <div id="app">
-    <span v-bind:title="message">Hover over to see title!</span><br/>
     <div style="background-color: floralwhite"><login-view></login-view></div>
     <div style="background-color: darksalmon"><player-view></player-view></div>
-    <!-- TODO: Add to player component info on cards -->
     <!-- TODO: Add component of active adventures -->
     <!-- TODO: Add component of available adventures -->
 </div>

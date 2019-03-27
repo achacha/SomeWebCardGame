@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
     if (CallContextTls.get().getLogin() == null) {
-        session.setAttribute(CallContext.SESSION_REDIRECT_FROM, "/");
+        session.setAttribute(CallContext.SESSION_REDIRECT_FROM, "/[TODO-this-page-url-here]");
         response.sendRedirect("/login.jsp");
         return;
     }
