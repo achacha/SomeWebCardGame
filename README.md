@@ -34,11 +34,7 @@ Install via npm into package.json
 ---
 1. `npm install --save axios`
 1. `npm install --save tether bootstrap font-awesome`
-1. `npm install --save-dev webpack webpack-cli webpack-dev-server`
-1. `npm install --save-dev @babel/core @babel/cli @babel/preset-env`
-1. `npm install --save @babel/polyfill`
 1. `npm install --save vue`
-1. `npm install --save-dev vue-loader vue-template-compiler babel-loadernpm`
 
 1. Set in package.json at scripts:`"build": "webpack"`
     _(This allows us to use `npm run build`)_

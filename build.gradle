@@ -1,3 +1,4 @@
+
 import org.flywaydb.gradle.task.FlywayCleanTask
 import org.flywaydb.gradle.task.FlywayMigrateTask
 
@@ -187,21 +188,3 @@ task yarnUpgrade(type: YarnTask, dependsOn: yarnInstall) {
 
     args = ['upgrade']
 }
-
-//
-// Webpack tasks
-//
-task npmWebpack(type: NpmTask, dependsOn: npmSetup) {
-    group 'node'
-    description 'Execute build task defined in package.json'
-
-    args = ['run', 'webpack']
-}
-build.dependsOn npmWebpack
-
-task npmWebpackClean(type: Delete) {
-    group 'node'
-    description 'Remove webpack output files'
-    delete("${projectDir}/src/main/webapp/dist")
-}
-clean.dependsOn npmWebpackClean
