@@ -4,6 +4,7 @@
 /out/
 /build/
 /src/main/webapp/js/
+/src/main/webapp/dist/
 .DS_Store
 /etc/
 /yarn.lock
