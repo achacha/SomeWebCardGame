@@ -90,15 +90,15 @@ class AdventureDboTest extends BaseInitializedTest {
 
         // Cleanup (and test delete all code)
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
-            factory.deleteAllByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID);
-            assertNull(factory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID));
+            factory.deleteAllByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID1);
+            assertNull(factory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID1));
         }
     }
 
     @Test
     void builderEmpty() {
-        AdventureDbo adventure = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID).build();
-        assertEquals(TestDataConstants.JUNIT_PLAYER__ID, adventure.playerId);
+        AdventureDbo adventure = AdventureDbo.builder(TestDataConstants.JUNIT_PLAYER__ID1).build();
+        assertEquals(TestDataConstants.JUNIT_PLAYER__ID1, adventure.playerId);
         assertNotNull(adventure.getEncounters());
         assertEquals(0, adventure.getEncounters().size());
     }
@@ -169,7 +169,7 @@ class AdventureDboTest extends BaseInitializedTest {
     void testToFromJson() throws SQLException {
         DatabaseManager dbm = Global.getInstance().getDatabaseManager();
         try (Connection connection = dbm.getConnection()) {
-            PlayerDbo player = dbm.<PlayerDboFactory>getFactory(PlayerDbo.class).getById(connection, TestDataConstants.JUNIT_PLAYER__ID);
+            PlayerDbo player = dbm.<PlayerDboFactory>getFactory(PlayerDbo.class).getById(connection, TestDataConstants.JUNIT_PLAYER__ID1);
             AdventureDbo original = AdventureDbo.builder(player.getId())
                     .withCard(player.cards.get(1))
                     .withCard(player.cards.get(0))

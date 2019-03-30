@@ -19,7 +19,7 @@ class InventoryDboTest extends BaseInitializedTest {
     void testGetInventoryForExistingLogin() throws SQLException {
         // Default player has an inventory
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
-            InventoryDbo inventory = inventoryFactory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID);
+            InventoryDbo inventory = inventoryFactory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID1);
             assertNotNull(inventory);
         }
     }

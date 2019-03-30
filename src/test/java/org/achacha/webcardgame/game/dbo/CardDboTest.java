@@ -21,13 +21,13 @@ class CardDboTest extends BaseInitializedTest {
     @Test
     void testLoadCardsForKnownPlayer() throws SQLException {
         try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
-            Collection<CardDbo> cards = factory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID);
+            Collection<CardDbo> cards = factory.getByPlayerId(connection, TestDataConstants.JUNIT_PLAYER__ID1);
             assertNotNull(cards);
             assertEquals(5, cards.size());
 
             CardDbo one = cards.iterator().next();
             assertEquals(1, one.getId());
-            assertEquals(TestDataConstants.JUNIT_PLAYER__ID, one.getPlayerId());
+            assertEquals(TestDataConstants.JUNIT_PLAYER__ID1, one.getPlayerId());
             assertEquals("Card 1", one.getName());
             assertEquals(8, one.getLevel());
             assertEquals(99990, one.getXp());

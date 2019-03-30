@@ -29,14 +29,14 @@ public class AdventureRoutesTest extends BaseIntegrationTest {
     void adventureUsecase() throws Exception {
         try (final WebClient webClient = getWebClientWithLogin(TestDataConstants.JUNIT_USER_EMAIL, TestDataConstants.JUNIT_USER_PASSWORD)) {
             // Verify active player does not have adventure
-            final Page pageNoActive = webClient.getPage(getUrl("/api/adventure/active?playerId="+ TestDataConstants.JUNIT_PLAYER__ID));
+            final Page pageNoActive = webClient.getPage(getUrl("/api/adventure/active?playerId="+ TestDataConstants.JUNIT_PLAYER__ID1));
             WebResponse wrNoActive = pageNoActive.getWebResponse();
             assertEquals(Response.Status.OK.getStatusCode(), wrNoActive.getStatusCode());
             JsonObject json = parseContentJsonObject(wrNoActive);
             assertFalse(json.has(JsonHelper.DATA));    // Would contain no data if no adventure is active for this player
 
             // Get available adventures
-            final Page pageAvailable = webClient.getPage(getUrl("/api/adventure/available?playerId="+ TestDataConstants.JUNIT_PLAYER__ID));
+            final Page pageAvailable = webClient.getPage(getUrl("/api/adventure/available?playerId="+ TestDataConstants.JUNIT_PLAYER__ID1));
             WebResponse wrAvailable = pageAvailable.getWebResponse();
             assertEquals(Response.Status.OK.getStatusCode(), wrAvailable.getStatusCode());
             json = parseContentJsonObject(wrAvailable);
@@ -52,7 +52,7 @@ public class AdventureRoutesTest extends BaseIntegrationTest {
             WebRequest wrActivateAdventure = new WebRequest(
                     getUrl(
                             "/api/adventure/active?adventureId="+adventureAvailable.getId()+
-                            "&playerId="+TestDataConstants.JUNIT_PLAYER__ID+
+                            "&playerId="+TestDataConstants.JUNIT_PLAYER__ID1+
                             "&cards=2,1,0"
                     ),
                     HttpMethod.PUT
@@ -62,7 +62,7 @@ public class AdventureRoutesTest extends BaseIntegrationTest {
             assertEquals(Response.Status.OK.getStatusCode(), weActivateAdventure.getStatusCode());
 
             // Verify active player now has an adventure
-            final Page pageVerifyActive = webClient.getPage(getUrl("/api/adventure/active?playerId="+ TestDataConstants.JUNIT_PLAYER__ID));
+            final Page pageVerifyActive = webClient.getPage(getUrl("/api/adventure/active?playerId="+ TestDataConstants.JUNIT_PLAYER__ID1));
             WebResponse wrVerifyActive = pageVerifyActive.getWebResponse();
             assertEquals(Response.Status.OK.getStatusCode(), wrVerifyActive.getStatusCode());
             json = parseContentJsonObject(wrVerifyActive);
@@ -75,7 +75,7 @@ public class AdventureRoutesTest extends BaseIntegrationTest {
 
             // Simulate
             WebRequest wreqSimulateAdventure = new WebRequest(
-                    getUrl("/api/adventure/simulate?adventureId="+adventureAvailable.getId()+"&playerId="+TestDataConstants.JUNIT_PLAYER__ID),
+                    getUrl("/api/adventure/simulate?adventureId="+adventureAvailable.getId()+"&playerId="+TestDataConstants.JUNIT_PLAYER__ID1),
                     HttpMethod.PUT
             );
             final Page pageSimulateAdventure = webClient.getPage(wreqSimulateAdventure);
@@ -89,7 +89,7 @@ public class AdventureRoutesTest extends BaseIntegrationTest {
             assertEquals(adventureSelected.getId(), adventureArchive.getOriginalId());
 
             // Verify no active adventures exists after simulation
-            final Page pageVerifyNoActive = webClient.getPage(getUrl("/api/adventure/active?playerId="+ TestDataConstants.JUNIT_PLAYER__ID));
+            final Page pageVerifyNoActive = webClient.getPage(getUrl("/api/adventure/active?playerId="+ TestDataConstants.JUNIT_PLAYER__ID1));
             WebResponse wrVerifyNoActive = pageVerifyNoActive.getWebResponse();
             assertEquals(Response.Status.OK.getStatusCode(), wrVerifyNoActive.getStatusCode());
             json = parseContentJsonObject(wrVerifyNoActive);

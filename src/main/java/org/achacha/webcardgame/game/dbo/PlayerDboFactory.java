@@ -32,7 +32,7 @@ public class PlayerDboFactory extends BaseDboFactory<PlayerDbo> {
                         p -> p.setLong(1, loginId));
                 ResultSet rs = pstmt.executeQuery()
         ) {
-            if (rs.next()) {
+            while (rs.next()) {
                 PlayerDbo dbo = new PlayerDbo();
                 dbo.fromResultSet(connection, rs);
                 dbos.add(dbo);

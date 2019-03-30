@@ -15,6 +15,7 @@ public class TestDataConstants {
     public static final String JUNIT_SU_EMAIL = "junitsu";
     public static final String JUNIT_SU_PASSWORD = "test";
 
-    // player for JUNIT_USER_LOGINID
-    public static final long JUNIT_PLAYER__ID = 1;
+    // player for JUNIT_USER_LOGINID that are always there and should be the first 2
+    public static final long JUNIT_PLAYER__ID1 = 1;
+    public static final long JUNIT_PLAYER__ID2 = 2;
 }
