@@ -202,8 +202,8 @@ public class CardDbo extends BaseDbo {
 
     @Override
     public void insert(Connection connection) throws SQLException {
-        Preconditions.checkState(playerId > 0);
-        Preconditions.checkNotNull(type);
+        Preconditions.checkState(playerId > 0, "Must be associated with a player");
+        Preconditions.checkNotNull(type, "Must have a valid type");
 
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
@@ -237,9 +237,9 @@ public class CardDbo extends BaseDbo {
 
     @Override
     public void update(Connection connection) throws SQLException {
-        Preconditions.checkState(id > 0);
-        Preconditions.checkState(playerId > 0);
-        Preconditions.checkNotNull(type);
+        Preconditions.checkState(id > 0, "Must be a valid object to update");
+        Preconditions.checkState(playerId > 0, "Must be associated with a player");
+        Preconditions.checkNotNull(type, "Must have a valid type");
 
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(

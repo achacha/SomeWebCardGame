@@ -24,7 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AdventureRoutesTest extends BaseIntegrationTest {
+/*
+ * TODO: use createNewPlayer instead of JUNIT_USER*
+ */
+class AdventureRoutesTest extends BaseIntegrationTest {
     @Test
     void adventureUsecase() throws Exception {
         try (final WebClient webClient = getWebClientWithLogin(TestDataConstants.JUNIT_USER_EMAIL, TestDataConstants.JUNIT_USER_PASSWORD)) {

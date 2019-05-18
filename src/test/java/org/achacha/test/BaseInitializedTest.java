@@ -2,9 +2,6 @@ package org.achacha.test;
 
 import org.achacha.base.global.Global;
 import org.achacha.base.global.GlobalForTest;
-import org.achacha.webcardgame.game.data.CardType;
-import org.achacha.webcardgame.game.dbo.CardDbo;
-import org.achacha.webcardgame.game.dbo.PlayerDbo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
@@ -13,8 +10,6 @@ import org.mockito.Mockito;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class BaseInitializedTest {
     private static final Logger LOGGER = LogManager.getLogger(BaseInitializedTest.class);
@@ -48,36 +43,5 @@ public class BaseInitializedTest {
     @AfterAll
     public static void deinit() {
         LOGGER.debug("---INIT");
-    }
-
-    /**
-     * Creates a player owned by TestDataConstants.JUNIT_USER_LOGINID and persists it
-     * Contains 3 cards
-     * @param playerName String
-     * @return PlayerDbo
-     */
-    public PlayerDbo createNewTestPlayer(String playerName) throws SQLException {
-        try (Connection connection = Global.getInstance().getDatabaseManager().getConnection()) {
-            PlayerDbo player = PlayerDbo.builder(TestDataConstants.JUNIT_USER_LOGINID, playerName)
-                    .withCard(CardDbo.builder()
-                            .withType(CardType.Human)
-                            .withName(playerName+"_card0")
-                            .build())
-                    .withCard(CardDbo.builder()
-                            .withType(CardType.Human)
-                            .withName(playerName+"_card1")
-                            .build())
-                    .withCard(CardDbo.builder()
-                            .withType(CardType.Human)
-                            .withName(playerName+"_card2")
-                            .build())
-                    .build();
-
-            // Insert call will correctly propagate player ID to child classes
-            player.insert(connection);
-            connection.commit();
-
-            return player;
-        }
     }
 }

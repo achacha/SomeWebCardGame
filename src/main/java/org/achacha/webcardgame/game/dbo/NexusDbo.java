@@ -70,7 +70,7 @@ public class NexusDbo extends BaseDbo {
 
     @Override
     public void insert(Connection connection) throws SQLException {
-        Preconditions.checkState(playerId > 0);
+        Preconditions.checkState(playerId > 0, "There must be a valid player associated");
 
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
@@ -98,8 +98,8 @@ public class NexusDbo extends BaseDbo {
 
     @Override
     public void update(Connection connection) throws SQLException {
-        Preconditions.checkState(id > 0);
-        Preconditions.checkState(playerId > 0);
+        Preconditions.checkState(id > 0, "Update can only be performed on an existing object");
+        Preconditions.checkState(playerId > 0, "There must be a valid player associated");
 
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
+import static org.achacha.test.TestHelper.createNewTestPlayer;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

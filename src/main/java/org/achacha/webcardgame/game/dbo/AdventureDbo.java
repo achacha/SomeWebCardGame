@@ -158,8 +158,8 @@ public class AdventureDbo extends BaseDbo {
      */
     @Override
     public void insert(Connection connection) throws SQLException {
-        Preconditions.checkState(playerId > 0);
-        Preconditions.checkState(playerCards.size() > 0);
+        Preconditions.checkState(playerId > 0, "Must be associated with player to insert adventure");
+        Preconditions.checkState(playerCards.size() > 0, "Must have cards to insert adventure");
 
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(connection,

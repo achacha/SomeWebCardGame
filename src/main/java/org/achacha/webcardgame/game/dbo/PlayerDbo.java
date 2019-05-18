@@ -103,7 +103,7 @@ public class PlayerDbo extends BaseDbo {
 
     @Override
     public void insert(Connection connection) throws SQLException {
-        Preconditions.checkState(loginId > 0);
+        Preconditions.checkState(loginId > 0, "Must be associated with a Login");
 
         try (
                 PreparedStatement pstmt = Global.getInstance().getDatabaseManager().prepareStatement(
@@ -139,8 +139,8 @@ public class PlayerDbo extends BaseDbo {
 
     @Override
     public void update(Connection connection) throws SQLException {
-        Preconditions.checkState(id > 0);
-        Preconditions.checkState(loginId > 0);
+        Preconditions.checkState(id > 0, "MUst be a valid object to update");
+        Preconditions.checkState(loginId > 0, "Must be asscoaited with a Login");
 
         // Player doesn't have any updatable data at this time, propagate changes to members
         inventory.update(connection);
