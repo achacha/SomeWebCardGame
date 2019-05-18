@@ -38,14 +38,14 @@ public class NexusDbo extends BaseDbo {
     /**
      * TODO: enum
      */
-    int materialProcessingType;
+    int resourceProcessingType;
 
     /**
      * Total raw resources available for processing
      */
     int rawResourcesAvailable;
 
-    NexusDbo() {
+    public NexusDbo() {
     }
 
     @Override
@@ -61,7 +61,7 @@ public class NexusDbo extends BaseDbo {
         this.level = rs.getInt("level");
         this.rawResourcesAvailable = rs.getInt("raw_resources_available");
         this.energyGathererType = rs.getInt("energy_gatherer_type");
-        this.materialProcessingType = rs.getInt("material_processing_type");
+        this.resourceProcessingType = rs.getInt("material_processing_type");
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("fromResultSet: this="+this);
@@ -81,7 +81,7 @@ public class NexusDbo extends BaseDbo {
                             p.setLong(2, level);
                             p.setLong(3, rawResourcesAvailable);
                             p.setLong(4, energyGathererType);
-                            p.setLong(5, materialProcessingType);
+                            p.setLong(5, resourceProcessingType);
                         }
                 );
                 ResultSet rs = pstmt.executeQuery()
@@ -109,7 +109,7 @@ public class NexusDbo extends BaseDbo {
                             p.setLong(1, level);
                             p.setLong(2, rawResourcesAvailable);
                             p.setLong(3, energyGathererType);
-                            p.setLong(4, materialProcessingType);
+                            p.setLong(4, resourceProcessingType);
 
                             p.setLong(5, id);
                         }
@@ -139,15 +139,15 @@ public class NexusDbo extends BaseDbo {
         this.energyGathererType = energyGathererType;
     }
 
-    public void setMaterialProcessingType(int materialProcessingType) {
-        this.materialProcessingType = materialProcessingType;
+    public void setResourceProcessingType(int resourceProcessingType) {
+        this.resourceProcessingType = resourceProcessingType;
     }
 
     public int getEnergyGathererType() {
         return energyGathererType;
     }
 
-    public int getMaterialProcessingType() {
-        return materialProcessingType;
+    public int getResourceProcessingType() {
+        return resourceProcessingType;
     }
 }

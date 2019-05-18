@@ -26,7 +26,7 @@ class NexusDboTest extends BaseInitializedTest {
             nexus = new NexusDbo();
             nexus.setPlayerId(player.getId());
             nexus.energyGathererType = 1;
-            nexus.materialProcessingType = 2;
+            nexus.resourceProcessingType = 2;
             nexus.level = 3;
             nexus.insert(connection);
             connection.commit();
@@ -35,7 +35,7 @@ class NexusDboTest extends BaseInitializedTest {
             assertNotNull(insertedNexus);
             assertEquals(nexus.getPlayerId(), insertedNexus.getPlayerId());
             assertEquals(1, nexus.energyGathererType);
-            assertEquals(2, nexus.materialProcessingType);
+            assertEquals(2, nexus.resourceProcessingType);
             assertEquals(3, nexus.level);
 
             dbm.<NexusDboFactory>getFactory(NexusDbo.class).deleteById(connection, nexus.getId());

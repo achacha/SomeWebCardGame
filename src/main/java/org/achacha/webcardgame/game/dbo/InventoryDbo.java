@@ -43,6 +43,16 @@ public class InventoryDbo extends BaseDbo {
         return new Builder(player);
     }
 
+    /**
+     * Moves resources from resource store into materials (via processing)
+     * @param resourcesToProcess long
+     */
+    public void convertResourcesToMaterials(long resourcesToProcess) {
+        Preconditions.checkState(resources >= resourcesToProcess, "Must have enough resources to process %s >= %s", resources, resourcesToProcess);
+        resources -= resourcesToProcess;
+        materials += resourcesToProcess;
+    }
+
     public static class Builder {
         private InventoryDbo inventory = new InventoryDbo();
 
