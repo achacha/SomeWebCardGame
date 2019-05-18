@@ -14,32 +14,33 @@ import org.achacha.test.TestDataConstants;
 import org.achacha.webcardgame.game.dbo.AdventureArchiveDbo;
 import org.achacha.webcardgame.game.dbo.AdventureArchiveDboFactory;
 import org.achacha.webcardgame.game.dbo.AdventureDbo;
+import org.achacha.webcardgame.game.dbo.PlayerDbo;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;
 import java.sql.Connection;
 
+import static org.achacha.test.TestHelper.createNewTestPlayer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/*
- * TODO: use createNewPlayer instead of JUNIT_USER*
- */
 class AdventureRoutesTest extends BaseIntegrationTest {
     @Test
     void adventureUsecase() throws Exception {
+        PlayerDbo player = createNewTestPlayer("adventureRoutes1");
+
         try (final WebClient webClient = getWebClientWithLogin(TestDataConstants.JUNIT_USER_EMAIL, TestDataConstants.JUNIT_USER_PASSWORD)) {
             // Verify active player does not have adventure
-            final Page pageNoActive = webClient.getPage(getUrl("/api/adventure/active?playerId="+ TestDataConstants.JUNIT_PLAYER__ID1));
+            final Page pageNoActive = webClient.getPage(getUrl("/api/adventure/active?playerId=" + player.getId()));
             WebResponse wrNoActive = pageNoActive.getWebResponse();
             assertEquals(Response.Status.OK.getStatusCode(), wrNoActive.getStatusCode());
             JsonObject json = parseContentJsonObject(wrNoActive);
             assertFalse(json.has(JsonHelper.DATA));    // Would contain no data if no adventure is active for this player
 
             // Get available adventures
-            final Page pageAvailable = webClient.getPage(getUrl("/api/adventure/available?playerId="+ TestDataConstants.JUNIT_PLAYER__ID1));
+            final Page pageAvailable = webClient.getPage(getUrl("/api/adventure/available?playerId=" + player.getId()));
             WebResponse wrAvailable = pageAvailable.getWebResponse();
             assertEquals(Response.Status.OK.getStatusCode(), wrAvailable.getStatusCode());
             json = parseContentJsonObject(wrAvailable);
@@ -55,7 +56,7 @@ class AdventureRoutesTest extends BaseIntegrationTest {
             WebRequest wrActivateAdventure = new WebRequest(
                     getUrl(
                             "/api/adventure/active?adventureId="+adventureAvailable.getId()+
-                            "&playerId="+TestDataConstants.JUNIT_PLAYER__ID1+
+                            "&playerId="+player.getId()+
                             "&cards=2,1,0"
                     ),
                     HttpMethod.PUT
@@ -65,7 +66,7 @@ class AdventureRoutesTest extends BaseIntegrationTest {
             assertEquals(Response.Status.OK.getStatusCode(), weActivateAdventure.getStatusCode());
 
             // Verify active player now has an adventure
-            final Page pageVerifyActive = webClient.getPage(getUrl("/api/adventure/active?playerId="+ TestDataConstants.JUNIT_PLAYER__ID1));
+            final Page pageVerifyActive = webClient.getPage(getUrl("/api/adventure/active?playerId=" + player.getId()));
             WebResponse wrVerifyActive = pageVerifyActive.getWebResponse();
             assertEquals(Response.Status.OK.getStatusCode(), wrVerifyActive.getStatusCode());
             json = parseContentJsonObject(wrVerifyActive);
@@ -78,7 +79,7 @@ class AdventureRoutesTest extends BaseIntegrationTest {
 
             // Simulate
             WebRequest wreqSimulateAdventure = new WebRequest(
-                    getUrl("/api/adventure/simulate?adventureId="+adventureAvailable.getId()+"&playerId="+TestDataConstants.JUNIT_PLAYER__ID1),
+                    getUrl("/api/adventure/simulate?adventureId="+adventureAvailable.getId()+"&playerId=" + player.getId()),
                     HttpMethod.PUT
             );
             final Page pageSimulateAdventure = webClient.getPage(wreqSimulateAdventure);
@@ -92,7 +93,7 @@ class AdventureRoutesTest extends BaseIntegrationTest {
             assertEquals(adventureSelected.getId(), adventureArchive.getOriginalId());
 
             // Verify no active adventures exists after simulation
-            final Page pageVerifyNoActive = webClient.getPage(getUrl("/api/adventure/active?playerId="+ TestDataConstants.JUNIT_PLAYER__ID1));
+            final Page pageVerifyNoActive = webClient.getPage(getUrl("/api/adventure/active?playerId=" + player.getId()));
             WebResponse wrVerifyNoActive = pageVerifyNoActive.getWebResponse();
             assertEquals(Response.Status.OK.getStatusCode(), wrVerifyNoActive.getStatusCode());
             json = parseContentJsonObject(wrVerifyNoActive);
