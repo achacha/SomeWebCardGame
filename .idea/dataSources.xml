@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="necropolis@localhost" uuid="b496afdd-7765-4722-84cd-e36ea793fdef">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/necropolis</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="necropolis_test@localhost" uuid="38322204-30db-4e0b-a8b9-b56cdc5d3825">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/necropolis_test</jdbc-url>
+    </data-source>
+  </component>
+</project>
