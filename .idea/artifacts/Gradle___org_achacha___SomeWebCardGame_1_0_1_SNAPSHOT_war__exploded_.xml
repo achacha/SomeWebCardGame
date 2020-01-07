@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/build/libs/exploded/SomeWebCardGame-1.0.1-SNAPSHOT.war</output-path>
     <properties id="gradle-properties">
       <options external-project-path="$PROJECT_DIR$">
-        <manifest>TWFuaWZlc3QtVmVyc2lvbjogMS4wDQpJbXBsZW1lbnRhdGlvbi1UaXRsZTogU29tZSBXZWIgQ2FyZCBHYW1lDQpJbXBsZW1lbnRhdGlvbi1WZW5kb3I6IEFsZXggQ2hhY2hhbmFzaHZpbGkgb24gMjAxOS0wOC0wNlQwODowNzoxOC41Mjc4NTMNCkltcGxlbWVudGF0aW9uLVZlcnNpb246IDEuMC4xLVNOQVBTSE9UDQoNCg==</manifest>
+        <manifest>TWFuaWZlc3QtVmVyc2lvbjogMS4wDQpJbXBsZW1lbnRhdGlvbi1UaXRsZTogU29tZSBXZWIgQ2FyZCBHYW1lDQpJbXBsZW1lbnRhdGlvbi1WZW5kb3I6IEFsZXggQ2hhY2hhbmFzaHZpbGkgb24gMjAyMC0wMS0wN1QxNDozMjo1MC4zMzY4MTkNCkltcGxlbWVudGF0aW9uLVZlcnNpb246IDEuMC4xLVNOQVBTSE9UDQoNCg==</manifest>
       </options>
     </properties>
     <root id="root">
@@ -40,7 +40,6 @@
           <element id="library" level="project" name="Gradle: commons-beanutils:commons-beanutils:1.9.3" />
           <element id="library" level="project" name="Gradle: org.postgresql:postgresql:42.2.6" />
           <element id="library" level="project" name="Gradle: com.zaxxer:HikariCP:3.3.1" />
-          <element id="library" level="project" name="Gradle: org.flywaydb:flyway-core:5.2.4" />
           <element id="library" level="project" name="Gradle: org.apache.logging.log4j:log4j-web:2.12.0" />
           <element id="library" level="project" name="Gradle: org.apache.logging.log4j:log4j-core:2.12.0" />
           <element id="library" level="project" name="Gradle: org.apache.logging.log4j:log4j-slf4j-impl:2.12.0" />
@@ -84,6 +83,7 @@
           <element id="library" level="project" name="Gradle: net.minidev:accessors-smart:1.2" />
           <element id="library" level="project" name="Gradle: org.glassfish.hk2.external:aopalliance-repackaged:2.5.0" />
           <element id="library" level="project" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.9.9" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.flywaydb/flyway-core/6.1.4/a3e56a04e663dfb24f2ae4be650f5db32743c0da/flyway-core-6.1.4.jar" />
         </element>
       </element>
     </root>
