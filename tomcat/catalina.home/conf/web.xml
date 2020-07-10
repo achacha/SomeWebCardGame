@@ -94,16 +94,21 @@
   <!--                       globalXsltFile[null]                           -->
   <!--                                                                      -->
   <!--   globalXsltFile      Site wide configuration version of             -->
-  <!--                       localXsltFile. This argument must either be an -->
-  <!--                       absolute or relative (to either                -->
-  <!--                       $CATALINA_BASE/conf or $CATALINA_HOME/conf)    -->
-  <!--                       path that points to a location below either    -->
-  <!--                       $CATALINA_BASE/conf (checked first) or         -->
-  <!--                       $CATALINA_HOME/conf (checked second).[null]    -->
-  <!--                                                                      -->
-  <!--   showServerInfo      Should server information be presented in the  -->
-  <!--                       response sent to clients when directory        -->
-  <!--                       listings is enabled? [true]                    -->
+    <!--                       localXsltFile. This argument must either be an -->
+    <!--                       absolute or relative (to either                -->
+    <!--                       $CATALINA_BASE/conf or $CATALINA_HOME/conf)    -->
+    <!--                       path that points to a location below either    -->
+    <!--                       $CATALINA_BASE/conf (checked first) or         -->
+    <!--                       $CATALINA_HOME/conf (checked second).[null]    -->
+    <!--                                                                      -->
+    <!--   showServerInfo      Should server information be presented in the  -->
+    <!--                       response sent to clients when directory        -->
+    <!--                       listings is enabled? [true]                    -->
+    <!--                                                                      -->
+    <!--   allowPartialPut     Should the server treat an HTTP PUT request    -->
+    <!--                       with a Range header as a partial PUT? Note     -->
+    <!--                       that RFC 7233 clarified that Range headers are -->
+    <!--                       only valid for GET requests. [true]            -->
 
     <servlet>
         <servlet-name>default</servlet-name>
@@ -335,26 +340,48 @@
 
   <!-- Common Gateway Includes (CGI) processing servlet, which supports     -->
   <!-- execution of external applications that conform to the CGI spec      -->
-  <!-- requirements.  Typically, this servlet is mapped to the URL pattern  -->
-  <!-- "/cgi-bin/*", which means that any CGI applications that are         -->
-  <!-- executed must be present within the web application.  This servlet   -->
-  <!-- supports the following initialization parameters (default values     -->
-  <!-- are in square brackets):                                             -->
-  <!--                                                                      -->
-  <!--   cgiPathPrefix        The CGI search path will start at             -->
-  <!--                        webAppRootDir + File.separator + this prefix. -->
-  <!--                        If not set, then webAppRootDir is used.       -->
-  <!--                        Recommended value: WEB-INF/cgi                -->
-  <!--                                                                      -->
-  <!--   enableCmdLineArguments                                             -->
-  <!--                        Are command line parameters generated from    -->
-  <!--                        the query string as per section 4.4 of 3875   -->
-  <!--                        RFC? [false]                                  -->
-  <!--                                                                      -->
-  <!--   executable           Name of the executable used to run the        -->
-  <!--                        script. [perl]                                -->
-  <!--                                                                      -->
-  <!--   envHttpHeaders       A regular expression used to select the HTTP  -->
+    <!-- requirements.  Typically, this servlet is mapped to the URL pattern  -->
+    <!-- "/cgi-bin/*", which means that any CGI applications that are         -->
+    <!-- executed must be present within the web application.  This servlet   -->
+    <!-- supports the following initialization parameters (default values     -->
+    <!-- are in square brackets):                                             -->
+    <!--                                                                      -->
+    <!--   cgiPathPrefix        The CGI search path will start at             -->
+    <!--                        webAppRootDir + File.separator + this prefix. -->
+    <!--                        If not set, then webAppRootDir is used.       -->
+    <!--                        Recommended value: WEB-INF/cgi                -->
+    <!--                                                                      -->
+    <!--  cmdLineArgumentsDecoded                                             -->
+    <!--                        Only used when enableCmdLineArguments is      -->
+    <!--                        true. The pattern that individual decoded     -->
+    <!--                        command line arguments must match else the    -->
+    <!--                        request will be rejected. This is to          -->
+    <!--                        work-around various issues when Java passes   -->
+    <!--                        the arguments to the OS. See the CGI How-To   -->
+    <!--                        for more details. The default varies by       -->
+    <!--                        platform.                                     -->
+    <!--                        Windows: [[a-zA-Z0-9\Q-_.\\/:\E]+]            -->
+    <!--                        Others:  [.*]                                 -->
+    <!--                        Note that internally the CGI Servlet treats   -->
+    <!--                        [.*] as a special case to improve performance -->
+    <!--                                                                      -->
+    <!--   cmdLineArgumentsEncoded                                            -->
+    <!--                        Only used when enableCmdLineArguments is      -->
+    <!--                        true. The pattern that individual encoded     -->
+    <!--                        command line arguments must match else the    -->
+    <!--                        request will be rejected. The default matches -->
+    <!--                        the allowed values defined by RFC3875.        -->
+    <!--                        [[a-zA-Z0-9\Q%;/?:@&,$-_.!~*'()\E]+]          -->
+    <!--                                                                      -->
+    <!--   enableCmdLineArguments                                             -->
+    <!--                        Are command line parameters generated from    -->
+    <!--                        the query string as per section 4.4 of 3875   -->
+    <!--                        RFC? [false]                                  -->
+    <!--                                                                      -->
+    <!--   executable           Name of the executable used to run the        -->
+    <!--                        script. [perl]                                -->
+    <!--                                                                      -->
+    <!--   envHttpHeaders       A regular expression used to select the HTTP  -->
   <!--                        headers passed to the CGI process as          -->
   <!--                        environment variables. Note that headers are  -->
   <!--                        converted to upper case before matching and   -->
@@ -469,13 +496,11 @@
   <!--   blockContentTypeSniffingEnabled                                    -->
   <!--                       Should the header that blocks content type     -->
   <!--                       sniffing be added to every response? [true]    -->
-<!--
     <filter>
         <filter-name>httpHeaderSecurity</filter-name>
         <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
         <async-supported>true</async-supported>
     </filter>
--->
 
   <!-- A filter that sets character encoding that is used to decode -->
   <!-- parameters in a POST request -->
@@ -566,13 +591,11 @@
   <!-- ==================== Built In Filter Mappings ====================== -->
 
   <!-- The mapping for the HTTP header security Filter -->
-<!--
     <filter-mapping>
         <filter-name>httpHeaderSecurity</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
--->
 
   <!-- The mapping for the Set Character Encoding Filter -->
 <!--
@@ -4628,10 +4651,6 @@
     </mime-mapping>
     <mime-mapping>
         <extension>z</extension>
-        <mime-type>application/x-compress</mime-type>
-    </mime-mapping>
-    <mime-mapping>
-        <extension>Z</extension>
         <mime-type>application/x-compress</mime-type>
     </mime-mapping>
     <mime-mapping>

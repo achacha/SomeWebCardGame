@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class TestFixedSizeSortedSet {
+class FixedSizeSortedSetTest {
     @Test
     void testFixedSizeNoComparator() {
         FixedSizeSortedSet<String> set = new FixedSizeSortedSet<>(3);
