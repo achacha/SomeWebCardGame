@@ -1,16 +1,16 @@
 package org.achacha.webcardgame.web;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebInitParam;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.achacha.base.global.GlobalProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.WebConfig;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
@@ -27,7 +27,7 @@ import java.io.IOException;
                         value = "org.achacha.webcardgame.web"
                 ),
                 @WebInitParam(
-                        name = "javax.ws.rs.Application",
+                        name = "jakarta.ws.rs.Application",
                         value = "org.achacha.webcardgame.web.MyApplication"
                 )
         }

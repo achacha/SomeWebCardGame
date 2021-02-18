@@ -1,13 +1,12 @@
 package org.achacha.webcardgame.helper;
 
 import com.google.common.net.HttpHeaders;
+import jakarta.servlet.http.HttpServletRequest;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.global.Global;
 import org.achacha.base.global.GlobalProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class LoginHelper {
     private static final Logger LOGGER = LogManager.getLogger(LoginHelper.class);

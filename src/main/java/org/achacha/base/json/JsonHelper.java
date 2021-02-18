@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
+import jakarta.servlet.http.HttpServletRequest;
 import org.achacha.base.global.Global;
 import org.achacha.base.i18n.UIMessageHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;

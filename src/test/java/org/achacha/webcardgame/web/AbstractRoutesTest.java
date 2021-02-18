@@ -1,5 +1,6 @@
 package org.achacha.webcardgame.web;
 
+import jakarta.ws.rs.Path;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
 import org.junit.jupiter.api.Test;
 import org.reflections.Configuration;
@@ -8,7 +9,6 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import javax.ws.rs.Path;
 import java.lang.reflect.Method;
 import java.util.Set;
 

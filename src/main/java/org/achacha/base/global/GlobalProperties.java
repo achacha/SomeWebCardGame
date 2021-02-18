@@ -1,11 +1,11 @@
 package org.achacha.base.global;
 
 import com.google.gson.JsonObject;
+import jakarta.servlet.ServletContextEvent;
 import org.achacha.base.json.JsonEmittable;
 import org.achacha.base.json.JsonHelper;
 
 import javax.annotation.Nonnull;
-import javax.servlet.ServletContextEvent;
 import java.util.Properties;
 
 /**

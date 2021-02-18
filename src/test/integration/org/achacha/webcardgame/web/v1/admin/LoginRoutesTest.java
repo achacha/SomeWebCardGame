@@ -3,11 +3,11 @@ package org.achacha.oddity.web.v1.admin;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
+import jakarta.ws.rs.core.Response;
 import org.achacha.test.BaseIntegrationTest;
 import org.achacha.test.TestDataConstants;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

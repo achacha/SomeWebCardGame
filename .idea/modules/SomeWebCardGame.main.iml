@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="SomeWebCardGame:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="org.achacha" external.system.module.type="sourceSet" external.system.module.version="1.0.1-SNAPSHOT" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <datasource-mapping>
+          <factory-entry name="SomeWebCardGame.main" />
+        </datasource-mapping>
+        <naming-strategy-map />
+      </configuration>
+    </facet>
+    <facet type="kotlin-language" name="Kotlin">
+      <configuration version="3" platform="JVM 11" allPlatforms="JVM [11]" useProjectSettings="false">
+        <compilerSettings>
+          <option name="additionalArguments" value="-Xallow-no-source-files" />
+        </compilerSettings>
+        <compilerArguments>
+          <option name="destination" value="$MODULE_DIR$/../../build/classes/kotlin/main" />
+          <option name="classpath" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.achacha/DadaWordEngine/1.3.6/f3f02fdb67e2e57a0701abe85a636b1f3d7b580f/DadaWordEngine-1.3.6.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.6/9180733b7df8542621dc12e21e87557e8c99b8cb/gson-2.8.6.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.72/8032138f12c0180bc4e51fe139d4c52b46db6109/kotlin-stdlib-1.3.72.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.media/jersey-media-json-jackson/3.0.1/d477e4f058749907ae58f3b77b4be458c96f4e53/jersey-media-json-jackson-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/javax.xml.bind/jaxb-api/2.4.0-b180830.0359/b54184b7dcab2031add3f525550c7f1b7e12209d/jaxb-api-2.4.0-b180830.0359.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/javax.persistence/javax.persistence-api/2.2/25665ac8c0b62f50e6488173233239120fc52c96/javax.persistence-api-2.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-core/10.0.2/6b6b1345bdc40deb06ce366c100ac361c02c5c9/tomcat-embed-core-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-annotations-api/10.0.2/5fc431560207e3ff71f0933c1d635dab31195f5/tomcat-annotations-api-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-jasper/10.0.2/f5562c54ef06701491d71f762ba0e389348e18b9/tomcat-jasper-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/3.0.1/70790777637f83d4e0ae551bcc1a5c441692f9/jersey-container-servlet-core-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-server/3.0.1/18a449e9665a6134940f71dc120a56d8a335b8a2/jersey-server-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.inject/jersey-hk2/3.0.1/7e4b543a25a4a208454b920db6136218ed51c93d/jersey-hk2-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-client/3.0.1/fe9fca46f8be0f5622237faecc79342f73f15d3/jersey-client-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-common/3.0.1/451e8dae242191f1db289a3b098660e935fa0e53/jersey-common-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/jakarta.annotation/jakarta.annotation-api/2.0.0/f3cd84cc45f583a0fdc42a8156d6c5b98d625c1a/jakarta.annotation-api-2.0.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/29.0-jre/801142b4c3d0f0770dd29abea50906cacfddd447/guava-29.0-jre.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.github.ben-manes.caffeine/caffeine/2.8.5/f0eafef6e1529a44e36549cd9d1fc06d3a57f384/caffeine-2.8.5.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.12/1c9d44c563eebe9b8a3afebd29ed5c4646db800c/reflections-0.9.12.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-text/1.8/879a6bde4c0537a25504c72ec7a94ba4099f469c/commons-text-1.8.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.10/e155460aaf5b464062a09c3923f089ce99128a17/commons-lang3-3.10.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.7/3f2bd4ba11c4162733c13cc90ca7c7ea09967102/commons-io-2.7.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-collections4/4.4/62ebe7544cb7164d87e0637a2a6a2bdc981395e8/commons-collections4-4.4.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.14/3cb1181b2141a7e752f5bdc998b7ef1849f726cf/commons-codec-1.14.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/commons-beanutils/commons-beanutils/1.9.4/d52b9abcd97f38c81342bb7e7ae1eee9b73cba51/commons-beanutils-1.9.4.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.postgresql/postgresql/42.2.18/a0a9c1d43c7727eeaf1b729477891185d3c71751/postgresql-42.2.18.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.zaxxer/HikariCP/3.4.5/aa1a2c00aae8e4ba8308e19940711bb9525b103d/HikariCP-3.4.5.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.flywaydb/flyway-core/6.5.0/67fd83fb5ce9ce828b1bfc8f90efc015f57270c9/flyway-core-6.5.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-web/2.13.3/6a8df09d33deb6063faefa5afd43f75f038bfb6e/log4j-web-2.13.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.13.3/4e857439fc4fe974d212adaaaa3b118b8b50e3ec/log4j-core-2.13.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/annotations/3.0.1/fc019a2216218990d64dfe756e7aa20f0069dea2/annotations-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.jayway.jsonpath/json-path/2.4.0/765a4401ceb2dc8d40553c2075eb80a8fa35c2ae/json-path-2.4.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/3.4.0/f1961bfdcd03b1323dae35ccfcf0d42938917a3a/mockito-core-3.4.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.13.3/ec1508160b93d274b1add34419b897bae84c6ca9/log4j-api-2.13.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.4/c51c00206bb913cd8612b24abd9fa98ae89719b1/commons-cli-1.4.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.72/6ca8bee3d88957eaaaef077c41c908c9940492d8/kotlin-stdlib-common-1.3.72.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/javax.activation/javax.activation-api/1.2.0/85262acf3ca9816f9537ca47d5adeabaead7cb16/javax.activation-api-1.2.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-jsp-api/10.0.2/b12791c407c8319d386d08550dc0c9028b49f6b7/tomcat-jsp-api-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-util-scan/10.0.2/ee82224467e5f6e8f4dfee02bb7157cb2198faad/tomcat-util-scan-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-api/10.0.2/e72dfdf0fae77ec80417b32a8934c4c7f093781e/tomcat-api-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-servlet-api/10.0.2/324655ba048d8c5d28b977028a18f093421a12bf/tomcat-servlet-api-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-util/10.0.2/b6aca069a1193dadd5a62a8629f1f67a1057a50f/tomcat-util-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-juli/10.0.2/74d8388076b3bacdedf642985fcf2a1ee56fbe2e/tomcat-juli-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-jasper-el/10.0.2/186d24d29e8fa3a50fd77506608eb0d8a1b65963/tomcat-jasper-el-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-el-api/10.0.2/8096670e715b49986fd29f07a520a0d2b7c5b7a7/tomcat-el-api-10.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.eclipse.jdt/ecj/3.24.0/e52bd6d97f71e418f5f4724e1bc5986650b96693/ecj-3.24.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.ext/jersey-entity-filtering/3.0.1/a9c33531046cdd10d5ff17d77dc9d75ff3f75ed6/jersey-entity-filtering-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/jakarta.ws.rs/jakarta.ws.rs-api/3.0.0/5eea182d6651a7257bc8c3614507e1540c766fc2/jakarta.ws.rs-api-3.0.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-locator/3.0.1/a9c4e89c7d01dce59ebfd3afa4758e14d3036135/hk2-locator-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-api/3.0.1/4080927db83438aca2bbf45aea1f2df20cb8649a/hk2-api-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/3.0.1/91a66d9f92545536589cdf897cad8622ca389266/hk2-utils-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/jakarta.inject/jakarta.inject-api/2.0.0/46fc8560b6fd17b78396d88f39c1a730457671f0/jakarta.inject-api-2.0.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/osgi-resource-locator/1.0.3/de3b21279df7e755e38275137539be5e2c80dd58/osgi-resource-locator-1.0.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/jakarta.validation/jakarta.validation-api/3.0.0/8c8eecc40da64037d7731356511c568d466f8480/jakarta.validation-api-3.0.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-jaxb-annotations/2.11.3/1e13e4da4be86181b19067cd872369c3d617ecc1/jackson-module-jaxb-annotations-2.11.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.11.3/4f7b27416934dc929bb6c2d2c5fe521829e6a4ec/jackson-databind-2.11.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.11.3/25d4e9c777e7a8805c4a000a8629d3009c779c9b/jackson-annotations-2.11.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.26.0-GA/bb2890849968d8d8311ffba8c37b0ce16ce284dc/javassist-3.26.0-GA.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.4.1/b3df2bf4d7d258e5aa192c3ac6f7f84688046262/checker-qual-3.4.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.4.0/32ecccc595e4e4d813a80ee9e3ab5813d65874eb/error_prone_annotations-2.4.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/commons-collections/commons-collections/3.2.2/8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5/commons-collections-3.2.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/da76ca59f6a57ee3102f8f9bd9cee742973efa8a/slf4j-api-1.7.25.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/net.jcip/jcip-annotations/1.0/afba4942caaeaf46aab0b976afd57cc7c181467e/jcip-annotations-1.0.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/net.minidev/json-smart/2.3/7396407491352ce4fa30de92efb158adb76b5b/json-smart-2.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.10.10/602a3da70f603752d3ce20a9997817d8dec39b51/byte-buddy-1.10.10.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.10.10/b8d4e21e80e79e09267e18d814caf345111d3b29/byte-buddy-agent-1.10.10.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.6/639033469776fd37c08358c6b92a4761feb2af4b/objenesis-2.6.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.11.3/c2351800432bdbdd8284c3f5a7f0782a352aa84a/jackson-core-2.11.3.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/3.0.1/5790cd4154515c8ad5267ea8e7a6cd896692cf1/aopalliance-repackaged-3.0.1.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/net.minidev/accessors-smart/1.2/c592b500269bfde36096641b01238a8350f8aa31/accessors-smart-1.2.jar:/Users/achachanashvili/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/5.0.4/da08b8cce7bbf903602a25a3a163ae252435795/asm-5.0.4.jar" />
+          <option name="noStdlib" value="true" />
+          <option name="noReflect" value="true" />
+          <option name="moduleName" value="SomeWebCardGame" />
+          <option name="jvmTarget" value="11" />
+          <option name="languageVersion" value="1.3" />
+          <option name="apiVersion" value="1.3" />
+          <option name="pluginOptions">
+            <array />
+          </option>
+          <option name="pluginClasspaths">
+            <array>
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/1.3.72/657d8d34d91e1964b4439378c09933e840bfe8d5/kotlin-script-runtime-1.3.72.jar" />
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/1.3.72/e09990437040879d692655d66f58a64318681ffe/kotlin-scripting-common-1.3.72.jar" />
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/1.3.72/7dde2c909e6f1b80245c7ca100d32a8646b5666d/kotlin-scripting-jvm-1.3.72.jar" />
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.72/6ca8bee3d88957eaaaef077c41c908c9940492d8/kotlin-stdlib-common-1.3.72.jar" />
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.72/8032138f12c0180bc4e51fe139d4c52b46db6109/kotlin-stdlib-1.3.72.jar" />
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core/1.2.1/3839faf625f4197acaeceeb6da000f011a2acb49/kotlinx-coroutines-core-1.2.1.jar" />
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar" />
+            </array>
+          </option>
+          <option name="errors">
+            <ArgumentParseErrors />
+          </option>
+        </compilerArguments>
+      </configuration>
+    </facet>
+    <facet type="web" name="Web Gradle : SomeWebCardGame-1.0.1-SNAPSHOT.war">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/../../src/main/webapp/WEB-INF/web.xml" />
+        </descriptors>
+        <webroots>
+          <root url="file://$MODULE_DIR$/../../src/main/webapp" relative="/" />
+        </webroots>
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/main/kotlin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/main/generated" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/main/resources" type="java-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: io.github.achacha:DadaWordEngine:1.3.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.6" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.72" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.jersey.media:jersey-media-json-jackson:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: javax.xml.bind:jaxb-api:2.4.0-b180830.0359" level="project" />
+    <orderEntry type="library" name="Gradle: javax.persistence:javax.persistence-api:2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-core:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-annotations-api:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-jasper:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.jersey.containers:jersey-container-servlet-core:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.jersey.core:jersey-server:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.jersey.inject:jersey-hk2:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.jersey.core:jersey-common:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.annotation:jakarta.annotation-api:2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava:29.0-jre" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.ben-manes.caffeine:caffeine:2.8.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.reflections:reflections:0.9.12" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-text:1.8" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.10" level="project" />
+    <orderEntry type="library" name="Gradle: commons-io:commons-io:2.7" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-collections4:4.4" level="project" />
+    <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.14" level="project" />
+    <orderEntry type="library" name="Gradle: commons-beanutils:commons-beanutils:1.9.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.postgresql:postgresql:42.2.18" level="project" />
+    <orderEntry type="library" name="Gradle: com.zaxxer:HikariCP:3.4.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.flywaydb:flyway-core:6.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-web:2.13.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-core:2.13.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.findbugs:annotations:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.jayway.jsonpath:json-path:2.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.mockito:mockito-core:3.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.13.3" level="project" />
+    <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.72" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.jersey.ext:jersey-entity-filtering:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.11.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.11.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.11.3" level="project" />
+    <orderEntry type="library" name="Gradle: javax.activation:javax.activation-api:1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-jsp-api:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-util-scan:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-api:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-servlet-api:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-juli:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-jasper-el:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-el-api:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jdt:ecj:3.24.0" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.ws.rs:jakarta.ws.rs-api:3.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.inject:jakarta.inject-api:2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.jersey.core:jersey-client:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.validation:jakarta.validation-api:3.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.hk2:hk2-locator:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.javassist:javassist:3.26.0-GA" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.hk2:osgi-resource-locator:1.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:failureaccess:1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.checkerframework:checker-qual:3.4.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:1.3" level="project" />
+    <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: commons-collections:commons-collections:3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Gradle: net.jcip:jcip-annotations:1.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.minidev:json-smart:2.3" level="project" />
+    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.10.10" level="project" />
+    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy-agent:1.10.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.objenesis:objenesis:2.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.11.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-util:10.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.hk2:hk2-api:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.hk2:hk2-utils:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.hk2.external:aopalliance-repackaged:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: net.minidev:accessors-smart:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.ow2.asm:asm:5.0.4" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.checkerframework:checker-qual:3.5.0" level="project" />
+  </component>
+</module>

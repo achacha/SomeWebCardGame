@@ -1,5 +1,7 @@
 package org.achacha.test;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
 import org.achacha.base.global.Global;
 import org.achacha.base.global.GlobalForTest;
 import org.apache.logging.log4j.LogManager;
@@ -7,9 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.mockito.Mockito;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
 
 public class BaseInitializedTest {
     private static final Logger LOGGER = LogManager.getLogger(BaseInitializedTest.class);

@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SomeWebCardGame.iml" filepath="$PROJECT_DIR$/.idea/modules/SomeWebCardGame.iml" group="SomeWebCardGame" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SomeWebCardGame_main.iml" filepath="$PROJECT_DIR$/.idea/modules/SomeWebCardGame_main.iml" group="SomeWebCardGame" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SomeWebCardGame_test.iml" filepath="$PROJECT_DIR$/.idea/modules/SomeWebCardGame_test.iml" group="SomeWebCardGame" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SomeWebCardGame.iml" filepath="$PROJECT_DIR$/.idea/modules/SomeWebCardGame.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SomeWebCardGame.main.iml" filepath="$PROJECT_DIR$/.idea/modules/SomeWebCardGame.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SomeWebCardGame.test.iml" filepath="$PROJECT_DIR$/.idea/modules/SomeWebCardGame.test.iml" />
     </modules>
   </component>
 </project>

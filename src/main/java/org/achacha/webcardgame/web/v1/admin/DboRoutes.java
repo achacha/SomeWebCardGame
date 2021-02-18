@@ -2,6 +2,12 @@ package org.achacha.webcardgame.web.v1.admin;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.achacha.base.db.AdminDboFactory;
 import org.achacha.base.db.BaseDbo;
 import org.achacha.base.db.DboClassHelper;
@@ -12,12 +18,6 @@ import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.sql.Connection;
 import java.util.Optional;
 import java.util.Set;

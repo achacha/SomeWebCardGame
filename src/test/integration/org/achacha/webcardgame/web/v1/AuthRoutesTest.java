@@ -8,11 +8,11 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.gargoylesoftware.htmlunit.util.UrlUtils;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
+import jakarta.ws.rs.core.Response;
 import org.achacha.test.BaseIntegrationTest;
 import org.achacha.test.TestDataConstants;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;

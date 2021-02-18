@@ -21,7 +21,7 @@ public interface JsonEmittable {
      * @return JSONObject
      */
     default JsonObject toJsonObject() {
-        Class clazz = getClass();
+        Class<?> clazz = getClass();
         JsonElement rootElement = Global.getInstance().getGson().toJsonTree(this, clazz);
         return rootElement.getAsJsonObject();
     }

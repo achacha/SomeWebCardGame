@@ -7,6 +7,7 @@ import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import jakarta.ws.rs.core.Response;
 import org.achacha.base.global.Global;
 import org.achacha.base.json.JsonHelper;
 import org.achacha.test.BaseIntegrationTest;
@@ -17,7 +18,6 @@ import org.achacha.webcardgame.game.dbo.AdventureDbo;
 import org.achacha.webcardgame.game.dbo.PlayerDbo;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
 import java.sql.Connection;
 
 import static org.achacha.test.TestHelper.createNewTestPlayer;

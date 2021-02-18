@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="JUnit: All Tests" type="JUnit" factoryName="JUnit">
-    <module name="SomeWebCardGame_test" />
-    <option name="PACKAGE_NAME" value="org.achacha" />
+  <configuration default="false" name="JUnit: All in SomeWebCardGame.test" type="JUnit" factoryName="JUnit">
+    <module name="SomeWebCardGame.test" />
+    <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="package" />

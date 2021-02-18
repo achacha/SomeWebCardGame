@@ -85,20 +85,6 @@ war {
     }
 }
 
-/*
-Flyway plugin handles DB migration
-*/
-flyway {
-    description 'Migrate database and populate data'
-    url = "${homeProperties['flyway.db.jdbcUrl']}"
-    driver = "${homeProperties['flyway.db.driverClassName']}"
-    user = "${homeProperties['flyway.db.username']}"
-    password = "${homeProperties['flyway.db.password']}"
-    locations = [
-            'filesystem:db/migration'
-    ]
-}
-
 println "MODE=${homeProperties['mode']}"
 
 //noinspection GroovyUnusedAssignment
@@ -144,27 +130,50 @@ clean.dependsOn cleanJs
 //
 // Flyway tasks
 //
-task flywayCleanTest(type: FlywayCleanTask) {
+task flywayMainClean(type: FlywayCleanTask) {
+    description 'Clean database'
+    description 'Migrate database and populate data'
+    url = "${homeProperties['flyway.db.jdbcUrl']}"
+    driver = "${homeProperties['flyway.db.driverClassName']}"
+    user = "${homeProperties['flyway.db.username']}"
+    password = "${homeProperties['flyway.db.password']}"
+    locations = [
+            'filesystem:./db/migration'
+    ]
+}
+
+task flywayMainMigrate(type: FlywayMigrateTask) {
+    description 'Create tables and initialize database'
+    url = "${homeProperties['flyway.db.jdbcUrl']}"
+    driver = "${homeProperties['flyway.db.driverClassName']}"
+    user = "${homeProperties['flyway.db.username']}"
+    password = "${homeProperties['flyway.db.password']}"
+    locations = [
+            'filesystem:./db/migration'
+    ]
+}
+
+task flywayTestClean(type: FlywayCleanTask) {
     description 'Clean Test database'
     url = "${homeProperties['flyway.test.db.jdbcUrl']}"
     driver = "${homeProperties['flyway.test.db.driverClassName']}"
     user = "${homeProperties['flyway.test.db.username']}"
     password = "${homeProperties['flyway.test.db.password']}"
     locations = [
-            'filesystem:db/migration',
-            'filesystem:db/migration_test'
+            'filesystem:./db/migration',
+            'filesystem:./db/test'
     ]
 }
 
-task flywayMigrateTest(type: FlywayMigrateTask, dependsOn: flywayCleanTest) {
-    description 'Migrate Test database and populate test data'
+task flywayTestMigrate(type: FlywayMigrateTask) {
+    description 'Populate test data'
     url = "${homeProperties['flyway.test.db.jdbcUrl']}"
     driver = "${homeProperties['flyway.test.db.driverClassName']}"
     user = "${homeProperties['flyway.test.db.username']}"
     password = "${homeProperties['flyway.test.db.password']}"
     locations = [
-            'filesystem:db/migration',
-            'filesystem:db/migration_test'
+            'filesystem:./db/migration',
+            'filesystem:./db/test'
     ]
 }
 

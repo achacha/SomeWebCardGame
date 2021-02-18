@@ -1,8 +1,8 @@
 package org.achacha.webcardgame.web.filter;
 
+import jakarta.ws.rs.NameBinding;
 import org.achacha.base.security.SecurityLevel;
 
-import javax.ws.rs.NameBinding;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 

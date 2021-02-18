@@ -3,6 +3,9 @@ package org.achacha.base.context;
 import com.google.common.net.MediaType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.achacha.base.dbo.EventLogDboFactory;
 import org.achacha.base.dbo.LoginUserDbo;
 import org.achacha.base.dbo.LoginUserDboFactory;
@@ -15,9 +18,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.time.Instant;
 import java.util.Optional;
 

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Tomcat90:10080" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9.0.x" ALTERNATIVE_JRE_ENABLED="false">
+  <configuration default="false" name="Tomcat100:10080" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.0.2" ALTERNATIVE_JRE_ENABLED="false">
     <option name="OPEN_IN_BROWSER" value="false" />
     <option name="START_JAVASCRIPT_DEBUGGER" value="true" />
     <deployment>
@@ -10,8 +10,9 @@
       </artifact>
     </deployment>
     <server-settings>
-      <option name="BASE_DIRECTORY_NAME" value="Unnamed_SomeWebCardGame" />
+      <option name="BASE_DIRECTORY_NAME" value="3489a34b-684a-4255-8c61-469e233e6898" />
       <option name="HTTP_PORT" value="10080" />
+      <option name="JNDI_PORT" value="10099" />
     </server-settings>
     <predefined_log_file enabled="true" id="Tomcat" />
     <predefined_log_file enabled="true" id="Tomcat Catalina" />
@@ -23,7 +24,6 @@
     </RunnerSettings>
     <RunnerSettings RunnerId="Debug with VisualVM">
       <option name="DEBUG_PORT" value="61775" />
-      <option name="visualVMId" value="295204704223214" />
     </RunnerSettings>
     <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
       <option name="USE_ENV_VARIABLES" value="true" />
@@ -70,7 +70,7 @@
         <option name="PROGRAM_PARAMETERS" value="" />
       </SHUTDOWN>
     </ConfigurationWrapper>
-    <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Profile ">
+    <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Profile">
       <option name="USE_ENV_VARIABLES" value="true" />
       <STARTUP>
         <option name="USE_DEFAULT" value="true" />

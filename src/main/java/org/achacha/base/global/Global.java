@@ -9,6 +9,7 @@ import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
+import jakarta.servlet.ServletContextEvent;
 import org.achacha.base.cache.DboCacheManager;
 import org.achacha.base.db.DatabaseManager;
 import org.achacha.base.i18n.LocalizedKey;
@@ -20,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletContextEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

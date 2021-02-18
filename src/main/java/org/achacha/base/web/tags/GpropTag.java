@@ -1,10 +1,9 @@
 package org.achacha.base.web.tags;
 
+import jakarta.servlet.jsp.tagext.SimpleTagSupport;
 import org.achacha.base.global.Global;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 public class GpropTag extends SimpleTagSupport {
     private static final Logger LOGGER = LogManager.getLogger(GpropTag.class);

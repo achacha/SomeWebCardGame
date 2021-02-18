@@ -1,6 +1,12 @@
 package org.achacha.webcardgame.web.v1;
 
 import com.google.gson.JsonObject;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.achacha.base.context.CallContext;
 import org.achacha.base.context.CallContextTls;
 import org.achacha.base.global.Global;
@@ -9,13 +15,6 @@ import org.achacha.base.security.SecurityLevel;
 import org.achacha.webcardgame.web.AbstractRoutes;
 import org.achacha.webcardgame.web.MyApplication;
 import org.achacha.webcardgame.web.filter.SecurityLevelRequired;
-
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("server")
 @Produces(MediaType.APPLICATION_JSON)
