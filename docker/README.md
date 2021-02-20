@@ -1,8 +1,9 @@
-Create a docker image
+Create a docker image and start container
 ---
-Use Dockerfile to build docker image
+Use docker/Dockerfile to build docker image
 
-`docker build -t postgres_swcg .`
+`docker build -t postgres_sawcog docker`
+`docker run --name sawcog_container -e POSTGRES_PASSWORD=cogsaw -d -p 5432:5432 postgres_sawcog`
 
 
 Create container based on image

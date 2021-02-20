@@ -40,7 +40,7 @@ dependencies {
     // Utils
     //
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    compile group: 'com.google.code.gson', name: 'gson', version: "${gsonVersion}"
+    implementation group: 'com.google.code.gson', name: 'gson', version: "${gsonVersion}"
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation group: 'com.google.guava', name: 'guava', version: "${guavaVersion}"
     // https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine
@@ -73,6 +73,8 @@ dependencies {
     implementation group: 'com.zaxxer', name: 'HikariCP', version: "${hikariVersion}"
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
     implementation group: 'org.flywaydb', name: 'flyway-core', version: "${flywaydbVersion}"
+    // https://mvnrepository.com/artifact/org.flywaydb/flyway-gradle-plugin
+    runtimeOnly group: 'org.flywaydb', name: 'flyway-gradle-plugin', version: "${flywaydbVersion}"
 
     //
     // Logging
