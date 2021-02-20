@@ -15,6 +15,10 @@
         <Logger name="org.achacha" level="trace" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
+        <Logger name="io.github.achacha.dada" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
         <Root level="debug">
             <AppenderRef ref="Console"/>
         </Root>
